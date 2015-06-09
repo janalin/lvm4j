@@ -1,5 +1,5 @@
 ssHMM
-======
+==========
 
 A simple protein secondary structure using a 3-state HMM.
 
