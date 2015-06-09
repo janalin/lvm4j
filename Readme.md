@@ -1,6 +1,7 @@
 ssHMM
 ======
-A <i>very</i> simple HMM predictor for protein secondary structure.
+
+A simple protein secondary structure using a 3-state HMM.
 
 ## Installation
  
