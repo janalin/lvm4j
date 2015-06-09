@@ -2,21 +2,22 @@ ssHMM
 ======
 A <i>very</i> simple HMM predictor for protein secondary structure.
 
-### Installation
+## Installation
  
-* Change directory to downloaded folder.
-* Change directory to HMM.
-* Call maven.
-
+Unzip file and change directory to ss-hmm-master:
+```bash
+cd ss-hmm-master
 ```
-cd HMM
-mvn package
+Then call make:
+```bash
+./make.sh
 ```
+Calling make will create a jar <code>ss-hmm.jar</code> in the current directory.
 
-### Required files
+## Required files
 
-to come
+<code>ss-hmm</code> needs several files for training or prediction. Folder <code>data</code> contains examples of all relevant files.
 
-### Usage
+## Usage
 
 to come
