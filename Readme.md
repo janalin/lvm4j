@@ -19,6 +19,8 @@ Calling make will create a jar <code>ss-hmm.jar</code> in the current directory.
 
 <code>ss-hmm</code> needs several files for training or prediction. Folder <code>data</code> contains examples of all relevant files.
 
+* Training file
+
 ## Usage
 
 to come
