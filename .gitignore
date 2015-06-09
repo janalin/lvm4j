@@ -1,7 +1,6 @@
 create_seqs.plx
 uniq.plx
 target
-data
 angular/*
 api/__pycache__
 atlassian-ide-plugin.xml

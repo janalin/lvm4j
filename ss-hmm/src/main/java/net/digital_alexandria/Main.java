@@ -23,7 +23,10 @@ public class Main
 		HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
 		checkParams(parser);
 		if (parser.isSet("--train"))
+		{
 			ssHMM.train(parser.getArgument("-s"), parser.getArgument("-a"));
+			ssHMM.write(parser.getArgument("--hmm"));
+		}
 		if (parser.isSet("--predict"))
 		{
 			Map<String, String> map = ssHMM.predict(parser.getArgument("-a"));
@@ -32,7 +35,6 @@ public class Main
 				System.out.println(e.getKey());
 				System.out.println(e.getValue());
 			}
-
 		}
 	}
 
@@ -43,18 +45,18 @@ public class Main
 			System.err.println("Please set either '--train' or '--predict'!");
 			System.exit(1);
 		}
-		if (parser.isSet("--train"))
+		if (parser.isSet("--write"))
 		{
 			if (!parser.isSet("-s"))
 			{
 				System.err.println("You have to give a [latent] state sequence file " +
-								   "using '-s' if you want to train the HMM");
+								   "using '-s' if you want to write the HMM");
 				System.exit(1);
 			}
 			if (!parser.isSet("-a"))
 			{
 				System.out.println("You have to give a observation sequence file " +
-								   "using '-a' if you want to train the HMM");
+								   "using '-a' if you want to write the HMM");
 				System.exit(1);
 			}
 		}
@@ -72,23 +74,20 @@ public class Main
 	private static ParamsParser parse(String[] args)
 	{
 		ParamList list = ParamList.newInstance(
-			new Param.Builder().desc("State sequence file [latent variables]")
+			new Param.Builder().desc("State sequence file [latent variables].")
 							   .flag("-s").flagType(FlagType.OPTIONAL_ARG)
 							   .build(),
 			new Param.Builder().desc("Observations sequence file [random " +
-									 "variables]. Either used for training or " +
-									 "prediction.")
+									 "variables].")
 							   .flag("-a").flagType(FlagType.NEEDED_ARG)
 							   .build(),
-			new Param.Builder().desc("Train the HMM")
+			new Param.Builder().desc("")
 							   .flag("--train").flagType(FlagType.OPTIONAL)
 							   .build(),
-			new Param.Builder().desc("Predict latent variable sequence")
+			new Param.Builder().desc("")
 							   .flag("--predict").flagType(FlagType.OPTIONAL)
 							   .build(),
-			new Param.Builder().desc("HMM file. Either trained file or " +
-									 "adjacency matrix file for " +
-									 "emissions/transitions.")
+			new Param.Builder().desc("HMM file.")
 							   .flag("--hmm").flagType(FlagType.NEEDED_ARG)
 							   .build());
 		ParamsParser parser = ParamsParser.getInstance(list);

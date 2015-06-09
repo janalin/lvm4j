@@ -25,6 +25,7 @@ public class HMMPredictor
 	protected Map<String, String> predict(HMM hmm,
 										  Map<String, String> observationsMap)
 	{
+		checkMatrices(hmm);
 		/* calculate log matrices, because then probabilities can be added instead of multiplied
 		* -> double has maybe too low precision!
 		*/
@@ -40,6 +41,36 @@ public class HMMPredictor
 			statesMap.put(entry.getKey(), stateSequence);
 		}
 		return statesMap;
+	}
+
+	private void checkMatrices(HMM hmm)
+	{
+		final double delta = 0.01;
+		final double probSum = 1.0;
+		double[] startProbabilities = hmm.startProbabilities();
+		if (!net.digital_alexandria.util.Math.equals(startProbabilities,delta,probSum))
+		{
+			System.err.println("Sum of starting probabilities does not equal 1.00!");
+			System.exit(-1);
+		}
+		double[][] transitionsMatrix = hmm.transitionMatrix();
+		for (double row[] : transitionsMatrix)
+		{
+			if (!net.digital_alexandria.util.Math.equals(row,delta,probSum))
+			{
+				System.err.println("Sum of transition probabilities does not equal 1.00!");
+				System.exit(-1);
+			}
+		}
+		double[][] emissionsMatrix = hmm.emissionMatrix();
+		for (double row[] : emissionsMatrix)
+		{
+			if (!net.digital_alexandria.util.Math.equals(row, delta,probSum))
+			{
+				System.err.println("Sum of emission probabilities does not equal 1.00!");
+				System.exit(-1);
+			}
+		}
 	}
 
 	/**

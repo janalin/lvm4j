@@ -28,7 +28,7 @@ public class File
 		BufferedReader bR;
 		try
 		{
-			bR = ecce.homo.util.File.getReader(file);
+			bR = File.getReader(file);
 			String line;
 			String id = "";
 			while ((line = bR.readLine()) != null)

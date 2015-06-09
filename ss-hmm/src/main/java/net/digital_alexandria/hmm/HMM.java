@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static net.digital_alexandria.util.String.toDouble;
+
 /**
  * @author Simon Dirmeier
  * @email simon.dirmeier@gmx.de
@@ -40,6 +42,7 @@ public class HMM
 		char observations[] = new char[0];
 		double transitions[][] = new double[0][0];
 		double emissions[][] = new double[0][0];
+		double[] probs = new double[0];
 		try
 		{
 			bR = File.getReader(hmmFile);
@@ -55,9 +58,12 @@ public class HMM
 					{
 						String tr = bR.readLine();
 						if (tr.startsWith("#"))
-							net.digital_alexandria.util.System.exit("Error while parsing " +
-													   "transition matrix",
-													   -1);
+							net.digital_alexandria.util.System.exit("Error " +
+																	"while " +
+																	"parsing" +
+																	" " +
+																	"transition matrix",
+																	-1);
 						l.add(tr);
 					}
 					transitions = initTransitionMatrix(l);
@@ -72,15 +78,27 @@ public class HMM
 					{
 						String tr = bR.readLine();
 						if (tr.startsWith("#"))
-							net.digital_alexandria.util.System.exit("Error while parsing " +
-													   "emission matrix", -1);
+							net.digital_alexandria.util.System.exit("Error " +
+																	"while " +
+																	"parsing" +
+																	" " +
+																	"emission" +
+																	" " +
+																	"matrix",
+																	-1);
 						l.add(tr);
 					}
 					emissions = initEmissionMatrix(states, l);
 				}
+				else if (line.startsWith("#StartingProbabilities"))
+				{
+					probs = toDouble(bR.readLine().split("\t"));
+				}
 				else
-					net.digital_alexandria.util.System.exit("Unrecognized pattern at " +
-											   "parsing hmm file!", -1);
+					net.digital_alexandria.util.System.exit("Unrecognized " +
+															"pattern at " +
+															"parsing hmm " +
+															"file!", -1);
 			}
 			bR.close();
 		}
@@ -90,16 +108,24 @@ public class HMM
 				log(Level.WARNING, "Could not read HMM-file\n" + e.toString());
 			net.digital_alexandria.util.System.exit("", -1);
 		}
-		init(states, observations, transitions, emissions);
+		init(states, observations, transitions, emissions, probs);
 	}
 
 	private void init(char[] states, char[] observations,
-					  double[][] transitions, double[][] emissions)
+					  double[][] transitions, double[][] emissions, double[] probs)
 	{
 		addStates(states);
 		addObservations(observations);
+		addStartingProbabilities(probs);
 		addTransitions(transitions);
 		addEmissions(emissions);
+	}
+
+	private void addStartingProbabilities(double[] probs)
+	{
+		if (probs.length != _STATES.size()) return;
+		for (int i = 0; i < _STATES.size(); i++)
+			_STATES.get(i).startingStateProbability(probs[i]);
 	}
 
 	private void addStates(char[] states)
@@ -161,7 +187,7 @@ public class HMM
 	{
 		double[][] emissions = new double[states.length][];
 		for (int i = 0; i < emissions.length; i++)
-			emissions[i] =net.digital_alexandria.util.String.toDouble(list.get(i).split
+			emissions[i] = toDouble(list.get(i).split
 				("\t"));
 		return emissions;
 	}
@@ -170,7 +196,7 @@ public class HMM
 	{
 		double m[][] = new double[l.size()][];
 		for (int i = 0; i < m.length; i++)
-			m[i] = net.digital_alexandria.util.String.toDouble(l.get(i).split("\t"));
+			m[i] = toDouble(l.get(i).split("\t"));
 		return m;
 	}
 
@@ -210,6 +236,14 @@ public class HMM
 		return probs;
 	}
 
+	public double[] startProbabilities()
+	{
+		double[] probs = new double[this._STATES.size()];
+		for (State s : _STATES)
+			probs[s.idx()] = (s.startingStateProbability());
+		return probs;
+	}
+
 	public double[][] logEmissionMatrix()
 	{
 		double[][] emissionMatrix =
@@ -219,6 +253,18 @@ public class HMM
 		{
 			emissionMatrix[e.source().idx()][e.sink().idx()] =
 				Math.log(e.emissionProbability() + pseudo);
+		}
+		return emissionMatrix;
+	}
+
+	public double[][] emissionMatrix()
+	{
+		double[][] emissionMatrix =
+			new double[this._STATES.size()][this._OBSERVATIONS.size()];
+		for (Emission e : _EMISSIONS)
+		{
+			emissionMatrix[e.source().idx()][e.sink().idx()] =
+				(e.emissionProbability());
 		}
 		return emissionMatrix;
 	}
@@ -234,6 +280,16 @@ public class HMM
 		return transitionsMatrix;
 	}
 
+	public double[][] transitionMatrix()
+	{
+		double[][] transitionsMatrix =
+			new double[this._STATES.size()][this._STATES.size()];
+		for (Transition t : _TRANSITIONS)
+			transitionsMatrix[t.source().idx()][t.sink().idx()] =
+				(t.transitionProbability());
+		return transitionsMatrix;
+	}
+
 	public List<Emission> emissions()
 	{
 		return _EMISSIONS;
@@ -242,5 +298,11 @@ public class HMM
 	public List<State> states()
 	{
 		return _STATES;
+	}
+
+	public void write(String hmmFile)
+	{
+		HMMWriter writer = HMMWriter.getInstance();
+		writer.write(this, hmmFile);
 	}
 }
