@@ -1,5 +1,5 @@
 ssHMM
-==========
+======
 
 A simple protein secondary structure using a 3-state HMM.
 
@@ -19,7 +19,14 @@ Calling make will create a jar <code>ss-hmm.jar</code> in the current directory.
 
 <code>ss-hmm</code> needs several files for training or prediction. Folder <code>data</code> contains examples of all relevant files.
 
-##### Training file
+##### Observations/states files
+
+Multiple IDs and observation/state sequences.
+* IDs start with ">" and are following by identifier.
+* Observation/state sequence is a string of characters.
+
+##### HMM file
+
 
 ## Usage
 
