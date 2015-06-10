@@ -14,11 +14,6 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>net.digital_alexandria</groupId>
-            <artifactId>commandline-parser</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -1,4 +1,7 @@
-package net.digital_alexandria.hmm;
+package net.digital_alexandria.sshmm.predictor;
+
+import net.digital_alexandria.sshmm.hmm.HMM;
+import net.digital_alexandria.sshmm.util.File;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,6 +21,17 @@ public class HMMPredictor
 		if (_predictor == null)
 			_predictor = new HMMPredictor();
 		return _predictor;
+	}
+
+	/**
+	 * Predict the most probable latent state sequence using a sequence of
+	 * observations.
+	 * Prediciton is done using the viterbi algorithm.
+	 *
+	 * @param observationsFile the file of ids and observations (fasta format)
+	 */
+	public Map<String, String> predict(HMM hmm, String observationsFile) {
+		return predict(hmm, File.readFastaTagFile(observationsFile));
 	}
 
 	private HMMPredictor() {}
@@ -48,7 +62,7 @@ public class HMMPredictor
 		final double delta = 0.01;
 		final double probSum = 1.0;
 		double[] startProbabilities = hmm.startProbabilities();
-		if (!net.digital_alexandria.util.Math.equals(startProbabilities,delta,probSum))
+		if (!net.digital_alexandria.sshmm.util.Math.equals(startProbabilities,delta,probSum))
 		{
 			System.err.println("Sum of starting probabilities does not equal 1.00!");
 			System.exit(-1);
@@ -56,7 +70,7 @@ public class HMMPredictor
 		double[][] transitionsMatrix = hmm.transitionMatrix();
 		for (double row[] : transitionsMatrix)
 		{
-			if (!net.digital_alexandria.util.Math.equals(row,delta,probSum))
+			if (!net.digital_alexandria.sshmm.util.Math.equals(row,delta,probSum))
 			{
 				System.err.println("Sum of transition probabilities does not equal 1.00!");
 				System.exit(-1);
@@ -65,7 +79,7 @@ public class HMMPredictor
 		double[][] emissionsMatrix = hmm.emissionMatrix();
 		for (double row[] : emissionsMatrix)
 		{
-			if (!net.digital_alexandria.util.Math.equals(row, delta,probSum))
+			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,probSum))
 			{
 				System.err.println("Sum of emission probabilities does not equal 1.00!");
 				System.exit(-1);
@@ -91,10 +105,10 @@ public class HMMPredictor
 		// access
 		int encodedObservations[] = charToInt(hmm, obs);
 		// matrix of paths of probabilities
-		double probabilityPath[][] = new double[hmm._STATES.size()][obs
+		double probabilityPath[][] = new double[hmm.states().size()][obs
 			.length];
 		// matrix of paths of states
-		int statePath[][] = new int[hmm._STATES.size()][obs.length];
+		int statePath[][] = new int[hmm.states().size()][obs.length];
 		// set the first element of state/probability paths
 		initStarts(hmm, probabilityPath, statePath, startProbabilities,
 				   emissionMatrix,
@@ -114,7 +128,7 @@ public class HMMPredictor
 	{
 		for (int i = 1; i < encodedObservations.length; i++)
 		{
-			for (int j = 0; j < hmm._STATES.size(); j++)
+			for (int j = 0; j < hmm.states().size(); j++)
 			{
 				setPaths(statePath, probabilityPath, i, j,
 						 transitionsMatrix,
@@ -129,7 +143,7 @@ public class HMMPredictor
 							double[][] emissionMatrix,
 							int[] encodedObservations)
 	{
-		for (int i = 0; i < hmm._STATES.size(); i++)
+		for (int i = 0; i < hmm.states().size(); i++)
 		{
 			probs[i][0] = startProbabilities[i] +
 						  emissionMatrix[i][encodedObservations[0]];
@@ -157,13 +171,13 @@ public class HMMPredictor
 		statesIdx[encodedObservations.length - 1] =
 			getMostProbableEndingStateIdx(probabilityPath);
 		// set label of last state
-		statesLabel[encodedObservations.length - 1] = hmm._STATES.get
+		statesLabel[encodedObservations.length - 1] = hmm.states().get
 			(statesIdx[encodedObservations.length - 1]).getLabel();
 		// backtrace state/probability paths to get most probable state sequence
 		for (int i = encodedObservations.length - 1; i >= 1; i--)
 		{
 			statesIdx[i - 1] = statePath[statesIdx[i]][i];
-			statesLabel[i - 1] = hmm._STATES.get(statesIdx[i - 1]).getLabel();
+			statesLabel[i - 1] = hmm.states().get(statesIdx[i - 1]).getLabel();
 		}
 		return String.valueOf(statesLabel);
 	}
@@ -211,10 +225,10 @@ public class HMMPredictor
 		int idxs[] = new int[obs.length];
 		for (int i = 0; i < idxs.length; i++)
 		{
-			for (int j = 0; j < hmm._OBSERVATIONS.size(); j++)
+			for (int j = 0; j < hmm.observations().size(); j++)
 			{
-				if (obs[i] == hmm._OBSERVATIONS.get(j).getLabel())
-					idxs[i] = hmm._OBSERVATIONS.get(j).idx();
+				if (obs[i] == hmm.observations().get(j).getLabel())
+					idxs[i] = hmm.observations().get(j).idx();
 			}
 		}
 		return idxs;

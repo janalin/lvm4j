@@ -1,16 +1,14 @@
-package net.digital_alexandria.hmm;
+package net.digital_alexandria.sshmm.hmm;
 
-import net.digital_alexandria.util.File;
-
+import net.digital_alexandria.sshmm.util.File;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static net.digital_alexandria.util.String.toDouble;
+import static net.digital_alexandria.sshmm.util.String.toDouble;
 
 /**
  * @author Simon Dirmeier
@@ -58,7 +56,7 @@ public class HMM
 					{
 						String tr = bR.readLine();
 						if (tr.startsWith("#"))
-							net.digital_alexandria.util.System.exit("Error " +
+							net.digital_alexandria.sshmm.util.System.exit("Error " +
 																	"while " +
 																	"parsing" +
 																	" " +
@@ -78,7 +76,7 @@ public class HMM
 					{
 						String tr = bR.readLine();
 						if (tr.startsWith("#"))
-							net.digital_alexandria.util.System.exit("Error " +
+							net.digital_alexandria.sshmm.util.System.exit("Error " +
 																	"while " +
 																	"parsing" +
 																	" " +
@@ -95,7 +93,7 @@ public class HMM
 					probs = toDouble(bR.readLine().split("\t"));
 				}
 				else
-					net.digital_alexandria.util.System.exit("Unrecognized " +
+					net.digital_alexandria.sshmm.util.System.exit("Unrecognized " +
 															"pattern at " +
 															"parsing hmm " +
 															"file!", -1);
@@ -106,7 +104,7 @@ public class HMM
 		{
 			Logger.getLogger(HMMFactory.class.getSimpleName()).
 				log(Level.WARNING, "Could not read HMM-file\n" + e.toString());
-			net.digital_alexandria.util.System.exit("", -1);
+			net.digital_alexandria.sshmm.util.System.exit("", -1);
 		}
 		init(states, observations, transitions, emissions, probs);
 	}
@@ -200,33 +198,6 @@ public class HMM
 		return m;
 	}
 
-	/**
-	 * Train the HMM using two files: a file of observations and a file of
-	 * latent states that emit these observations.
-	 *
-	 * @param stateFile        the file of ids and latent states (fasta format)
-	 * @param observationsFile the file of ids and observations (fasta format)
-	 */
-	public void train(String stateFile, String observationsFile)
-	{
-		HMMTrainer trainer = HMMTrainer.getInstance();
-		trainer.train(this, stateFile, observationsFile);
-	}
-
-	/**
-	 * Predict the most probable latent state sequence using a sequence of
-	 * observations.
-	 * Prediciton is done using the viterbi algorithm.
-	 *
-	 * @param observationsFile the file of ids and observations (fasta format)
-	 */
-	public Map<String, String> predict(String observationsFile)
-	{
-		HMMPredictor predictor = HMMPredictor.getInstance();
-		return predictor.predict(this, File.readFastaTagFile
-			(observationsFile));
-	}
-
 	public double[] logStartProbabilities()
 	{
 		double[] probs = new double[this._STATES.size()];
@@ -304,5 +275,10 @@ public class HMM
 	{
 		HMMWriter writer = HMMWriter.getInstance();
 		writer.write(this, hmmFile);
+	}
+
+	public List<Observation> observations()
+	{
+		return _OBSERVATIONS;
 	}
 }

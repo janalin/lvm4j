@@ -1,4 +1,4 @@
-package net.digital_alexandria.util;
+package net.digital_alexandria.sshmm.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

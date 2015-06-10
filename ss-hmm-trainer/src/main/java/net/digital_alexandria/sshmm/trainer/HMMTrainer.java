@@ -1,6 +1,6 @@
-package net.digital_alexandria.hmm;
+package net.digital_alexandria.sshmm.trainer;
 
-import net.digital_alexandria.util.File;
+import net.digital_alexandria.sshmm.util.File;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.digital_alexandria.hmm;
+package net.digital_alexandria.sshmm.hmm;
 
 import java.util.ArrayList;
 import java.util.List;

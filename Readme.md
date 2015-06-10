@@ -21,7 +21,7 @@ Calling make will create a jar <code>ss-hmm.jar</code> in the current directory.
 
 ##### Observations/states files
 
-Multiple IDs and observation/state sequences.
+Multiple IDs and observation/state sequences, newline separated.
 * IDs start with ">" and are following by identifier.
 * Observation/state sequence is a string of characters.
 
