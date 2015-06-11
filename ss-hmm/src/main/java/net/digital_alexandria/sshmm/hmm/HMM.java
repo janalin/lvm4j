@@ -1,6 +1,10 @@
 package net.digital_alexandria.sshmm.hmm;
 
 import net.digital_alexandria.sshmm.util.File;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.Document;
+import org.jdom.Element;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,9 +39,33 @@ public class HMM
 
 	private void init(String hmmFile)
 	{
+		SAXBuilder builder = new SAXBuilder();
+		Document document = null;
+		try
+		{
+			document = (Document) builder.build(hmmFile);
+		}
+		catch (JDOMException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		Element rootNode = document.getRootElement();
+		Element meta = rootNode.getChild("meta");
+
+		char states[] = meta.getChild("states").getValue().toCharArray();
+		char observations[] = meta.getChild("observations").getValue().toCharArray();
+		int order = Integer.parseInt(meta.getChild("order").getValue());
+
+		for (char s : states) System.out.println(s);
+		for (char s : observations) System.out.println(s);
+		System.out.println(order);
+		System.exit(1);
 		BufferedReader bR;
-		char states[] = new char[0];
-		char observations[] = new char[0];
 		double transitions[][] = new double[0][0];
 		double emissions[][] = new double[0][0];
 		double[] probs = new double[0];
@@ -259,6 +287,11 @@ public class HMM
 			transitionsMatrix[t.source().idx()][t.sink().idx()] =
 				(t.transitionProbability());
 		return transitionsMatrix;
+	}
+
+	public List<Transition> transitions()
+	{
+		return _TRANSITIONS;
 	}
 
 	public List<Emission> emissions()

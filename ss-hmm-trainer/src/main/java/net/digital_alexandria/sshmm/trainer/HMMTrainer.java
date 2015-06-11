@@ -1,5 +1,12 @@
 package net.digital_alexandria.sshmm.trainer;
 
+import net.digital_alexandria.sshmm.hmm.*;
+import net.digital_alexandria.sshmm.hmm.Emission;
+import net.digital_alexandria.sshmm.hmm.HMM;
+import net.digital_alexandria.sshmm.hmm.HMMEdge;
+import net.digital_alexandria.sshmm.hmm.HMMNode;
+import net.digital_alexandria.sshmm.hmm.State;
+import net.digital_alexandria.sshmm.hmm.Transition;
 import net.digital_alexandria.sshmm.util.File;
 
 import java.util.HashMap;
@@ -42,12 +49,12 @@ public class HMMTrainer
 		Map<String, String> fastaObservationsMap =
 			File.readFastaTagFile(observationsFile);
 		// a mapping of state label (letter) -> state object
-		Map<Character, State> labelStatesMap = nodeMap(hmm._STATES);
+		Map<Character, State> labelStatesMap = nodeMap(hmm.states());
 		// a mapping of state label -> observation label -> emission object
-		Map<Character, Map<Character, Emission>> labelEmissionsMap = edgeMap(hmm._EMISSIONS);
+		Map<Character, Map<Character, Emission>> labelEmissionsMap = edgeMap(hmm.emissions());
 		// a mapping of state label -> state label -> transition object
 		Map<Character, Map<Character, Transition>> labelTransitionsMap =
-			edgeMap(hmm._TRANSITIONS);
+			edgeMap(hmm.transitions());
 		/* count observations, states, emissions and transitions.
 		 * this is replaced with Baum-Welch algorithm when state sequence is
 		 * not known
@@ -80,8 +87,8 @@ public class HMMTrainer
 
 	private void initializeEdges(HMM hmm)
 	{
-		hmm._TRANSITIONS.forEach(t -> t.transitionProbability(0.0));
-		hmm._EMISSIONS.forEach(e -> e.emissionProbability(0.0));
+		hmm.transitions().forEach(t -> t.transitionProbability(0.0));
+		hmm.emissions().forEach(e -> e.emissionProbability(0.0));
 	}
 
 	private <T extends HMMNode> Map<Character, T> nodeMap(List<T> l)
@@ -119,7 +126,7 @@ public class HMMTrainer
 	private void normalizeProbabilities(HMM hmm)
 	{
 		double initStateCount = 0;
-		for (State s : hmm._STATES)
+		for (State s : hmm.states())
 		{
 			initStateCount += s.startingStateProbability();
 			double cnt = 0.0;
@@ -134,7 +141,7 @@ public class HMMTrainer
 				t.transitionProbability(t.transitionProbability() /
 										cnt);
 		}
-		for (State s : hmm._STATES)
+		for (State s : hmm.states())
 			s.startingStateProbability(s.startingStateProbability() /
 									   initStateCount);
 	}

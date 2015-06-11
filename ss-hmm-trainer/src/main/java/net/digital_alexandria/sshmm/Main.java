@@ -20,8 +20,6 @@ public class Main
 	{
 		ParamsParser parser = parse(args);
 		HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
-//			ssHMM.train(parser.getArgument("-s"), parser.getArgument("-a"));
-//			ssHMM.write(parser.getArgument("--hmm"));
 	}
 
 	private static ParamsParser parse(String[] args)

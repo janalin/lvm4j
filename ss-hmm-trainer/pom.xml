@@ -19,11 +19,11 @@
       <artifactId>commandline-parser</artifactId>
       <version>1.0</version>
     </dependency>
-    <dependency>
-      <groupId>net.digital_alexandria</groupId>
-      <artifactId>ss-hmm</artifactId>
-      <version>1.0</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>net.digital_alexandria</groupId>-->
+      <!--<artifactId>ss-hmm</artifactId>-->
+      <!--<version>1.0</version>-->
+    <!--</dependency>-->
   </dependencies>
   <build>
     <plugins>
