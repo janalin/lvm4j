@@ -16,9 +16,9 @@ public class State extends HMMNode
 	private List<Emission>   emissions;
 	private double           _startingStateProbability;
 
-	protected State(Character id, int idx)
+	protected State(Character label, int idx, String seq)
 	{
-		super(id, idx);
+		super(label, idx, seq);
 		this.transitions = new ArrayList<>();
 		this.emissions = new ArrayList<>();
 		_startingStateProbability = 0.0;

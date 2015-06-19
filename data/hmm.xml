@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
 <hmm>
 	<meta>
 		<states>HEC</states>
 		<observations>ZWD</observations>
-		<order>5</order>
+		<order>2</order>
 	</meta>
 </hmm>

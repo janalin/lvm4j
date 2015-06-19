@@ -1,12 +1,12 @@
-package net.digital_alexandria.sshmm;
+package net.digital_alexandria.sshmm_trainer;
+
 import net.digital_alexandria.param.FlagType;
 import net.digital_alexandria.param.Param;
 import net.digital_alexandria.param.ParamList;
 import net.digital_alexandria.param.ParamsParser;
 import net.digital_alexandria.sshmm.hmm.HMM;
 import net.digital_alexandria.sshmm.hmm.HMMFactory;
-
-import java.util.Map;
+import net.digital_alexandria.sshmm_trainer.trainer.HMMTrainer;
 
 /**
  * @author Simon Dirmeier
@@ -20,6 +20,10 @@ public class Main
 	{
 		ParamsParser parser = parse(args);
 		HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
+		HMMTrainer trainer = HMMTrainer.getInstance();
+		trainer.train(ssHMM, parser.getArgument("-s"),
+					  parser.getArgument("-a"));
+		trainer.write(ssHMM, parser.getArgument("-o"));
 	}
 
 	private static ParamsParser parse(String[] args)
@@ -34,6 +38,9 @@ public class Main
 							   .build(),
 			new Param.Builder().desc("HMM file.")
 							   .flag("--hmm").flagType(FlagType.NEEDED_ARG)
+							   .build(),
+			new Param.Builder().desc("Output file")
+							   .flag("-o").flagType(FlagType.NEEDED_ARG)
 							   .build());
 		ParamsParser parser = ParamsParser.getInstance(list);
 		parser.parse(args);

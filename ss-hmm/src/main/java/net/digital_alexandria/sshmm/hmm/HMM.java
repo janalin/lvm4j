@@ -1,17 +1,12 @@
 package net.digital_alexandria.sshmm.hmm;
 
 import net.digital_alexandria.sshmm.util.File;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.Document;
-import org.jdom.Element;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import static net.digital_alexandria.sshmm.util.Math.combinatorical;
 import static net.digital_alexandria.sshmm.util.String.toDouble;
 
 /**
@@ -23,6 +18,7 @@ import static net.digital_alexandria.sshmm.util.String.toDouble;
  */
 public class HMM
 {
+	protected       int               _order;
 	protected final List<State>       _STATES;
 	protected final List<Observation> _OBSERVATIONS;
 	protected final List<Transition>  _TRANSITIONS;
@@ -39,112 +35,21 @@ public class HMM
 
 	private void init(String hmmFile)
 	{
-		SAXBuilder builder = new SAXBuilder();
-		Document document = null;
-		try
-		{
-			document = (Document) builder.build(hmmFile);
-		}
-		catch (JDOMException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 
-		Element rootNode = document.getRootElement();
-		Element meta = rootNode.getChild("meta");
-
-		char states[] = meta.getChild("states").getValue().toCharArray();
-		char observations[] = meta.getChild("observations").getValue().toCharArray();
-		int order = Integer.parseInt(meta.getChild("order").getValue());
-
-		for (char s : states) System.out.println(s);
-		for (char s : observations) System.out.println(s);
-		System.out.println(order);
-		System.exit(1);
-		BufferedReader bR;
-		double transitions[][] = new double[0][0];
-		double emissions[][] = new double[0][0];
-		double[] probs = new double[0];
-		try
-		{
-			bR = File.getReader(hmmFile);
-			String line;
-			while ((line = bR.readLine()) != null)
-			{
-				if (line.startsWith("#States"))
-					states = bR.readLine().toUpperCase().trim().toCharArray();
-				else if (line.startsWith("#Transitions"))
-				{
-					ArrayList<String> l = new ArrayList<>();
-					for (int i = 0; i < states.length; i++)
-					{
-						String tr = bR.readLine();
-						if (tr.startsWith("#"))
-							net.digital_alexandria.sshmm.util.System.exit("Error " +
-																	"while " +
-																	"parsing" +
-																	" " +
-																	"transition matrix",
-																	-1);
-						l.add(tr);
-					}
-					transitions = initTransitionMatrix(l);
-				}
-				else if (line.startsWith("#Observations"))
-					observations = bR.readLine().toUpperCase().trim()
-									 .toCharArray();
-				else if (line.startsWith("#Emissions"))
-				{
-					ArrayList<String> l = new ArrayList<>();
-					for (int i = 0; i < states.length; i++)
-					{
-						String tr = bR.readLine();
-						if (tr.startsWith("#"))
-							net.digital_alexandria.sshmm.util.System.exit("Error " +
-																	"while " +
-																	"parsing" +
-																	" " +
-																	"emission" +
-																	" " +
-																	"matrix",
-																	-1);
-						l.add(tr);
-					}
-					emissions = initEmissionMatrix(states, l);
-				}
-				else if (line.startsWith("#StartingProbabilities"))
-				{
-					probs = toDouble(bR.readLine().split("\t"));
-				}
-				else
-					net.digital_alexandria.sshmm.util.System.exit("Unrecognized " +
-															"pattern at " +
-															"parsing hmm " +
-															"file!", -1);
-			}
-			bR.close();
-		}
-		catch (IOException e)
-		{
-			Logger.getLogger(HMMFactory.class.getSimpleName()).
-				log(Level.WARNING, "Could not read HMM-file\n" + e.toString());
-			net.digital_alexandria.sshmm.util.System.exit("", -1);
-		}
-		init(states, observations, transitions, emissions, probs);
+		HMMParams params = File.parseXML(hmmFile);
+		char states[] = params.states();
+		char observations[] = params.observations();
+		this._order = params.order();
+		List<String> stateList = combinatorical(states, _order);
+		init(stateList, observations);
 	}
 
-	private void init(char[] states, char[] observations,
-					  double[][] transitions, double[][] emissions, double[] probs)
+	private void init(List<String> states, char[] observations)
 	{
 		addStates(states);
 		addObservations(observations);
-		addStartingProbabilities(probs);
-		addTransitions(transitions);
-		addEmissions(emissions);
+		addTransitions();
+		addEmissions();
 	}
 
 	private void addStartingProbabilities(double[] probs)
@@ -154,56 +59,86 @@ public class HMM
 			_STATES.get(i).startingStateProbability(probs[i]);
 	}
 
-	private void addStates(char[] states)
+	private void addStates(List<String> states)
 	{
-		for (int i = 0; i < states.length; i++)
-			_STATES.add(new State(states[i], i));
+		Collections.sort(states, (o1, o2) -> {
+			if (o1.length() != o2.length())
+				return o1.length() < o2.length() ? -1 : 1;
+			else
+				return o1.compareTo(o2);
+		});
+		for (int i = 0; i < states.size(); i++)
+		{
+			String s = states.get(i);
+			int length = s.length();
+			_STATES.add(new State(s.charAt(length - 1), i , s));
+
+		}
 	}
 
 	private void addObservations(char[] observations)
 	{
 		for (int i = 0; i < observations.length; i++)
-			_OBSERVATIONS.add(new Observation(observations[i], i));
+			_OBSERVATIONS.add(new Observation(observations[i], i, String.valueOf(observations[i])));
 	}
 
-	private void addTransitions(double[][] transitions)
+	private void addTransitions()
 	{
-		for (int i = 0; i < transitions.length; i++)
+		for (int i = 0; i < _STATES.size(); i++)
 		{
 			State source = _STATES.get(i);
-			for (int j = 0; j < transitions[i].length; j++)
+			for (int j = 0; j < _STATES.size(); j++)
 			{
-				if (transitions[i][j] == 0.0) continue;
 				State sink = _STATES.get(j);
-				addTransition(source, sink, transitions[i][j]);
+				addTransition(source, sink);
 			}
 		}
 	}
 
-	private void addTransition(State source, State sink, double transition)
+	private void addTransition(State source, State sink)
 	{
-		Transition t = new Transition(source, sink, (transition));
+		String sourceSeq = source.seq();
+		String sinkSeq = sink.seq();
+		int sourceLength = sourceSeq.length();
+		int sinkLength = sinkSeq.length();
+		if (sourceLength  > sinkLength)	return;
+		if (sourceLength  == sinkLength && sourceLength < this._order)
+			return;
+		if (sourceLength  != sinkLength && sourceLength  + 1 != sinkLength)
+			return;
+		String sourceSuffix;
+		String sinkPrefix;
+		if (sourceLength < this._order)
+			sourceSuffix = sourceSeq;
+		else
+			sourceSuffix = sourceSeq.substring(1, sourceLength);
+		if (sinkLength < this._order)
+			sinkPrefix = sinkSeq.substring(0, sourceLength);
+		else
+			sinkPrefix = sinkSeq.substring(0, sinkLength - 1);
+		if (!sourceSuffix.equals(sinkPrefix))
+			return;
+		Transition t = new Transition(source, sink, 0.0);
 		_TRANSITIONS.add(t);
 		source.addTransition(t);
 	}
 
-	private void addEmissions(double[][] emissions)
+	private void addEmissions()
 	{
-		for (int i = 0; i < emissions.length; i++)
+		for (int i = 0; i < _STATES.size(); i++)
 		{
 			State source = _STATES.get(i);
-			for (int j = 0; j < emissions[i].length; j++)
+			for (int j = 0; j < _OBSERVATIONS.size(); j++)
 			{
-				if (emissions[i][j] == 0.0) continue;
 				Observation sink = _OBSERVATIONS.get(j);
-				addEmission(source, sink, (emissions[i][j]));
+				addEmission(source, sink);
 			}
 		}
 	}
 
-	private void addEmission(State source, Observation sink, double emission)
+	private void addEmission(State source, Observation sink)
 	{
-		Emission e = new Emission(source, sink, emission);
+		Emission e = new Emission(source, sink, 0.0);
 		_EMISSIONS.add(e);
 		source.addEmission(e);
 	}
@@ -304,14 +239,10 @@ public class HMM
 		return _STATES;
 	}
 
-	public void write(String hmmFile)
-	{
-		HMMWriter writer = HMMWriter.getInstance();
-		writer.write(this, hmmFile);
-	}
-
 	public List<Observation> observations()
 	{
 		return _OBSERVATIONS;
 	}
+
+	public int order() { return _order; }
 }

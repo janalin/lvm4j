@@ -10,11 +10,13 @@ public class HMMNode
 {
 	private final Character _LABEL;
 	private final int    _IDX;
+	private final String    _SEQ;
 
-	protected HMMNode(Character label, int idx)
+	protected HMMNode(Character label, int idx, String seq)
 	{
 		this._LABEL = label;
 		this._IDX = idx;
+		this._SEQ = seq;
 	}
 
 	public Character getLabel()
@@ -25,7 +27,9 @@ public class HMMNode
 	@Override
 	public String toString()
 	{
-		return _LABEL.toString();
+		return new StringBuilder(_LABEL.toString())
+			.append(",").append(_IDX)
+				.append(",").append(_SEQ).toString();
 	}
 
 	@Override
@@ -38,6 +42,8 @@ public class HMMNode
 		}
 		return false;
 	}
+
+	public String seq(){return _SEQ;}
 
 	public int idx()
 	{

@@ -8,9 +8,9 @@ package net.digital_alexandria.sshmm.hmm;
  */
 public class Observation extends HMMNode
 {
-	protected Observation(Character label, int idx)
+	protected Observation(Character label, int idx,  String seq)
 	{
-		super(label, idx);
+		super(label, idx, seq);
 	}
 
 	@Override

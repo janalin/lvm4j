@@ -1,12 +1,17 @@
 package net.digital_alexandria.sshmm.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import net.digital_alexandria.sshmm.hmm.HMMParams;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+
 import java.io.IOException;
 import java.lang.String;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static net.digital_alexandria.sshmm.util.System.exit;
 
 /**
  * @author Simon Dirmeier
@@ -16,33 +21,48 @@ import java.util.logging.Logger;
  */
 public class File
 {
-	public static BufferedReader getReader(String f) throws
-															   IOException
-	{
-		return (new BufferedReader(new FileReader(new java.io.File(f))));
-	}
+	private static String xmlDefinition = "<hmm>\n" +
+										  "\t<meta>\n" +
+										  "\t\t<states>HEC</states>\n" +
+										  "\t\t<observations>ZWD" +
+										  "</observations" +
+										  ">\n" +
+										  "\t\t<order>5</order>\n" +
+										  "\t</meta>\n" +
+										  "</hmm>\n";
 
-	public static HashMap<String, String> readFastaTagFile(String file)
+	public static HMMParams parseXML(java.lang.String hmmFile)
 	{
-		HashMap<String, String> map = new HashMap<>();
-		BufferedReader bR;
+		String exit = "Your XML format is wrong! It should look like this:\n" +
+					  xmlDefinition;
+		HMMParams params = HMMParams.newInstance();
+		SAXBuilder builder = new SAXBuilder();
+		Document document;
 		try
 		{
-			bR = File.getReader(file);
-			String line;
-			String id = "";
-			while ((line = bR.readLine()) != null)
-			{
-				if (line.startsWith(">")) id = line.split("\\|")[0];
-				else map.put(id, line.trim().toUpperCase());
-			}
-			bR.close();
+			document = builder.build(hmmFile);
+			Element rootNode = document.getRootElement();
+			Element meta = rootNode.getChild("meta");
+			if (meta == null ||
+				meta.getChild("states") == null ||
+				meta.getChild("observations") == null ||
+				meta.getChild("order") == null)
+				exit(exit, -1);
+			char states[] = meta.getChild("states").getValue().toCharArray();
+			char observations[] = meta.getChild("observations").getValue()
+									  .toCharArray();
+			int order = Integer.parseInt(meta.getChild("order").getValue());
+			if (states.length == 0 || observations.length == 0) exit(exit,-1);
+			params.observations(observations);
+			params.order(order);
+			params.states(states);
 		}
-		catch (IOException e)
+		catch (IOException | JDOMException e)
 		{
-			Logger.getLogger(File.class.getSimpleName()).
-				log(Level.WARNING, "Could not read file\n" + e.toString());
+			Logger.getLogger(File.class.getSimpleName())
+				  .log(Level.SEVERE, "Error when opening xmlFile: " +
+									 e.getMessage());
 		}
-		return map;
+		return params;
 	}
 }
