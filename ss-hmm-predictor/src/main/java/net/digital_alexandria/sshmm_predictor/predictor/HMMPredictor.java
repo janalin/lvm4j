@@ -1,8 +1,6 @@
-package net.digital_alexandria.sshmm.predictor;
+package net.digital_alexandria.sshmm_predictor.predictor;
 
 import net.digital_alexandria.sshmm.hmm.HMM;
-import net.digital_alexandria.sshmm.util.File;
-
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -16,10 +14,11 @@ public class HMMPredictor
 {
 	private static HMMPredictor _predictor;
 
-	protected static HMMPredictor getInstance()
+	private HMMPredictor() {}
+
+	public static HMMPredictor getInstance()
 	{
-		if (_predictor == null)
-			_predictor = new HMMPredictor();
+		if (_predictor == null) _predictor = new HMMPredictor();
 		return _predictor;
 	}
 
@@ -30,17 +29,20 @@ public class HMMPredictor
 	 *
 	 * @param observationsFile the file of ids and observations (fasta format)
 	 */
-	public Map<String, String> predict(HMM hmm, String observationsFile) {
-		return predict(hmm, File.readFastaTagFile(observationsFile));
+	public void predict(HMM hmm, String observationsFile, String outFile)
+	{
+		predict(
+			hmm,
+			net.digital_alexandria.sshmm_predictor.util
+				.File.readFastaTagFile(observationsFile));
 	}
 
-	private HMMPredictor() {}
-
-	protected Map<String, String> predict(HMM hmm,
-										  Map<String, String> observationsMap)
+	private void predict(HMM hmm, Map<String, String> observationsMap)
 	{
 		checkMatrices(hmm);
-		/* calculate log matrices, because then probabilities can be added instead of multiplied
+		System.exit(1);
+		/* calculate log matrices, because then probabilities can be added
+		instead of multiplied
 		* -> double has maybe too low precision!
 		*/
 		double[] startProbabilities = hmm.logStartProbabilities();
@@ -54,7 +56,6 @@ public class HMMPredictor
 										   transitionsMatrix, emissionsMatrix);
 			statesMap.put(entry.getKey(), stateSequence);
 		}
-		return statesMap;
 	}
 
 	private void checkMatrices(HMM hmm)
@@ -62,26 +63,35 @@ public class HMMPredictor
 		final double delta = 0.01;
 		final double probSum = 1.0;
 		double[] startProbabilities = hmm.startProbabilities();
-		if (!net.digital_alexandria.sshmm.util.Math.equals(startProbabilities,delta,probSum))
+		if (!net.digital_alexandria.sshmm.util.Math.equals(startProbabilities,
+														   delta, probSum))
 		{
-			System.err.println("Sum of starting probabilities does not equal 1.00!");
+			System.err.println("Sum of starting probabilities does not equal" +
+							   " " +
+							   "1" +
+							   ".00!");
 			System.exit(-1);
 		}
 		double[][] transitionsMatrix = hmm.transitionMatrix();
 		for (double row[] : transitionsMatrix)
 		{
-			if (!net.digital_alexandria.sshmm.util.Math.equals(row,delta,probSum))
+			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,
+															   probSum))
 			{
-				System.err.println("Sum of transition probabilities does not equal 1.00!");
+				System.err.println("Sum of transition probabilities does not" +
+								   " " +
+								   "equal 1.00!");
 				System.exit(-1);
 			}
 		}
 		double[][] emissionsMatrix = hmm.emissionMatrix();
 		for (double row[] : emissionsMatrix)
 		{
-			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,probSum))
+			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,
+															   probSum))
 			{
-				System.err.println("Sum of emission probabilities does not equal 1.00!");
+				System.err.println("Sum of emission probabilities does not " +
+								   "equal 1.00!");
 				System.exit(-1);
 			}
 		}
@@ -155,8 +165,8 @@ public class HMMPredictor
 	 * Backtrace the probability and state path matrices to create the most
 	 * probable latent state sequence.
 	 *
-	 * @param probabilityPath  matrix of paths of probabilities
-	 * @param statePath matrix of paths of states
+	 * @param probabilityPath matrix of paths of probabilities
+	 * @param statePath       matrix of paths of states
 	 * @return return a string of the predicted latent states
 	 */
 	private String backtrace(HMM hmm, final double[][] probabilityPath,
@@ -173,7 +183,8 @@ public class HMMPredictor
 		// set label of last state
 		statesLabel[encodedObservations.length - 1] = hmm.states().get
 			(statesIdx[encodedObservations.length - 1]).getLabel();
-		// backtrace state/probability paths to get most probable state sequence
+		// backtrace state/probability paths to get most probable state
+		// sequence
 		for (int i = encodedObservations.length - 1; i >= 1; i--)
 		{
 			statesIdx[i - 1] = statePath[statesIdx[i]][i];
