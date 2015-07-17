@@ -1,10 +1,7 @@
 package net.digital_alexandria.sshmm.util;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 02/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class System
 {

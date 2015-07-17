@@ -1,14 +1,12 @@
 package net.digital_alexandria.sshmm_predictor.predictor;
 
 import net.digital_alexandria.sshmm.hmm.HMM;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 09/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class HMMPredictor
 {
@@ -31,19 +29,15 @@ public class HMMPredictor
 	 */
 	public void predict(HMM hmm, String observationsFile, String outFile)
 	{
-		predict(
-			hmm,
-			net.digital_alexandria.sshmm_predictor.util
-				.File.readFastaTagFile(observationsFile));
+		Map<String, String> map = predict(hmm, net.digital_alexandria.sshmm_predictor.util.File.readFastaTagFile(observationsFile));
+		net.digital_alexandria.sshmm_predictor.util.File.writeFastaTagFile(map, outFile);
 	}
 
-	private void predict(HMM hmm, Map<String, String> observationsMap)
+	private Map<String, String> predict(HMM hmm, Map<String, String> observationsMap)
 	{
 		checkMatrices(hmm);
-		System.exit(1);
 		/* calculate log matrices, because then probabilities can be added
-		instead of multiplied
-		* -> double has maybe too low precision!
+		instead of multiplied: double has maybe too low precision!
 		*/
 		double[] startProbabilities = hmm.logStartProbabilities();
 		double[][] transitionsMatrix = hmm.logTransitionMatrix();
@@ -56,39 +50,35 @@ public class HMMPredictor
 										   transitionsMatrix, emissionsMatrix);
 			statesMap.put(entry.getKey(), stateSequence);
 		}
+		return statesMap;
 	}
 
 	private void checkMatrices(HMM hmm)
 	{
 		final double delta = 0.01;
 		final double probSum = 1.0;
+		final double altProbSum = 0.0;
 		double[] startProbabilities = hmm.startProbabilities();
-		if (!net.digital_alexandria.sshmm.util.Math.equals(startProbabilities,
-														   delta, probSum))
+		if (!net.digital_alexandria.sshmm.util.Math.equals(startProbabilities, delta, probSum))
 		{
-			System.err.println("Sum of starting probabilities does not equal" +
-							   " " +
-							   "1" +
-							   ".00!");
+			System.err.println("Sum of starting probabilities does not equal 1.00!");
 			System.exit(-1);
 		}
 		double[][] transitionsMatrix = hmm.transitionMatrix();
 		for (double row[] : transitionsMatrix)
 		{
-			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,
-															   probSum))
+			if (!(net.digital_alexandria.sshmm.util.Math.equals(row, delta, probSum) ||
+				  net.digital_alexandria.sshmm.util.Math.equals(row, delta, altProbSum)))
 			{
-				System.err.println("Sum of transition probabilities does not" +
-								   " " +
-								   "equal 1.00!");
+				System.err.println("Sum of transition probabilities does not equal 1.00!");
 				System.exit(-1);
 			}
 		}
 		double[][] emissionsMatrix = hmm.emissionMatrix();
 		for (double row[] : emissionsMatrix)
 		{
-			if (!net.digital_alexandria.sshmm.util.Math.equals(row, delta,
-															   probSum))
+			if (!(net.digital_alexandria.sshmm.util.Math.equals(row, delta, probSum) ||
+				  net.digital_alexandria.sshmm.util.Math.equals(row, delta, altProbSum)))
 			{
 				System.err.println("Sum of emission probabilities does not " +
 								   "equal 1.00!");
@@ -115,14 +105,11 @@ public class HMMPredictor
 		// access
 		int encodedObservations[] = charToInt(hmm, obs);
 		// matrix of paths of probabilities
-		double probabilityPath[][] = new double[hmm.states().size()][obs
-			.length];
+		double probabilityPath[][] = new double[hmm.states().size()][obs.length];
 		// matrix of paths of states
 		int statePath[][] = new int[hmm.states().size()][obs.length];
 		// set the first element of state/probability paths
-		initStarts(hmm, probabilityPath, statePath, startProbabilities,
-				   emissionMatrix,
-				   encodedObservations);
+		initStarts(hmm, probabilityPath, statePath, startProbabilities, emissionMatrix, encodedObservations);
 		// fill the two matrices with state and probability paths
 		fillPathMatrices(hmm, statePath, probabilityPath, encodedObservations,
 						 transitionsMatrix, emissionMatrix);
@@ -139,12 +126,7 @@ public class HMMPredictor
 		for (int i = 1; i < encodedObservations.length; i++)
 		{
 			for (int j = 0; j < hmm.states().size(); j++)
-			{
-				setPaths(statePath, probabilityPath, i, j,
-						 transitionsMatrix,
-						 emissionMatrix, encodedObservations[i]);
-
-			}
+				setPaths(statePath, probabilityPath, i, j, transitionsMatrix, emissionMatrix, encodedObservations[i]);
 		}
 	}
 
@@ -155,8 +137,7 @@ public class HMMPredictor
 	{
 		for (int i = 0; i < hmm.states().size(); i++)
 		{
-			probs[i][0] = startProbabilities[i] +
-						  emissionMatrix[i][encodedObservations[0]];
+			probs[i][0] = startProbabilities[i] + emissionMatrix[i][encodedObservations[0]];
 			states[i][0] = 0;
 		}
 	}
@@ -231,6 +212,13 @@ public class HMMPredictor
 		statePath[j][i] = idx;
 	}
 
+	/**
+	 * Convert a char array to an array of int indexes.
+	 *
+	 * @param hmm the hmm
+	 * @param obs the array of observations to be encoded
+	 * @return the array of encoded integers
+	 */
 	private int[] charToInt(HMM hmm, char[] obs)
 	{
 		int idxs[] = new int[obs.length];

@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 28/05/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class State extends HMMNode
 {

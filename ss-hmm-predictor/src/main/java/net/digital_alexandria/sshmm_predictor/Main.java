@@ -9,10 +9,7 @@ import net.digital_alexandria.sshmm.hmm.HMMFactory;
 import net.digital_alexandria.sshmm_predictor.predictor.HMMPredictor;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 10/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class Main
 {

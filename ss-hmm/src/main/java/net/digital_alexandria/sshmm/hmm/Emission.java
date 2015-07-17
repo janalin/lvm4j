@@ -1,10 +1,7 @@
 package net.digital_alexandria.sshmm.hmm;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 09/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class Emission extends HMMEdge
 {

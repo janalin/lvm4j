@@ -2,6 +2,7 @@ package net.digital_alexandria.sshmm_trainer.util;
 
 import net.digital_alexandria.sshmm.hmm.Emission;
 import net.digital_alexandria.sshmm.hmm.HMM;
+import net.digital_alexandria.sshmm.hmm.State;
 import net.digital_alexandria.sshmm.hmm.Transition;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -20,18 +21,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 15/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class File
 {
+	/**
+	 * Read a fasta file into a hashmap where every key is a fasta ID and every value is a sequence.
+	 *
+	 * @param file the file you want to read
+	 * @return a hashmap
+	 */
 	public static Map<String, String> readFastaTagFile(java.lang.String file)
 	{
 		Map<String, String> map = new TreeMap<>();
-		try (BufferedReader bR = new BufferedReader(new FileReader(new java.io
-			.File(file))))
+		try (BufferedReader bR = new BufferedReader(new FileReader(new java.io.File(file))))
 		{
 			String line;
 			String id = "";
@@ -50,11 +53,17 @@ public class File
 		}
 		catch (IOException e)
 		{
-
+			Logger.getLogger(File.class.getSimpleName()).log(Level.SEVERE, "Could not open file {0}!", e.getMessage());
 		}
 		return map;
 	}
 
+	/**
+	 * Write the trained HMM parameters to a xml file.
+	 *
+	 * @param ssHMM the hmm of which should be written
+	 * @param file the output file
+	 */
 	public static void writeXML(HMM ssHMM, String file)
 	{
 		try
@@ -85,6 +94,14 @@ public class File
 
 	private static void addOrtho(HMM ssHMM, Element ortho)
 	{
+		Element starts = new Element("starts");
+		ortho.addContent(starts);
+		ssHMM.states().stream().filter(s -> s.seq().length() == 1).forEach(s -> {
+			Element start = new Element("start");
+			starts.addContent(start);
+			start.setAttribute("state", s.seq());
+			start.setText(String.valueOf(s.startingStateProbability()));
+		});
 		Element transitions = new Element("transitions");
 		ortho.addContent(transitions);
 		for (Transition t : ssHMM.transitions())

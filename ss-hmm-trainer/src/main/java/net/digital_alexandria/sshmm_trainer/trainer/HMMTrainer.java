@@ -20,10 +20,7 @@ import java.util.stream.Collectors;
 import static net.digital_alexandria.sshmm.util.System.exit;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 09/06/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class HMMTrainer
 {
@@ -78,7 +75,8 @@ public class HMMTrainer
 			for (int i = 0; i < order; i++)
 			{
 				String statePrefix = states.substring(0, i + 1);
-				incStartingStateCount(statePrefix, labelStatesMap);
+				if (i == 0)
+					incStartingStateCount(statePrefix, labelStatesMap);
 				// increase the counter of the emission of state -> observation
 				incEdgeCount(statePrefix, obs[i], labelEmissionsMap);
 				if (i > 0)
@@ -176,6 +174,12 @@ public class HMMTrainer
 		}
 	}
 
+	/**
+	 * Write an HMM to an xml file.
+	 *
+	 * @param ssHMM the hmm which parameters should be written
+	 * @param file the output file
+	 */
 	public void write(HMM ssHMM, String file)
 	{
 		File.writeXML(ssHMM, file);

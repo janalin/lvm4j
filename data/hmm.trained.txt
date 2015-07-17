@@ -7,9 +7,9 @@
   </meta>
   <ortho>
     <starts>
-      <start state="C">1.0</start>
-      <start state="E">0.0</start>
-      <start state="H">0.0</start>
+      <start seq="C">1.0</start>
+      <start seq="E">0.0</start>
+      <start seq="H">0.0</start>
     </starts>
     <transitions>
       <transition source="C" sink="CC">0.0</transition>

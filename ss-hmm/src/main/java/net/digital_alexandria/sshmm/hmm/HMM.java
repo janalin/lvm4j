@@ -1,28 +1,29 @@
 package net.digital_alexandria.sshmm.hmm;
 
+import net.digital_alexandria.sshmm.structs.Pair;
+import net.digital_alexandria.sshmm.structs.Triple;
 import net.digital_alexandria.sshmm.util.File;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static net.digital_alexandria.sshmm.util.Math.combinatorical;
 import static net.digital_alexandria.sshmm.util.String.toDouble;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 09/06/15
- * @desc HMM class for training and prediction. Can be used to predict a
- * sequence of latent states for a given sequence of observations.
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
+ *         <p>
+ *         DESCRIPTION: Central HMM class, that contains states, transitions etc.
  */
 public class HMM
 {
-	protected       int               _order;
-	protected final List<State>       _STATES;
+	// the order of the HMM -> number of previous states that are considered for prediction
+	protected int _order;
+	protected final List<State> _STATES;
 	protected final List<Observation> _OBSERVATIONS;
-	protected final List<Transition>  _TRANSITIONS;
-	protected final List<Emission>    _EMISSIONS;
+	protected final List<Transition> _TRANSITIONS;
+	protected final List<Emission> _EMISSIONS;
 
 	protected HMM(String hmmFile)
 	{
@@ -35,13 +36,48 @@ public class HMM
 
 	private void init(String hmmFile)
 	{
-
+		// get relevant options of the HMM
 		HMMParams params = File.parseXML(hmmFile);
 		char states[] = params.states();
 		char observations[] = params.observations();
 		this._order = params.order();
 		List<String> stateList = combinatorical(states, _order);
+		// set up nodes
 		init(stateList, observations);
+		// if the XML provided has trained parameter, initialize a trained HMM
+		if (params.hasTrainingParams())
+			initTrainingParams(params.emissionProbabilities(),
+							   params.transitionProbabilities(),
+							   params.startProbabilities());
+	}
+
+	private void initTrainingParams(List<Triple> emissions, List<Triple> transititions, List<Pair> startProbabilities)
+	{
+		// set up the starting probabilities for every state
+		for (Pair<String, Double> p : startProbabilities)
+		{
+			String state = p.getFirst();
+			double prob = p.getSecond();
+			this.states().stream().filter(s -> s.seq().equals(state)).forEach(s -> s.startingStateProbability(prob));
+		}
+		// set up the transition probabilities from a state to another state
+		for (Triple<String, String, Double> t : transititions)
+		{
+			String source = t.getFirst();
+			String sink = t.getSecond();
+			double prob = t.getThird();
+			this.transitions().stream().filter(transition -> transition.source().seq().equals(source) && transition
+				.sink().seq().equals(sink)).forEach(transition -> transition.transitionProbability(prob));
+		}
+		// set up the emission probabilities from a state to an observation
+		for (Triple<String, String, Double> e : emissions)
+		{
+			String source = e.getFirst();
+			String sink = e.getSecond();
+			double prob = e.getThird();
+			this.emissions().stream().filter(transition -> transition.source().seq().equals(source) && transition
+				.sink().seq().equals(sink)).forEach(emission -> emission.emissionProbability(prob));
+		}
 	}
 
 	private void init(List<String> states, char[] observations)
@@ -71,7 +107,7 @@ public class HMM
 		{
 			String s = states.get(i);
 			int length = s.length();
-			_STATES.add(new State(s.charAt(length - 1), i , s));
+			_STATES.add(new State(s.charAt(length - 1), i, s));
 
 		}
 	}
@@ -101,10 +137,10 @@ public class HMM
 		String sinkSeq = sink.seq();
 		int sourceLength = sourceSeq.length();
 		int sinkLength = sinkSeq.length();
-		if (sourceLength  > sinkLength)	return;
-		if (sourceLength  == sinkLength && sourceLength < this._order)
+		if (sourceLength > sinkLength) return;
+		if (sourceLength == sinkLength && sourceLength < this._order)
 			return;
-		if (sourceLength  != sinkLength && sourceLength  + 1 != sinkLength)
+		if (sourceLength != sinkLength && sourceLength + 1 != sinkLength)
 			return;
 		String sourceSuffix;
 		String sinkPrefix;

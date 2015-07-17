@@ -1,14 +1,17 @@
 package net.digital_alexandria.sshmm.util;
 
 /**
- * @author Simon Dirmeier
- * @email simon.dirmeier@gmx.de
- * @date 28/05/15
- * @desc
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class String
 {
 
+	/**
+	 * Convert an array of strings to an array of integers.
+	 *
+	 * @param strings an array of strings
+	 * @return an array of integers
+	 */
 	public static int[] toInt(java.lang.String ... strings)
 	{
 		int ints[] = new int[strings.length];
@@ -17,6 +20,12 @@ public class String
 		return ints;
 	}
 
+	/**
+	 * Convert an array of strings to an array of doubles.
+	 *
+	 * @param strings an array of strings
+	 * @return an array of doubles
+	 */
 	public static double[] toDouble(java.lang.String ... strings)
 	{
 		double  doubles[] = new double[strings.length];
