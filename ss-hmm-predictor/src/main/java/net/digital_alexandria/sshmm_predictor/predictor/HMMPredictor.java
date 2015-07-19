@@ -27,10 +27,9 @@ public class HMMPredictor
 	 *
 	 * @param observationsFile the file of ids and observations (fasta format)
 	 */
-	public void predict(HMM hmm, String observationsFile, String outFile)
+	public Map<String, String> predict(HMM hmm, String observationsFile)
 	{
-		Map<String, String> map = predict(hmm, net.digital_alexandria.sshmm_predictor.util.File.readFastaTagFile(observationsFile));
-		net.digital_alexandria.sshmm_predictor.util.File.writeFastaTagFile(map, outFile);
+		return  predict(hmm, net.digital_alexandria.sshmm_predictor.util.File.readFastaTagFile(observationsFile));
 	}
 
 	private Map<String, String> predict(HMM hmm, Map<String, String> observationsMap)
