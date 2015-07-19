@@ -38,7 +38,14 @@ The HMM xml consists of three major xml-tags:
 
 ## Usage
 
-In order to train you HMM, call: 
+In order to train your HMM, call: 
 ```java
-java -cp ss-hmm-trainer.jar net.digital_alexandria.sshmm_predictor.Main -a observations-file -s states-file --hmm hmm-file -o output-file
+java -cp ss-hmm-trainer.jar net.digital_alexandria.sshmm_trainer.Main -a observations-file -s states-file --hmm hmm-file -o output-file
 ```
+
+If you then want to make a prediction, use:
+```java
+java -cp ss-hmm-predictor.jar net.digital_alexandria.sshmm_predictor.Main -a observations-file --hmm trained-hmm-file -o output-file
+```
+In this case the <code>observations-file</code> is a new file for which no states are given and should be predicted. <code>trained-hmm-file</code> is the output of <code>ss-hmm-trainer</code>.
+
