@@ -1,3 +1,6 @@
+ss-hmm-predictor.jar
+ss-hmm-trainer.jar
+ss-hmm.jar
 copy.sh
 create_seqs.plx
 uniq.plx
