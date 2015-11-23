@@ -15,7 +15,7 @@
             </releases>
             <id>net.digital_alexandria</id>
             <name>YourName</name>
-            <url>http://digital-alexandria.net/maven2</url>
+            <url>http://digital-alexandria.net/repositories</url>
             <layout>default</layout>
         </repository>
     </repositories>
@@ -35,6 +35,8 @@
             <groupId>net.digital_alexandria</groupId>
             <artifactId>ss-hmm</artifactId>
             <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/ss-hmm.jar</systemPath>
         </dependency>
     </dependencies>
     <build>
