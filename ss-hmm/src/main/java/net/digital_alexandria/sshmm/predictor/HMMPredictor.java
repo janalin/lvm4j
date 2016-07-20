@@ -1,4 +1,4 @@
-package net.digital_alexandria.sshmm_predictor.predictor;
+package net.digital_alexandria.sshmm.predictor;
 
 import net.digital_alexandria.sshmm.hmm.HMM;
 
@@ -29,7 +29,7 @@ public class HMMPredictor
 	 */
 	public Map<String, String> predict(HMM hmm, String observationsFile)
 	{
-		return  predict(hmm, net.digital_alexandria.sshmm_predictor.util.File.readFastaTagFile(observationsFile));
+		return  predict(hmm, net.digital_alexandria.sshmm.util.File.readFastaTagFile(observationsFile));
 	}
 
 	private Map<String, String> predict(HMM hmm, Map<String, String> observationsMap)

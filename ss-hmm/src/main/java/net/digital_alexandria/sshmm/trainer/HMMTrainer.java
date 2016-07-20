@@ -1,7 +1,7 @@
-package net.digital_alexandria.sshmm_trainer.trainer;
+package net.digital_alexandria.sshmm.trainer;
 
 import net.digital_alexandria.sshmm.hmm.*;
-import net.digital_alexandria.sshmm_trainer.util.File;
+import net.digital_alexandria.sshmm.util.File;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -182,6 +182,6 @@ public class HMMTrainer
 	 */
 	public void write(HMM ssHMM, String file)
 	{
-		File.writeXML(ssHMM, file);
+		net.digital_alexandria.sshmm.util.File.writeXML(ssHMM, file);
 	}
 }

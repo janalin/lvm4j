@@ -92,6 +92,13 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <finalName>ss-hmm</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.digital_alexandria.sshmm.Main</mainClass>
+                        </manifest>
+                    </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
