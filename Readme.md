@@ -1,7 +1,8 @@
-ssHMM
-======
+<h1 align="center">
+	<p>ss-hmm</p>
+</h1>
 
-A simple protein secondary structure predictor using a n-th order HMM. 
+A simple protein secondary structure prediction tool using a n-th order HMM. The HMM consists of a library (`ss-hmm.jar`) that contains the basic data-structure, a package that trains the HMM (`ss-hmm-trainer.jar`) and a package that predicts new data using the trained HMM (`ss-hmm-predictor.jar`).
 
 ## Installation
  
