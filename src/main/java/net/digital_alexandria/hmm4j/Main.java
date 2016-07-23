@@ -1,6 +1,8 @@
 package net.digital_alexandria.hmm4j;
 
 import net.digital_alexandria.hmm4j.predictor.HMMPredictor;
+import net.digital_alexandria.hmm4j.trainer.HMMTrainer;
+import net.digital_alexandria.hmm4j.util.File;
 import net.digital_alexandria.hmm4j.util.System;
 import net.digital_alexandria.param.FlagType;
 import net.digital_alexandria.param.Param;
@@ -8,7 +10,6 @@ import net.digital_alexandria.param.ParamList;
 import net.digital_alexandria.param.ParamsParser;
 import net.digital_alexandria.hmm4j.hmm.HMM;
 import net.digital_alexandria.hmm4j.hmm.HMMFactory;
-
 
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class Main
 {
 
+    private static final org.slf4j.Logger _LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
     private static final String _USAGE = "java -jar hmm4j.jar";
     private static final String _DO_PREDICT = "--predict";
     private static final String _DO_TRAIN = "--train";
@@ -26,13 +28,30 @@ public class Main
 
     public static void main(String args[])
     {
+        _setLogger();
+        _run(args);
+    }
+
+    private static void _setLogger()
+    {
+        org.apache.log4j.ConsoleAppender appender = new org.apache.log4j.ConsoleAppender();
+        appender.setWriter(new java.io.OutputStreamWriter(java.lang.System.out));
+        appender.setLayout(new org.apache.log4j.PatternLayout("%-5p [%t]: %m%n"));
+        org.apache.log4j.Logger.getRootLogger().addAppender(appender);
+    }
+
+    private static int _run(String[] args)
+    {
         if (args.length == 0) _usage();
+        String arguments[] = new String[args.length - 1];
+        java.lang.System.arraycopy(args, 1, arguments, 0, arguments.length);
         switch (args[0])
         {
-            case _DO_PREDICT: _predict(args); break;
-            case _DO_TRAIN: _train(args); break;
+            case _DO_PREDICT: _predict(arguments); break;
+            case _DO_TRAIN: _train(arguments); break;
             default: _usage();
         }
+        return _EXIT_SUCCESS;
     }
 
     private static void _usage()
@@ -46,18 +65,15 @@ public class Main
         System.exit("", _EXIT_ERROR);
     }
 
-
     private static int _train(String args[])
     {
+        _LOGGER.info("Training new HMM.");
         ParamsParser parser = _parseTrain(args);
         HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
-        HMMPredictor predictor = HMMPredictor.getInstance();
-        Map<String, String> map = predictor.predict(ssHMM, parser.getArgument("-a"));
-        if (parser.isSet("-o"))
-            net.digital_alexandria.hmm4j.util.File
-                .writeFastaTagFile(map, parser.getArgument("-o"));
-        else
-            net.digital_alexandria.hmm4j.util.System.print(map);
+        HMMTrainer.getInstance().train(ssHMM,
+                                       parser.getArgument("-s"),
+                                       parser.getArgument("-e"));
+        File.writeXML(ssHMM, parser.getArgument("-o"));
         return _EXIT_SUCCESS;
     }
 
@@ -65,11 +81,9 @@ public class Main
     {
         ParamsParser parser = _parsePredict(args);
         HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
-        HMMPredictor predictor = HMMPredictor.getInstance();
-        Map<String, String> map = predictor.predict(ssHMM, parser.getArgument("-a"));
+        Map<String, String> map = HMMPredictor.getInstance().predict(ssHMM, parser.getArgument("-e"));
         if (parser.isSet("-o"))
-            net.digital_alexandria.hmm4j.util.File
-                .writeFastaTagFile(map, parser.getArgument("-o"));
+            File.writeFastaTagFile(map, parser.getArgument("-o"));
         else
             net.digital_alexandria.hmm4j.util.System.print(map);
         return _EXIT_SUCCESS;
@@ -79,13 +93,21 @@ public class Main
     {
         ParamList list = ParamList.newInstance(
             new Param.Builder().desc("Observations/emissions sequence file [random variables].")
-                               .flag("-e").flagType(FlagType.NEEDED_ARG).build(),
+                               .flag("-e")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build(),
             new Param.Builder().desc("States sequence file [latent variables].")
-                               .flag("-s").flagType(FlagType.NEEDED_ARG).build(),
+                               .flag("-s")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build(),
             new Param.Builder().desc("HMM file.")
-                               .flag("--hmm").flagType(FlagType.NEEDED_ARG).build(),
+                               .flag("--hmm")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build(),
             new Param.Builder().desc("Output file")
-                               .flag("-o").flagType(FlagType.NEEDED_ARG).build());
+                               .flag("-o")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build());
         ParamsParser parser = ParamsParser.newInstance(list, _USAGE);
         parser.parse(args);
         return parser;
@@ -95,11 +117,17 @@ public class Main
     {
         ParamList list = ParamList.newInstance(
             new Param.Builder().desc("Observations/emissions sequence file [random variables].")
-                               .flag("-e").flagType(FlagType.NEEDED_ARG).build(),
+                               .flag("-e")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build(),
             new Param.Builder().desc("HMM file.")
-                               .flag("--hmm").flagType(FlagType.NEEDED_ARG).build(),
+                               .flag("--hmm")
+                               .flagType(FlagType.NEEDED_ARG)
+                               .build(),
             new Param.Builder().desc("Output file")
-                               .flag("-o").flagType(FlagType.OPTIONAL_ARG).build());
+                               .flag("-o")
+                               .flagType(FlagType.OPTIONAL_ARG)
+                               .build());
         ParamsParser parser = ParamsParser.newInstance(list, _USAGE);
         parser.parse(args);
         return parser;
