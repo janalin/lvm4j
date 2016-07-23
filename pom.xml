@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.digital_alexandria</groupId>
-    <artifactId>ss-hmm</artifactId>
+    <artifactId>hmm4j</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>ss-hmm</name>
+    <name>hmm4j</name>
     <repositories>
         <repository>
             <releases>
@@ -27,9 +27,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.digital_alexandria</groupId>
             <artifactId>commandline-parser</artifactId>
-            <version>1.0</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>jdom</groupId>
@@ -92,11 +98,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>ss-hmm</finalName>
+                    <finalName>hmm4j</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>net.digital_alexandria.sshmm.Main</mainClass>
+                            <mainClass>net.digital_alexandria.hmm4j.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,34 +1,35 @@
-package net.digital_alexandria.sshmm.util;
+package net.digital_alexandria.hmm4j.util;
 
-import net.digital_alexandria.sshmm.hmm.Emission;
-import net.digital_alexandria.sshmm.hmm.HMM;
-import net.digital_alexandria.sshmm.hmm.HMMParams;
-import net.digital_alexandria.sshmm.hmm.Transition;
-import net.digital_alexandria.sshmm.structs.Pair;
-import net.digital_alexandria.sshmm.structs.Triple;
+import net.digital_alexandria.hmm4j.hmm.Emission;
+import net.digital_alexandria.hmm4j.hmm.HMM;
+import net.digital_alexandria.hmm4j.hmm.HMMParams;
+import net.digital_alexandria.hmm4j.hmm.Transition;
+import net.digital_alexandria.hmm4j.structs.Pair;
+import net.digital_alexandria.hmm4j.structs.Triple;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.String;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static net.digital_alexandria.sshmm.util.System.exit;
-
 /**
- * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
+ * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
 public class File
 {
+
+    private static Logger _logger = LoggerFactory.getLogger(File.class);
+
     private static final String xmlDefinition = "<hmm>\n" +
                                                 "\t<meta>\n" +
                                                 "\t\t<states>HEC</states>\n" +
@@ -71,9 +72,7 @@ public class File
         }
         catch (IOException | JDOMException e)
         {
-            Logger.getLogger(File.class.getSimpleName())
-                  .log(Level.SEVERE, "Error when opening xmlFile: " +
-                                     e.getMessage());
+            _logger.error("Error when opening xmlFile: " + e.getMessage());
         }
         return params;
     }
@@ -88,7 +87,7 @@ public class File
         if (ortho.getChild("starts") == null ||
             ortho.getChild("emissions") == null ||
             ortho.getChild("transitions") == null)
-            exit(exit, -1);
+            net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
 
         Element start = ortho.getChild("starts");
         List list = start.getChildren();
@@ -126,7 +125,6 @@ public class File
 
     private static void setStandardParams(Document document, HMMParams params)
     {
-
         String exit = "Your XML format is wrong! It should look like this:\n" + xmlDefinition;
         Element rootNode = document.getRootElement();
         Element meta = rootNode.getChild("meta");
@@ -134,45 +132,16 @@ public class File
             meta.getChild("states") == null ||
             meta.getChild("observations") == null ||
             meta.getChild("order") == null)
-            exit(exit, -1);
+                net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
         char states[] = meta.getChild("states").getValue().toCharArray();
         char observations[] = meta.getChild("observations").getValue()
                                   .toCharArray();
         int order = Integer.parseInt(meta.getChild("order").getValue());
-        if (states.length == 0 || observations.length == 0) exit(exit, -1);
+        if (states.length == 0 || observations.length == 0)
+            net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
         params.observations(observations);
         params.order(order);
         params.states(states);
-    }
-
-    public static Map<String, String> readFastaTagFile(String file)
-    {
-        Map<String, String> map = new HashMap<>();
-        try (BufferedReader bR = new BufferedReader(new FileReader(new java.io.File(file))))
-        {
-            String line;
-            String id = "";
-            int cnt = 0;
-            while ((line = bR.readLine()) != null)
-            {
-                if (cnt == 0)
-                {
-                    id = line.trim();
-                    cnt++;
-                }
-                else
-                {
-                    map.put(id, line.trim().toUpperCase());
-                    cnt = 0;
-                }
-            }
-        }
-        catch (IOException e)
-        {
-            Logger.getLogger(File.class.getSimpleName()).
-                log(Level.SEVERE, "Could not open file: {0}", e.getMessage());
-        }
-        return map;
     }
 
     /**
@@ -193,8 +162,7 @@ public class File
         }
         catch (IOException e)
         {
-            Logger.getLogger(File.class.getSimpleName()).
-                log(Level.SEVERE, "Could not open file: {0}", e.getMessage());
+            _logger.error("Could not open file: {0}", e.getMessage());
         }
     }
 
@@ -204,7 +172,7 @@ public class File
      * @param file the file you want to read
      * @return a hashmap
      */
-    public static Map<String, String> readFastaTagFile2(java.lang.String file)
+    public static Map<String, String> readFastaTagFile(java.lang.String file)
     {
         Map<String, String> map = new TreeMap<>();
         try (BufferedReader bR = new BufferedReader(new FileReader(new java.io.File(file))))
@@ -226,7 +194,7 @@ public class File
         }
         catch (IOException e)
         {
-            Logger.getLogger(File.class.getSimpleName()).log(Level.SEVERE, "Could not open file {0}!", e.getMessage());
+            _logger.error("Could not open file {0}!", e.getMessage());
         }
         return map;
     }
@@ -259,9 +227,7 @@ public class File
         }
         catch (IOException e)
         {
-            Logger.getLogger(File.class.getSimpleName())
-                  .log(Level.SEVERE, "Error when writing xmlFile: " +
-                                     e.getMessage());
+            _logger.error("Error when writing xmlFile: " + e.getMessage());
         }
     }
 
@@ -299,19 +265,17 @@ public class File
 
     private static void addMeta(HMM ssHMM, Element meta)
     {
-
         Set<String> sb = ssHMM.states().stream()
                               .map(s -> String.valueOf(s.getLabel()))
                               .collect(Collectors.toSet());
         StringBuilder states = new StringBuilder();
-        sb.stream().forEach(s -> states.append(s));
+        sb.stream().forEach(states::append);
 
         sb = ssHMM.observations().stream()
                   .map(s -> String.valueOf(s.getLabel()))
                   .collect(Collectors.toSet());
         StringBuilder observations = new StringBuilder();
-        sb.forEach(s -> observations.append(s));
-
+        sb.forEach(observations::append);
         meta.addContent(
             new Element("states").setText(states.toString()));
         meta.addContent(

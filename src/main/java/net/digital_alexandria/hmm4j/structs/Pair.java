@@ -1,19 +1,17 @@
-package net.digital_alexandria.sshmm.structs;
+package net.digital_alexandria.hmm4j.structs;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class Triple<T, U, V>
+public class Pair<T, U>
 {
 	private final T t;
 	private final U u;
-	private final V v;
 
-	public Triple(T t, U u, V v)
+	public Pair(T t, U u)
 	{
 		this.t = t;
 		this.u = u;
-		this.v = v;
 	}
 
 	public T getFirst()
@@ -26,8 +24,4 @@ public class Triple<T, U, V>
 		return u;
 	}
 
-	public V getThird()
-	{
-		return v;
-	}
 }
