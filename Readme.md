@@ -1,6 +1,7 @@
 <h1 align="center">
-	<p>ss-hmm</p>
+	<img src="https://github.com/rafstraumur/lvm4j/blob/master/lvm_icon.png" alt="lvm4j"/></h1>
 </h1>
+
 
 A simple protein secondary structure prediction tool using a n-th order HMM. The HMM consists of a library (`ss-hmm.jar`) that contains the basic data-structure, a package that trains the HMM (`ss-hmm-trainer.jar`) and a package that predicts new data using the trained HMM (`ss-hmm-predictor.jar`).
 
