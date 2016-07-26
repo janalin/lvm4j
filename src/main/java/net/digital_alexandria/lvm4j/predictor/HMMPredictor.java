@@ -1,6 +1,6 @@
 package net.digital_alexandria.lvm4j.predictor;
 
-import net.digital_alexandria.lvm4j.hmm.discrete.HMM;
+import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 
 import java.util.Map;
 import java.util.TreeMap;

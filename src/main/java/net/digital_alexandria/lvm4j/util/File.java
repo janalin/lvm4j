@@ -1,9 +1,8 @@
 package net.digital_alexandria.lvm4j.util;
 
-import net.digital_alexandria.lvm4j.hmm.edge.Emission;
-import net.digital_alexandria.lvm4j.hmm.discrete.HMM;
-import net.digital_alexandria.lvm4j.hmm.discrete.HMMParams;
-import net.digital_alexandria.lvm4j.hmm.edge.Transition;
+import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
+import net.digital_alexandria.lvm4j.lvm.hmm.HMMParams;
+import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import org.jdom.Document;
@@ -243,7 +242,7 @@ public class File
         });
         Element transitions = new Element("transitions");
         ortho.addContent(transitions);
-        for (Transition t : ssHMM.transitions())
+        for (WeightedArc t : ssHMM.transitions())
         {
             Element transition = new Element("transition");
             transitions.addContent(transition);

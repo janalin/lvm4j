@@ -1,15 +1,15 @@
 package net.digital_alexandria.lvm4j;
 
-import net.digital_alexandria.hmm4j.predictor.HMMPredictor;
-import net.digital_alexandria.hmm4j.trainer.HMMTrainer;
-import net.digital_alexandria.hmm4j.util.File;
-import net.digital_alexandria.hmm4j.util.System;
+import net.digital_alexandria.lvm4j.predictor.HMMPredictor;
+import net.digital_alexandria.lvm4j.trainer.HMMTrainer;
+import net.digital_alexandria.lvm4j.util.File;
+import net.digital_alexandria.lvm4j.util.System;
 import net.digital_alexandria.param.FlagType;
 import net.digital_alexandria.param.Param;
 import net.digital_alexandria.param.ParamList;
 import net.digital_alexandria.param.ParamsParser;
-import net.digital_alexandria.hmm4j.hmm.discrete.HMM;
-import net.digital_alexandria.hmm4j.hmm.discrete.HMMFactory;
+import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
+import net.digital_alexandria.lvm4j.lvm.hmm.HMMFactory;
 
 import java.util.Map;
 
@@ -85,7 +85,7 @@ public class Main
         if (parser.isSet("-o"))
             File.writeFastaTagFile(map, parser.getArgument("-o"));
         else
-            net.digital_alexandria.hmm4j.util.System.print(map);
+            net.digital_alexandria.lvm4j.util.System.print(map);
         return _EXIT_SUCCESS;
     }
 

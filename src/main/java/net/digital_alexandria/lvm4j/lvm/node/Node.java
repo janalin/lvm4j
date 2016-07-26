@@ -1,9 +1,8 @@
-package net.digital_alexandria.lvm4j.hmm;
+package net.digital_alexandria.lvm4j.lvm.node;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public interface HMM
+public interface Node
 {
-
 }

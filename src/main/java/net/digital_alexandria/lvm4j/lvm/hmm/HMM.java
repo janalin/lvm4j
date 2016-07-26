@@ -1,9 +1,7 @@
-package net.digital_alexandria.lvm4j.hmm.discrete;
+package net.digital_alexandria.lvm4j.lvm.hmm;
 
-import net.digital_alexandria.lvm4j.hmm.edge.Emission;
-import net.digital_alexandria.lvm4j.hmm.edge.Transition;
-import net.digital_alexandria.lvm4j.hmm.node.Observation;
-import net.digital_alexandria.lvm4j.hmm.node.State;
+import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
+
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import net.digital_alexandria.lvm4j.util.File;
@@ -13,20 +11,19 @@ import java.util.Collections;
 import java.util.List;
 
 import static net.digital_alexandria.lvm4j.util.Math.combinatorical;
-import static net.digital_alexandria.lvm4j.util.String.toDouble;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  *
  * DESCRIPTION: Central HMM class, that contains states, transitions etc.
  */
-public class DiscreteStateHMM
+public class HMM
 {
     // the order of the HMM -> number of previous states that are considered for prediction
     private int _order;
     private final List<State> _STATES;
     private final List<Observation> _OBSERVATIONS;
-    private final List<Transition> _TRANSITIONS;
+    private final List<WeightedArc> _TRANSITIONS;
     private final List<Emission> _EMISSIONS;
 
     protected HMM(String hmmFile)
@@ -158,7 +155,7 @@ public class DiscreteStateHMM
             sinkPrefix = sinkSeq.substring(0, sinkLength - 1);
         if (!sourceSuffix.equals(sinkPrefix))
             return;
-        Transition t = new Transition(source, sink, 0.0);
+        WeightedArc t = new WeightedArc(source, sink, 0.0);
         _TRANSITIONS.add(t);
         source.addTransition(t);
     }
@@ -248,7 +245,7 @@ public class DiscreteStateHMM
         double[][] transitionsMatrix =
             new double[this._STATES.size()][this._STATES.size()];
         final double pseudo = 0.000001;
-        for (Transition t : _TRANSITIONS)
+        for (WeightedArc t : _TRANSITIONS)
             transitionsMatrix[t.source().idx()][t.sink().idx()] =
                 Math.log(t.transitionProbability() + pseudo);
         return transitionsMatrix;
@@ -258,13 +255,13 @@ public class DiscreteStateHMM
     {
         double[][] transitionsMatrix =
             new double[this._STATES.size()][this._STATES.size()];
-        for (Transition t : _TRANSITIONS)
+        for (WeightedArc t : _TRANSITIONS)
             transitionsMatrix[t.source().idx()][t.sink().idx()] =
                 (t.transitionProbability());
         return transitionsMatrix;
     }
 
-    public List<Transition> transitions()
+    public List<WeightedArc> transitions()
     {
         return _TRANSITIONS;
     }

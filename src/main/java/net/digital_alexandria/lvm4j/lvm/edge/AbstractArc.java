@@ -1,16 +1,17 @@
-package net.digital_alexandria.lvm4j.hmm.edge;
+package net.digital_alexandria.lvm4j.lvm.edge;
 
-import net.digital_alexandria.lvm4j.hmm.node.HMMNode;
+
+import net.digital_alexandria.lvm4j.lvm.node.Node;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public abstract class HMMEdge
+public abstract class AbstractArc implements Arc
 {
-    private final HMMNode _SOURCE;
-    private final HMMNode _SINK;
+    private final Node _SOURCE;
+    private final Node _SINK;
 
-    HMMEdge(HMMNode source, HMMNode sink)
+    AbstractArc(Node source, Node sink)
     {
         this._SOURCE = source;
         this._SINK = sink;
@@ -26,9 +27,9 @@ public abstract class HMMEdge
     @Override
     public boolean equals(Object o)
     {
-        if (o instanceof HMMEdge)
+        if (o instanceof AbstractArc)
         {
-            HMMEdge t = (HMMEdge) o;
+            AbstractArc t = (AbstractArc) o;
             return t._SINK.equals(this._SINK)
                    && t._SOURCE.equals(this._SOURCE);
         }
@@ -37,12 +38,12 @@ public abstract class HMMEdge
 
     public abstract void increment();
 
-    public HMMNode sink()
+    public final Node sink()
     {
         return _SINK;
     }
 
-    public HMMNode source()
+    public final Node source()
     {
         return _SOURCE;
     }

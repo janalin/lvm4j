@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.hmm.discrete;
+package net.digital_alexandria.lvm4j.lvm.hmm;
 
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
