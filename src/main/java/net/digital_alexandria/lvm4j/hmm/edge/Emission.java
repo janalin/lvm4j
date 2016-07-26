@@ -1,4 +1,7 @@
-package net.digital_alexandria.hmm4j.hmm;
+package net.digital_alexandria.lvm4j.hmm.edge;
+
+import net.digital_alexandria.lvm4j.hmm.node.Observation;
+import net.digital_alexandria.lvm4j.hmm.node.State;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}

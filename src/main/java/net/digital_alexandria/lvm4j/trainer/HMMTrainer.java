@@ -1,7 +1,12 @@
-package net.digital_alexandria.hmm4j.trainer;
+package net.digital_alexandria.lvm4j.trainer;
 
-import net.digital_alexandria.hmm4j.hmm.*;
-import net.digital_alexandria.hmm4j.util.File;
+import net.digital_alexandria.lvm4j.hmm.edge.Emission;
+import net.digital_alexandria.lvm4j.hmm.edge.HMMEdge;
+import net.digital_alexandria.lvm4j.hmm.edge.Transition;
+import net.digital_alexandria.lvm4j.hmm.discrete.HMM;
+import net.digital_alexandria.lvm4j.hmm.node.HMMNode;
+import net.digital_alexandria.lvm4j.hmm.node.State;
+import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.HashMap;
 import java.util.List;
@@ -171,6 +176,6 @@ public class HMMTrainer
      */
     public void write(HMM ssHMM, String file)
     {
-        net.digital_alexandria.hmm4j.util.File.writeXML(ssHMM, file);
+        net.digital_alexandria.lvm4j.util.File.writeXML(ssHMM, file);
     }
 }

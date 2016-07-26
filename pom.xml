@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.digital_alexandria</groupId>
-    <artifactId>hmm4j</artifactId>
+    <artifactId>lvm4j</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>hmm4j</name>
+    <name>lvm4j</name>
     <repositories>
         <repository>
             <releases>
@@ -97,11 +97,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>hmm4j</finalName>
+                    <finalName>lvm4j</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>net.digital_alexandria.hmm4j.Main</mainClass>
+                            <mainClass>net.digital_alexandria.lvm4j.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,4 +1,4 @@
-package net.digital_alexandria.hmm4j.structs;
+package net.digital_alexandria.lvm4j.structs;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}

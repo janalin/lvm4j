@@ -1,7 +1,7 @@
-package net.digital_alexandria.hmm4j.hmm;
+package net.digital_alexandria.lvm4j.hmm.discrete;
 
-import net.digital_alexandria.hmm4j.structs.Pair;
-import net.digital_alexandria.hmm4j.structs.Triple;
+import net.digital_alexandria.lvm4j.structs.Pair;
+import net.digital_alexandria.lvm4j.structs.Triple;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,22 +1,26 @@
-package net.digital_alexandria.hmm4j.hmm;
+package net.digital_alexandria.lvm4j.hmm.discrete;
 
-import net.digital_alexandria.hmm4j.structs.Pair;
-import net.digital_alexandria.hmm4j.structs.Triple;
-import net.digital_alexandria.hmm4j.util.File;
+import net.digital_alexandria.lvm4j.hmm.edge.Emission;
+import net.digital_alexandria.lvm4j.hmm.edge.Transition;
+import net.digital_alexandria.lvm4j.hmm.node.Observation;
+import net.digital_alexandria.lvm4j.hmm.node.State;
+import net.digital_alexandria.lvm4j.structs.Pair;
+import net.digital_alexandria.lvm4j.structs.Triple;
+import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.hmm4j.util.Math.combinatorical;
-import static net.digital_alexandria.hmm4j.util.String.toDouble;
+import static net.digital_alexandria.lvm4j.util.Math.combinatorical;
+import static net.digital_alexandria.lvm4j.util.String.toDouble;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  *
  * DESCRIPTION: Central HMM class, that contains states, transitions etc.
  */
-public class HMM
+public class DiscreteStateHMM
 {
     // the order of the HMM -> number of previous states that are considered for prediction
     private int _order;

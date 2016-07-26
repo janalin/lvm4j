@@ -1,4 +1,4 @@
-package net.digital_alexandria.hmm4j.hmm;
+package net.digital_alexandria.lvm4j.hmm.discrete;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}

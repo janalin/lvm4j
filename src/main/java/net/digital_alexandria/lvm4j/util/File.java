@@ -1,11 +1,11 @@
-package net.digital_alexandria.hmm4j.util;
+package net.digital_alexandria.lvm4j.util;
 
-import net.digital_alexandria.hmm4j.hmm.Emission;
-import net.digital_alexandria.hmm4j.hmm.HMM;
-import net.digital_alexandria.hmm4j.hmm.HMMParams;
-import net.digital_alexandria.hmm4j.hmm.Transition;
-import net.digital_alexandria.hmm4j.structs.Pair;
-import net.digital_alexandria.hmm4j.structs.Triple;
+import net.digital_alexandria.lvm4j.hmm.edge.Emission;
+import net.digital_alexandria.lvm4j.hmm.discrete.HMM;
+import net.digital_alexandria.lvm4j.hmm.discrete.HMMParams;
+import net.digital_alexandria.lvm4j.hmm.edge.Transition;
+import net.digital_alexandria.lvm4j.structs.Pair;
+import net.digital_alexandria.lvm4j.structs.Triple;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -87,7 +87,7 @@ public class File
         if (ortho.getChild("starts") == null ||
             ortho.getChild("emissions") == null ||
             ortho.getChild("transitions") == null)
-            net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
+            net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
 
         Element start = ortho.getChild("starts");
         List list = start.getChildren();
@@ -132,13 +132,13 @@ public class File
             meta.getChild("states") == null ||
             meta.getChild("observations") == null ||
             meta.getChild("order") == null)
-                net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
+                net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
         char states[] = meta.getChild("states").getValue().toCharArray();
         char observations[] = meta.getChild("observations").getValue()
                                   .toCharArray();
         int order = Integer.parseInt(meta.getChild("order").getValue());
         if (states.length == 0 || observations.length == 0)
-            net.digital_alexandria.hmm4j.util.System.exit(exit, -1);
+            net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
         params.observations(observations);
         params.order(order);
         params.states(states);

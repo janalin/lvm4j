@@ -1,4 +1,4 @@
-package net.digital_alexandria.hmm4j.util;
+package net.digital_alexandria.lvm4j.util;
 
 import java.util.Map;
 

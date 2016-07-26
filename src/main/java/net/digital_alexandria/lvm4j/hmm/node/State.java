@@ -1,4 +1,7 @@
-package net.digital_alexandria.hmm4j.hmm;
+package net.digital_alexandria.hmm4j.hmm.node;
+
+import net.digital_alexandria.hmm4j.hmm.edge.Emission;
+import net.digital_alexandria.hmm4j.hmm.edge.Transition;
 
 import java.util.ArrayList;
 import java.util.List;

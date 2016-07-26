@@ -1,4 +1,4 @@
-package net.digital_alexandria.hmm4j;
+package net.digital_alexandria.lvm4j;
 
 import net.digital_alexandria.hmm4j.predictor.HMMPredictor;
 import net.digital_alexandria.hmm4j.trainer.HMMTrainer;
@@ -8,8 +8,8 @@ import net.digital_alexandria.param.FlagType;
 import net.digital_alexandria.param.Param;
 import net.digital_alexandria.param.ParamList;
 import net.digital_alexandria.param.ParamsParser;
-import net.digital_alexandria.hmm4j.hmm.HMM;
-import net.digital_alexandria.hmm4j.hmm.HMMFactory;
+import net.digital_alexandria.hmm4j.hmm.discrete.HMM;
+import net.digital_alexandria.hmm4j.hmm.discrete.HMMFactory;
 
 import java.util.Map;
 
