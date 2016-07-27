@@ -1,5 +1,5 @@
 <h1 align="center">
-	<img src="https://github.com/rafstraumur/lvm4j/blob/master/lvm_icon.png" alt="lvm4j"/></h1>
+lvm4j
 </h1>
 
 
