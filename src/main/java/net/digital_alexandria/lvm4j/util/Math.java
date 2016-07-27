@@ -33,7 +33,7 @@ public class Math
      * @param length the length of every string that is returned
      * @return returns a list of strings
      */
-    public static List combinatorical(char[] array, int length)
+    public static List<java.lang.String> combinatorical(char[] array, int length)
     {
         List<java.lang.String> list = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
@@ -53,10 +53,9 @@ public class Math
         }
         else
         {
-            for (int i = 0; i < array.length; i++)
+            for (char anArray : array)
             {
-                List<java.lang.String> l = new ArrayList<>(list);
-                StringBuilder s = new StringBuilder(builder).append(array[i]);
+                StringBuilder s = new StringBuilder(builder).append(anArray);
                 combinatorical(s, list, array, length);
             }
         }

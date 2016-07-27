@@ -3,7 +3,7 @@ package net.digital_alexandria.lvm4j.lvm.node;
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public abstract class AbstractLabelledNode<T> extends AbstractNode
+abstract class AbstractLabelledNode<T> extends AbstractNode
 {
     private final T _LABEL;
 

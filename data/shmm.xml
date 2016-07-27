@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hmm>
+  <meta>
+    <states>CEH</states>
+    <observations>DWZ</observations>
+    <order>2</order>
+  </meta>
+  <ortho>
+    <starts>
+      <start state="C">1.0</start>
+      <start state="E">0.0</start>
+      <start state="H">0.0</start>
+    </starts>
+    <transitions>
+      <transition source="C" sink="CC">0.0</transition>
+      <transition source="C" sink="CE">0.0</transition>
+      <transition source="C" sink="CH">1.0</transition>
+      <transition source="E" sink="EC">0.0</transition>
+      <transition source="E" sink="EE">0.0</transition>
+      <transition source="E" sink="EH">0.0</transition>
+      <transition source="H" sink="HC">0.0</transition>
+      <transition source="H" sink="HE">0.0</transition>
+      <transition source="H" sink="HH">0.0</transition>
+      <transition source="CC" sink="CC">0.0</transition>
+      <transition source="CC" sink="CE">0.0</transition>
+      <transition source="CC" sink="CH">0.0</transition>
+      <transition source="CE" sink="EC">0.0</transition>
+      <transition source="CE" sink="EE">0.0</transition>
+      <transition source="CE" sink="EH">0.0</transition>
+      <transition source="CH" sink="HC">0.0</transition>
+      <transition source="CH" sink="HE">1.0</transition>
+      <transition source="CH" sink="HH">0.0</transition>
+      <transition source="EC" sink="CC">0.0</transition>
+      <transition source="EC" sink="CE">0.0</transition>
+      <transition source="EC" sink="CH">1.0</transition>
+      <transition source="EE" sink="EC">0.0</transition>
+      <transition source="EE" sink="EE">0.0</transition>
+      <transition source="EE" sink="EH">0.0</transition>
+      <transition source="EH" sink="HC">0.0</transition>
+      <transition source="EH" sink="HE">0.0</transition>
+      <transition source="EH" sink="HH">0.0</transition>
+      <transition source="HC" sink="CC">0.0</transition>
+      <transition source="HC" sink="CE">0.0</transition>
+      <transition source="HC" sink="CH">0.0</transition>
+      <transition source="HE" sink="EC">1.0</transition>
+      <transition source="HE" sink="EE">0.0</transition>
+      <transition source="HE" sink="EH">0.0</transition>
+      <transition source="HH" sink="HC">0.0</transition>
+      <transition source="HH" sink="HE">0.0</transition>
+      <transition source="HH" sink="HH">0.0</transition>
+    </transitions>
+    <emissions>
+      <emission source="C" sink="Z">1.0</emission>
+      <emission source="C" sink="W">0.0</emission>
+      <emission source="C" sink="D">0.0</emission>
+      <emission source="E" sink="Z">0.0</emission>
+      <emission source="E" sink="W">0.0</emission>
+      <emission source="E" sink="D">0.0</emission>
+      <emission source="H" sink="Z">0.0</emission>
+      <emission source="H" sink="W">0.0</emission>
+      <emission source="H" sink="D">0.0</emission>
+      <emission source="CC" sink="Z">0.0</emission>
+      <emission source="CC" sink="W">0.0</emission>
+      <emission source="CC" sink="D">0.0</emission>
+      <emission source="CE" sink="Z">0.0</emission>
+      <emission source="CE" sink="W">0.0</emission>
+      <emission source="CE" sink="D">0.0</emission>
+      <emission source="CH" sink="Z">0.0</emission>
+      <emission source="CH" sink="W">1.0</emission>
+      <emission source="CH" sink="D">0.0</emission>
+      <emission source="EC" sink="Z">1.0</emission>
+      <emission source="EC" sink="W">0.0</emission>
+      <emission source="EC" sink="D">0.0</emission>
+      <emission source="EE" sink="Z">0.0</emission>
+      <emission source="EE" sink="W">0.0</emission>
+      <emission source="EE" sink="D">0.0</emission>
+      <emission source="EH" sink="Z">0.0</emission>
+      <emission source="EH" sink="W">0.0</emission>
+      <emission source="EH" sink="D">0.0</emission>
+      <emission source="HC" sink="Z">0.0</emission>
+      <emission source="HC" sink="W">0.0</emission>
+      <emission source="HC" sink="D">0.0</emission>
+      <emission source="HE" sink="Z">0.0</emission>
+      <emission source="HE" sink="W">0.0</emission>
+      <emission source="HE" sink="D">1.0</emission>
+      <emission source="HH" sink="Z">0.0</emission>
+      <emission source="HH" sink="W">0.0</emission>
+      <emission source="HH" sink="D">0.0</emission>
+    </emissions>
+  </ortho>
+</hmm>
+

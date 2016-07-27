@@ -1,8 +1,11 @@
 package net.digital_alexandria.lvm4j.util;
 
+import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMMParams;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
+import net.digital_alexandria.lvm4j.lvm.node.LabelledNode;
+import net.digital_alexandria.lvm4j.lvm.node.LatentLabelledNode;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import org.jdom.Document;
@@ -86,7 +89,7 @@ public class File
         if (ortho.getChild("starts") == null ||
             ortho.getChild("emissions") == null ||
             ortho.getChild("transitions") == null)
-            net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
+            net.digital_alexandria.lvm4j.util.System.exit(exit, ExitCode.EXIT_ERROR);
 
         Element start = ortho.getChild("starts");
         List list = start.getChildren();
@@ -106,7 +109,7 @@ public class File
             String source = node.getAttribute("source").getValue();
             String sink = node.getAttribute("sink").getValue();
             double prob = Double.parseDouble(node.getText());
-            params.transitionProbabilities().add(new Triple(source, sink, prob));
+            params.transitionProbabilities().add(new Triple<>(source, sink, prob));
         }
 
         Element emissions = ortho.getChild("emissions");
@@ -117,7 +120,7 @@ public class File
             String source = node.getAttribute("source").getValue();
             String sink = node.getAttribute("sink").getValue();
             double prob = Double.parseDouble(node.getText());
-            params.emissionProbabilities().add(new Triple(source, sink, prob));
+            params.emissionProbabilities().add(new Triple<>(source, sink, prob));
         }
         params.setTrainingParam(true);
     }
@@ -131,13 +134,13 @@ public class File
             meta.getChild("states") == null ||
             meta.getChild("observations") == null ||
             meta.getChild("order") == null)
-                net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
+                net.digital_alexandria.lvm4j.util.System.exit(exit,  ExitCode.EXIT_ERROR);
         char states[] = meta.getChild("states").getValue().toCharArray();
         char observations[] = meta.getChild("observations").getValue()
                                   .toCharArray();
         int order = Integer.parseInt(meta.getChild("order").getValue());
         if (states.length == 0 || observations.length == 0)
-            net.digital_alexandria.lvm4j.util.System.exit(exit, -1);
+            net.digital_alexandria.lvm4j.util.System.exit(exit,  ExitCode.EXIT_ERROR);
         params.observations(observations);
         params.order(order);
         params.states(states);
@@ -178,15 +181,11 @@ public class File
         {
             String line;
             String id = "";
-            Pattern p = Pattern.compile(">(.+?)\\|.+$");
             Matcher m;
             while ((line = bR.readLine()) != null)
             {
                 if (line.startsWith(">"))
-                {
-                    m = p.matcher(line);
-                    if (m.matches()) id = m.group(1);
-                }
+                    id = line;
                 else
                     map.put(id, line);
             }
@@ -230,48 +229,53 @@ public class File
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static void addOrtho(HMM ssHMM, Element ortho)
     {
         Element starts = new Element("starts");
         ortho.addContent(starts);
-        ssHMM.states().stream().filter(s -> s.seq().length() == 1).forEach(s -> {
+        ssHMM.states().stream().filter(s -> s.state().length() == 1).forEach(s -> {
             Element start = new Element("start");
             starts.addContent(start);
-            start.setAttribute("state", s.seq());
-            start.setText(String.valueOf(s.startingStateProbability()));
+            start.setAttribute("state", s.state());
+            start.setText(String.valueOf(s.startingProbability()));
         });
         Element transitions = new Element("transitions");
         ortho.addContent(transitions);
         for (WeightedArc t : ssHMM.transitions())
         {
+            LatentLabelledNode<Character, String> src = (LatentLabelledNode<Character, String>) t.source();
+            LatentLabelledNode<Character, String> sink = (LatentLabelledNode<Character, String>) t.sink();
             Element transition = new Element("transition");
             transitions.addContent(transition);
-            transition.setAttribute("source", t.source().seq());
-            transition.setAttribute("sink", t.sink().seq());
-            transition.setText(String.valueOf(t.transitionProbability()));
+            transition.setAttribute("source", src.state());
+            transition.setAttribute("sink", sink.state());
+            transition.setText(String.valueOf(t.weight()));
         }
         Element emissions = new Element("emissions");
         ortho.addContent(emissions);
-        for (Emission e : ssHMM.emissions())
+        for (WeightedArc e : ssHMM.emissions())
         {
+            LatentLabelledNode<Character, String> src = (LatentLabelledNode<Character, String>) e.source();
+            LatentLabelledNode<Character, String> sink = (LatentLabelledNode<Character, String>) e.sink();
             Element emission = new Element("emission");
             emissions.addContent(emission);
-            emission.setAttribute("source", e.source().seq());
-            emission.setAttribute("sink", e.sink().seq());
-            emission.setText(String.valueOf(e.emissionProbability()));
+            emission.setAttribute("source", src.state());
+            emission.setAttribute("sink", sink.state());
+            emission.setText(String.valueOf(e.weight()));
         }
     }
 
     private static void addMeta(HMM ssHMM, Element meta)
     {
         Set<String> sb = ssHMM.states().stream()
-                              .map(s -> String.valueOf(s.getLabel()))
+                              .map(s -> String.valueOf(s.label()))
                               .collect(Collectors.toSet());
         StringBuilder states = new StringBuilder();
         sb.stream().forEach(states::append);
 
         sb = ssHMM.observations().stream()
-                  .map(s -> String.valueOf(s.getLabel()))
+                  .map(s -> String.valueOf(s.label()))
                   .collect(Collectors.toSet());
         StringBuilder observations = new StringBuilder();
         sb.forEach(observations::append);

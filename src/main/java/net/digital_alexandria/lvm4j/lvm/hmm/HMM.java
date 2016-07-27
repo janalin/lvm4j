@@ -1,7 +1,11 @@
 package net.digital_alexandria.lvm4j.lvm.hmm;
 
+import net.digital_alexandria.lvm4j.lvm.edge.ArcFactory;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
 
+import net.digital_alexandria.lvm4j.lvm.node.LabelledNode;
+import net.digital_alexandria.lvm4j.lvm.node.LatentLabelledNode;
+import net.digital_alexandria.lvm4j.lvm.node.NodeFactory;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import net.digital_alexandria.lvm4j.util.File;
@@ -10,23 +14,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static net.digital_alexandria.lvm4j.util.String.toDouble;
 import static net.digital_alexandria.lvm4j.util.Math.combinatorical;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
- *
- * DESCRIPTION: Central HMM class, that contains states, transitions etc.
+ *         <p>
+ *         DESCRIPTION: Central HMM class, that contains states, transitions etc.
  */
 public class HMM
 {
     // the order of the HMM -> number of previous states that are considered for prediction
     private int _order;
-    private final List<State> _STATES;
-    private final List<Observation> _OBSERVATIONS;
+    private final List<LatentLabelledNode<Character, String>> _STATES;
+    private final List<LatentLabelledNode<Character, String>> _OBSERVATIONS;
     private final List<WeightedArc> _TRANSITIONS;
-    private final List<Emission> _EMISSIONS;
+    private final List<WeightedArc> _EMISSIONS;
 
-    protected HMM(String hmmFile)
+    HMM(String hmmFile)
     {
         this._STATES = new ArrayList<>();
         this._OBSERVATIONS = new ArrayList<>();
@@ -42,7 +47,7 @@ public class HMM
         char states[] = params.states();
         char observations[] = params.observations();
         this._order = params.order();
-        List<String> stateList = combinatorical(states, _order);
+        List<java.lang.String> stateList = combinatorical(states, _order);
         // set up nodes
         init(stateList, observations);
         // if the XML provided has trained parameter, initialize a trained HMM
@@ -52,32 +57,45 @@ public class HMM
                                params.startProbabilities());
     }
 
-    private void initTrainingParams(List<Triple> emissions, List<Triple> transititions, List<Pair> startProbabilities)
+    private void initTrainingParams(List<Triple<String, String, Double>> emissions,
+                                    List<Triple<String, String, Double>> transititions,
+                                    List<Pair<String, Double>> startProbabilities)
     {
         // set up the starting probabilities for every state
         for (Pair<String, Double> p : startProbabilities)
         {
             String state = p.getFirst();
             double prob = p.getSecond();
-            this.states().stream().filter(s -> s.seq().equals(state)).forEach(s -> s.startingStateProbability(prob));
+            for (LatentLabelledNode<Character, String> s : _STATES)
+            {
+                if (s.state().equals(state))
+                {
+                    s.startingProbability(prob);
+                }
+            }
         }
         // set up the transition probabilities from a state to another state
         for (Triple<String, String, Double> t : transititions)
-        {
-            String source = t.getFirst();
-            String sink = t.getSecond();
-            double prob = t.getThird();
-            this.transitions().stream().filter(transition -> transition.source().seq().equals(source) && transition
-                .sink().seq().equals(sink)).forEach(transition -> transition.transitionProbability(prob));
-        }
+            setUpWeights(t, this._TRANSITIONS);
         // set up the emission probabilities from a state to an observation
         for (Triple<String, String, Double> e : emissions)
+            setUpWeights(e, this._EMISSIONS);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setUpWeights(Triple<String, String, Double> t, List<WeightedArc> it)
+    {
+        String source = t.getFirst();
+        String sink = t.getSecond();
+        double prob = t.getThird();
+        for (WeightedArc a : it)
         {
-            String source = e.getFirst();
-            String sink = e.getSecond();
-            double prob = e.getThird();
-            this.emissions().stream().filter(transition -> transition.source().seq().equals(source) && transition
-                .sink().seq().equals(sink)).forEach(emission -> emission.emissionProbability(prob));
+            LatentLabelledNode<String, String> aso = (LatentLabelledNode<String, String>) a.source();
+            LatentLabelledNode<String, String> asi = (LatentLabelledNode<String, String>) a.sink();
+            if (aso.state().equals(source) && asi.state().equals(sink))
+            {
+                a.weight(prob);
+            }
         }
     }
 
@@ -93,11 +111,12 @@ public class HMM
     {
         if (probs.length != _STATES.size()) return;
         for (int i = 0; i < _STATES.size(); i++)
-            _STATES.get(i).startingStateProbability(probs[i]);
+            _STATES.get(i).startingProbability(probs[i]);
     }
 
     private void addStates(List<String> states)
     {
+        NodeFactory nodeFac = NodeFactory.instance();
         Collections.sort(states, (o1, o2) -> {
             if (o1.length() != o2.length())
                 return o1.length() < o2.length() ? -1 : 1;
@@ -108,34 +127,35 @@ public class HMM
         {
             String s = states.get(i);
             int length = s.length();
-            _STATES.add(new State(s.charAt(length - 1), i, s));
+            _STATES.add(nodeFac.latentLabelledNode(s.charAt(length - 1), s, i));
 
         }
     }
 
     private void addObservations(char[] observations)
     {
+        NodeFactory nodeFac = NodeFactory.instance();
         for (int i = 0; i < observations.length; i++)
-            _OBSERVATIONS.add(new Observation(observations[i], i, String.valueOf(observations[i])));
+            _OBSERVATIONS.add(nodeFac.latentLabelledNode(observations[i],
+                                                   String.valueOf(observations[i]),i));
     }
 
     private void addTransitions()
     {
         for (int i = 0; i < _STATES.size(); i++)
         {
-            State source = _STATES.get(i);
-            for (int j = 0; j < _STATES.size(); j++)
-            {
-                State sink = _STATES.get(j);
+            LatentLabelledNode<Character, String> source = _STATES.get(i);
+            for (LatentLabelledNode<Character, String> sink : _STATES)
                 addTransition(source, sink);
-            }
         }
     }
 
-    private void addTransition(State source, State sink)
+    private void addTransition(LatentLabelledNode<Character, String> source,
+                               LatentLabelledNode<Character, String> sink)
     {
-        String sourceSeq = source.seq();
-        String sinkSeq = sink.seq();
+        ArcFactory arcFac = ArcFactory.instance();
+        String sourceSeq = source.state();
+        String sinkSeq = sink.state();
         int sourceLength = sourceSeq.length();
         int sinkLength = sinkSeq.length();
         if (sourceLength > sinkLength) return;
@@ -155,29 +175,28 @@ public class HMM
             sinkPrefix = sinkSeq.substring(0, sinkLength - 1);
         if (!sourceSuffix.equals(sinkPrefix))
             return;
-        WeightedArc t = new WeightedArc(source, sink, 0.0);
+        WeightedArc t = arcFac.weightedArc(source, sink, .0);
         _TRANSITIONS.add(t);
         source.addTransition(t);
     }
 
     private void addEmissions()
     {
-        for (int i = 0; i < _STATES.size(); i++)
+        for (LatentLabelledNode<Character, String> state : _STATES)
         {
-            State source = _STATES.get(i);
-            for (int j = 0; j < _OBSERVATIONS.size(); j++)
+            for (LatentLabelledNode<Character, String> obs : _OBSERVATIONS)
             {
-                Observation sink = _OBSERVATIONS.get(j);
-                addEmission(source, sink);
+                addEmission(state, obs);
             }
         }
     }
 
-    private void addEmission(State source, Observation sink)
+    private void addEmission(LatentLabelledNode source, LatentLabelledNode sink)
     {
-        Emission e = new Emission(source, sink, 0.0);
-        _EMISSIONS.add(e);
-        source.addEmission(e);
+        ArcFactory arcFac = ArcFactory.instance();
+        WeightedArc t = arcFac.weightedArc(source, sink, .0);
+        _EMISSIONS.add(t);
+        source.addEmission(t);
     }
 
     private double[][] initEmissionMatrix(char[] states, ArrayList<String>
@@ -185,8 +204,7 @@ public class HMM
     {
         double[][] emissions = new double[states.length][];
         for (int i = 0; i < emissions.length; i++)
-            emissions[i] = toDouble(list.get(i).split
-                ("\t"));
+            emissions[i] = toDouble(list.get(i).split("\t"));
         return emissions;
     }
 
@@ -202,16 +220,16 @@ public class HMM
     {
         double[] probs = new double[this._STATES.size()];
         final double pseudo = 0.000001;
-        for (State s : _STATES)
-            probs[s.idx()] = Math.log(s.startingStateProbability() + pseudo);
+        for (LatentLabelledNode<Character, String> s : _STATES)
+            probs[s.idx()] = Math.log(s.startingProbability() + pseudo);
         return probs;
     }
 
     public double[] startProbabilities()
     {
         double[] probs = new double[this._STATES.size()];
-        for (State s : _STATES)
-            probs[s.idx()] = (s.startingStateProbability());
+        for (LatentLabelledNode<Character, String> s : _STATES)
+            probs[s.idx()] = (s.startingProbability());
         return probs;
     }
 
@@ -220,10 +238,11 @@ public class HMM
         double[][] emissionMatrix =
             new double[this._STATES.size()][this._OBSERVATIONS.size()];
         final double pseudo = 0.000001;
-        for (Emission e : _EMISSIONS)
+        for (WeightedArc e : _EMISSIONS)
         {
+
             emissionMatrix[e.source().idx()][e.sink().idx()] =
-                Math.log(e.emissionProbability() + pseudo);
+                Math.log(e.weight() + pseudo);
         }
         return emissionMatrix;
     }
@@ -232,10 +251,9 @@ public class HMM
     {
         double[][] emissionMatrix =
             new double[this._STATES.size()][this._OBSERVATIONS.size()];
-        for (Emission e : _EMISSIONS)
+        for (WeightedArc e : _EMISSIONS)
         {
-            emissionMatrix[e.source().idx()][e.sink().idx()] =
-                (e.emissionProbability());
+            emissionMatrix[e.source().idx()][e.sink().idx()] = e.weight();
         }
         return emissionMatrix;
     }
@@ -246,8 +264,7 @@ public class HMM
             new double[this._STATES.size()][this._STATES.size()];
         final double pseudo = 0.000001;
         for (WeightedArc t : _TRANSITIONS)
-            transitionsMatrix[t.source().idx()][t.sink().idx()] =
-                Math.log(t.transitionProbability() + pseudo);
+            transitionsMatrix[t.source().idx()][t.sink().idx()] = Math.log(t.weight() + pseudo);
         return transitionsMatrix;
     }
 
@@ -256,8 +273,7 @@ public class HMM
         double[][] transitionsMatrix =
             new double[this._STATES.size()][this._STATES.size()];
         for (WeightedArc t : _TRANSITIONS)
-            transitionsMatrix[t.source().idx()][t.sink().idx()] =
-                (t.transitionProbability());
+            transitionsMatrix[t.source().idx()][t.sink().idx()] = t.weight();
         return transitionsMatrix;
     }
 
@@ -266,17 +282,17 @@ public class HMM
         return _TRANSITIONS;
     }
 
-    public List<Emission> emissions()
+    public List<WeightedArc> emissions()
     {
         return _EMISSIONS;
     }
 
-    public List<State> states()
+    public List<LatentLabelledNode<Character, String>> states()
     {
         return _STATES;
     }
 
-    public List<Observation> observations()
+    public List<LatentLabelledNode<Character, String>> observations()
     {
         return _OBSERVATIONS;
     }

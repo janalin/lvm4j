@@ -1,5 +1,6 @@
 package net.digital_alexandria.lvm4j.predictor;
 
+import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 
 import java.util.Map;
@@ -14,9 +15,10 @@ public class HMMPredictor
 
     private HMMPredictor() {}
 
-    public static HMMPredictor getInstance()
+    public static HMMPredictor instance()
     {
-        if (_predictor == null) _predictor = new HMMPredictor();
+        if (_predictor == null)
+            _predictor = new HMMPredictor();
         return _predictor;
     }
 
@@ -29,15 +31,15 @@ public class HMMPredictor
      */
     public Map<String, String> predict(HMM hmm, String observationsFile)
     {
-        return predict(hmm, net.digital_alexandria.hmm4j.util.File.readFastaTagFile(observationsFile));
+        return predict(hmm, net.digital_alexandria.lvm4j.util.File.readFastaTagFile(observationsFile));
     }
 
     private Map<String, String> predict(HMM hmm, Map<String, String> observationsMap)
     {
         checkMatrices(hmm);
         /* calculate log matrices, because then probabilities can be added
-		* instead of multiplied: double has maybe too low precision!
-		*/
+         * instead of multiplied: double has maybe too low precision!
+         */
         double[] startProbabilities = hmm.logStartProbabilities();
         double[][] transitionsMatrix = hmm.logTransitionMatrix();
         double[][] emissionsMatrix = hmm.logEmissionMatrix();
@@ -58,7 +60,7 @@ public class HMMPredictor
         final double probSum = 1.0;
         final double altProbSum = 0.0;
         double[] startProbabilities = hmm.startProbabilities();
-        if (!net.digital_alexandria.hmm4j.util.Math.equals(startProbabilities, delta, probSum))
+        if (!net.digital_alexandria.lvm4j.util.Math.equals(startProbabilities, delta, probSum))
         {
             System.err.println("Sum of starting probabilities does not equal 1.00!");
             System.exit(-1);
@@ -66,22 +68,21 @@ public class HMMPredictor
         double[][] transitionsMatrix = hmm.transitionMatrix();
         for (double row[] : transitionsMatrix)
         {
-            if (!(net.digital_alexandria.hmm4j.util.Math.equals(row, delta, probSum) ||
-                  net.digital_alexandria.hmm4j.util.Math.equals(row, delta, altProbSum)))
-            {
-                System.err.println("Sum of transition probabilities does not equal 1.00!");
-                System.exit(-1);
-            }
+            if (!(net.digital_alexandria.lvm4j.util.Math.equals(row, delta, probSum) ||
+                  net.digital_alexandria.lvm4j.util.Math.equals(row, delta, altProbSum)))
+                net.digital_alexandria.lvm4j.util.System.exit
+                    ("Sum of transition probabilities does not equal 1.00!",
+                     ExitCode.EXIT_ERROR);
         }
         double[][] emissionsMatrix = hmm.emissionMatrix();
         for (double row[] : emissionsMatrix)
         {
-            if (!(net.digital_alexandria.hmm4j.util.Math.equals(row, delta, probSum) ||
-                  net.digital_alexandria.hmm4j.util.Math.equals(row, delta, altProbSum)))
+            if (!(net.digital_alexandria.lvm4j.util.Math.equals(row, delta, probSum) ||
+                  net.digital_alexandria.lvm4j.util.Math.equals(row, delta, altProbSum)))
             {
-                System.err.println("Sum of emission probabilities does not " +
-                                   "equal 1.00!");
-                System.exit(-1);
+                net.digital_alexandria.lvm4j.util.System.exit
+                    ("Sum of emission probabilities does not equal 1.00!",
+                     ExitCode.EXIT_ERROR);
             }
         }
     }
@@ -162,17 +163,18 @@ public class HMMPredictor
             getMostProbableEndingStateIdx(probabilityPath);
         // set label of last state
         statesLabel[encodedObservations.length - 1] = hmm.states().get
-            (statesIdx[encodedObservations.length - 1]).getLabel();
+            (statesIdx[encodedObservations.length - 1]).label();
         // backtrace state/probability paths to get most probable state
         // sequence
         for (int i = encodedObservations.length - 1; i >= 1; i--)
         {
             statesIdx[i - 1] = statePath[statesIdx[i]][i];
-            statesLabel[i - 1] = hmm.states().get(statesIdx[i - 1]).getLabel();
+            statesLabel[i - 1] = hmm.states().get(statesIdx[i - 1]).label();
         }
         return String.valueOf(statesLabel);
     }
 
+    // nice function name
     private int getMostProbableEndingStateIdx(double[][] probs)
     {
         double prob = Double.MIN_VALUE;
@@ -225,7 +227,7 @@ public class HMMPredictor
         {
             for (int j = 0; j < hmm.observations().size(); j++)
             {
-                if (obs[i] == hmm.observations().get(j).getLabel())
+                if (obs[i] == hmm.observations().get(j).label())
                     idxs[i] = hmm.observations().get(j).idx();
             }
         }

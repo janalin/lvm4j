@@ -3,7 +3,6 @@ package net.digital_alexandria.lvm4j.trainer;
 import net.digital_alexandria.lvm4j.lvm.edge.AbstractArc;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
-import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
 import net.digital_alexandria.lvm4j.lvm.node.LatentLabelledNode;
 import net.digital_alexandria.lvm4j.util.File;
 
@@ -19,7 +18,7 @@ public class HMMTrainer
 {
     private static HMMTrainer _trainer;
 
-    public static HMMTrainer getInstance()
+    public static HMMTrainer instance()
     {
         if (_trainer == null)
             _trainer = new HMMTrainer();
@@ -39,23 +38,19 @@ public class HMMTrainer
     {
         initializeEdges(hmm);
         // a mapping of id -> state sequence
-        final Map<String, String> fastaStatesMap =
-            File.readFastaTagFile(stateFile);
+        final Map<String, String> fastaStatesMap = File.readFastaTagFile(stateFile);
         // a mapping of id -> observation sequence
-        final Map<String, String> fastaObservationsMap =
-            File.readFastaTagFile(observationsFile);
+        final Map<String, String> fastaObservationsMap = File.readFastaTagFile(observationsFile);
         // a mapping of state label (letter) -> state object
-        final Map<String, LatentLabelledNode> labelStatesMap = nodeMap(hmm.states());
+        final Map<String, LatentLabelledNode<Character, String>> labelStatesMap = nodeMap(hmm.states());
         // a mapping of state label -> observation label -> emission object
-        final Map<String, Map<String, Emission>> labelEmissionsMap = edgeMap
-            (hmm.emissions());
+        final Map<String, Map<String, WeightedArc>> labelEmissionsMap = edgeMap(hmm.emissions());
         // a mapping of state label -> state label -> transition object
-        final Map<String, Map<String, WeightedArc>> labelTransitionsMap =
-            edgeMap(hmm.transitions());
+        final Map<String, Map<String, WeightedArc>> labelTransitionsMap = edgeMap(hmm.transitions());
         /* count observations, states, emissions and transitions.
-		 * this is replaced with Baum-Welch algorithm when state sequence is
-		 * not known
-		 */
+         * this is replaced with Baum-Welch algorithm when state sequence is
+         * not known
+         */
         final int order = hmm.order();
         for (String s : fastaStatesMap.keySet())
         {
@@ -98,32 +93,33 @@ public class HMMTrainer
 
     private void initializeEdges(HMM hmm)
     {
-        hmm.transitions().forEach(t -> t.transitionProbability(0.0));
-        hmm.emissions().forEach(e -> e.emissionProbability(0.0));
+        hmm.transitions().forEach(t -> t.weight(0.0));
+        hmm.emissions().forEach(e -> e.weight(0.0));
     }
 
-    private <T extends HMMNode> Map<String, T> nodeMap(List<T> l)
+    private <T extends LatentLabelledNode<Character, String>> Map<String, T> nodeMap(List<T> l)
     {
         Map<String, T> map = new HashMap<>();
-        for (T t : l) map.put(t.seq(), t);
+        for (T t : l) map.put(t.state(), t);
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends AbstractArc> Map<String, Map<String, T>> edgeMap(
         List<T> l)
     {
         Map<String, Map<String, T>> map = new HashMap<>();
         for (T t : l)
         {
-            String source = t.source().seq();
-            String sink = t.sink().seq();
+            String source = ((LatentLabelledNode<Character, String>)t.source()).state();
+            String sink =  ((LatentLabelledNode<Character, String>)t.sink()).state();
             if (!map.containsKey(source)) map.put(source, new HashMap<>());
             map.get(source).put(sink, t);
         }
         return map;
     }
 
-    private void incStartingStateCount(String state, Map<String, LatentLabelledNode> map)
+    private void incStartingStateCount(String state, Map<String, LatentLabelledNode<Character, String>> map)
     {
         map.get(state).increment();
     }
@@ -137,33 +133,33 @@ public class HMMTrainer
     private void normalizeProbabilities(HMM hmm)
     {
         double initStateCount = 0;
-        for (LatentLabelledNode s : hmm.states())
+        for (LatentLabelledNode<Character, String> s : hmm.states())
         {
-            initStateCount += s.startingStateProbability();
+            initStateCount += s.startingProbability();
             double cnt = 0.0;
-            for (Emission e : s.emissions())
-                cnt += e.emissionProbability();
-            for (Emission e : s.emissions())
+            for (WeightedArc e : s.emissions())
+                cnt += e.weight();
+            for (WeightedArc e : s.emissions())
             {
-                double p = e.emissionProbability() / cnt;
+                double p = e.weight() / cnt;
                 if (!Double.isFinite(p)) p = 0.0;
-                e.emissionProbability(p);
+                e.weight(p);
             }
             cnt = 0.0;
             for (WeightedArc t : s.transitions())
-                cnt += t.transitionProbability();
+                cnt += t.weight();
             for (WeightedArc t : s.transitions())
             {
-                double p = t.transitionProbability() / cnt;
+                double p = t.weight() / cnt;
                 if (!Double.isFinite(p)) p = 0.0;
-                t.transitionProbability(p);
+                t.weight(p);
             }
         }
         for (LatentLabelledNode s : hmm.states())
         {
-            double p = s.startingStateProbability() / initStateCount;
+            double p = s.startingProbability() / initStateCount;
             if (!Double.isFinite(p)) p = 0.0;
-            s.startingStateProbability(p);
+            s.startingProbability(p);
         }
     }
 

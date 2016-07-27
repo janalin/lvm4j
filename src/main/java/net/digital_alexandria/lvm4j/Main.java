@@ -1,5 +1,6 @@
 package net.digital_alexandria.lvm4j;
 
+import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
 import net.digital_alexandria.lvm4j.predictor.HMMPredictor;
 import net.digital_alexandria.lvm4j.trainer.HMMTrainer;
 import net.digital_alexandria.lvm4j.util.File;
@@ -20,11 +21,12 @@ public class Main
 {
 
     private static final org.slf4j.Logger _LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
+    private static HMMFactory _hmmFac = HMMFactory.instance();
     private static final String _USAGE = "java -jar hmm4j.jar";
     private static final String _DO_PREDICT = "--predict";
     private static final String _DO_TRAIN = "--train";
-    private static final int _EXIT_SUCCESS = 0;
-    private static final int _EXIT_ERROR = -1;
+    private static final ExitCode _EXIT_SUCCESS = ExitCode.EXIT_SUCCESS;
+    private static final ExitCode _EXIT_ERROR = ExitCode.EXIT_ERROR;
 
     public static void main(String args[])
     {
@@ -51,7 +53,7 @@ public class Main
             case _DO_TRAIN: _train(arguments); break;
             default: _usage();
         }
-        return _EXIT_SUCCESS;
+        return _EXIT_SUCCESS.code();
     }
 
     private static void _usage()
@@ -69,24 +71,25 @@ public class Main
     {
         _LOGGER.info("Training new HMM.");
         ParamsParser parser = _parseTrain(args);
-        HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
-        HMMTrainer.getInstance().train(ssHMM,
-                                       parser.getArgument("-s"),
-                                       parser.getArgument("-e"));
+        HMM ssHMM = _hmmFac.hmm(parser.getArgument("--hmm"));
+        HMMTrainer.instance().train(ssHMM,
+                                    parser.getArgument("-s"),
+                                    parser.getArgument("-e"));
         File.writeXML(ssHMM, parser.getArgument("-o"));
-        return _EXIT_SUCCESS;
+        return _EXIT_SUCCESS.code();
     }
 
     private static int _predict(String args[])
     {
+
         ParamsParser parser = _parsePredict(args);
-        HMM ssHMM = HMMFactory.newInstance(parser.getArgument("--hmm"));
-        Map<String, String> map = HMMPredictor.getInstance().predict(ssHMM, parser.getArgument("-e"));
+        HMM ssHMM = _hmmFac.hmm(parser.getArgument("--hmm"));
+        Map<String, String> map = HMMPredictor.instance().predict(ssHMM, parser.getArgument("-e"));
         if (parser.isSet("-o"))
             File.writeFastaTagFile(map, parser.getArgument("-o"));
         else
             net.digital_alexandria.lvm4j.util.System.print(map);
-        return _EXIT_SUCCESS;
+        return _EXIT_SUCCESS.code();
     }
 
     private static ParamsParser _parseTrain(String[] args)

@@ -5,4 +5,5 @@ package net.digital_alexandria.lvm4j.lvm.node;
  */
 public interface Node
 {
+    public int idx();
 }

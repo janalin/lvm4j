@@ -5,7 +5,7 @@ package net.digital_alexandria.lvm4j.lvm.node;
  */
 public class LabelledNode<T> extends AbstractLabelledNode<T>
 {
-    public LabelledNode(T label, int idx)
+    LabelledNode(T label, int idx)
     {
         super(label, idx);
     }

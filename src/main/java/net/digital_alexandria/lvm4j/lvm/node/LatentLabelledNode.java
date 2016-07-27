@@ -37,12 +37,12 @@ public class LatentLabelledNode<T,U> extends LabelledNode<T>
         throw new NotImplementedException();
     }
 
-    void addTransition(WeightedArc t)
+    public void addTransition(WeightedArc t)
     {
         this._TRANSITIONS.add(t);
     }
 
-    void addEmission(WeightedArc o)
+    public void addEmission(WeightedArc o)
     {
         this._EMISSIONS.add(o);
     }
@@ -71,4 +71,6 @@ public class LatentLabelledNode<T,U> extends LabelledNode<T>
     {
         this._probStart = d;
     }
+
+    public U state() { return _STATE; }
 }

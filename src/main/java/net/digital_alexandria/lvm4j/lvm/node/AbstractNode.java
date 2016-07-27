@@ -3,7 +3,7 @@ package net.digital_alexandria.lvm4j.lvm.node;
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class AbstractNode implements Node
+class AbstractNode implements Node
 {
     private final int _IDX;
 
@@ -12,6 +12,7 @@ public class AbstractNode implements Node
         this._IDX = idx;
     }
 
+    @Override
     public int idx()
     {
         return _IDX;

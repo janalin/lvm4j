@@ -1,5 +1,7 @@
 package net.digital_alexandria.lvm4j.util;
 
+import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
+
 import java.util.Map;
 
 /**
@@ -7,10 +9,10 @@ import java.util.Map;
  */
 public class System
 {
-    public static void exit(java.lang.String s, int code)
+    public static void exit(java.lang.String s, ExitCode exitCode)
     {
         java.lang.System.err.println(s);
-        java.lang.System.exit(code);
+        java.lang.System.exit(exitCode.code());
     }
 
     public static <K, V> void print(Map<K, V> map)

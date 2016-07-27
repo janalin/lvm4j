@@ -4,7 +4,7 @@
     <groupId>net.digital_alexandria</groupId>
     <artifactId>lvm4j</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>0.1</version>
     <name>lvm4j</name>
     <repositories>
         <repository>

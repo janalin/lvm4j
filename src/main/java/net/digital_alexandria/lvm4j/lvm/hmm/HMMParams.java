@@ -9,24 +9,24 @@ import java.util.List;
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class HMMParams
+public final class HMMParams
 {
     private char[] _states;
     private char[] _observations;
     private int _order;
-    private boolean trainingParams;
-    private List<Pair> startProbabilities;
-    private List<Triple> transitionProbabilities;
-    private List<Triple> emissionProbabilities;
+    private boolean _isTrainingParam;
+    private List<Pair<String, Double>> _startWeights;
+    private List<Triple<String, String, Double> > _transitionWeights;
+    private List<Triple<String, String, Double>> _emissionWeights;
 
     public static HMMParams newInstance() { return new HMMParams(); }
 
     private HMMParams()
     {
-        this.trainingParams = false;
-        this.startProbabilities = new ArrayList<>();
-        this.transitionProbabilities = new ArrayList<>();
-        this.emissionProbabilities = new ArrayList<>();
+        this._isTrainingParam = false;
+        this._startWeights = new ArrayList<>();
+        this._transitionWeights = new ArrayList<>();
+        this._emissionWeights = new ArrayList<>();
     }
 
     int order() { return _order; }
@@ -44,28 +44,28 @@ public class HMMParams
 
     public void states(char[] states) { this._states = states; }
 
-    public List<Pair> startProbabilities()
+    public List<Pair<String, Double>> startProbabilities()
     {
-        return startProbabilities;
+        return _startWeights;
     }
 
-    public List<Triple> transitionProbabilities()
+    public List<Triple<String, String, Double>> transitionProbabilities()
     {
-        return transitionProbabilities;
+        return _transitionWeights;
     }
 
-    public List<Triple> emissionProbabilities()
+    public List<Triple<String, String, Double>> emissionProbabilities()
     {
-        return emissionProbabilities;
+        return _emissionWeights;
     }
 
     public void setTrainingParam(boolean b)
     {
-        this.trainingParams = b;
+        this._isTrainingParam = b;
     }
 
     boolean hasTrainingParams()
     {
-        return this.trainingParams;
+        return this._isTrainingParam;
     }
 }
