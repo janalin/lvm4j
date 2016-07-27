@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
+ * Class that predict the hidden state sequence given a sequence of observations.
+ *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public class HMMPredictor
+public final class HMMPredictor
 {
     private static HMMPredictor _predictor;
 
@@ -29,7 +31,7 @@ public class HMMPredictor
      *
      * @param observationsFile the file of ids and observations (fasta format)
      */
-    public Map<String, String> predict(HMM hmm, String observationsFile)
+    public final Map<String, String> predict(HMM hmm, String observationsFile)
     {
         return predict(hmm, net.digital_alexandria.lvm4j.util.File.readFastaTagFile(observationsFile));
     }

@@ -1,33 +1,27 @@
 package net.digital_alexandria.lvm4j.structs;
 
 /**
- * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
+ * Class that holds a triple of values.
+ *
+ * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class Triple<T, U, V>
+public class Triple<T, U, V> extends Pair<T, U>
 {
-    private final T t;
-    private final U u;
-    private final V v;
+    private final V _V;
 
     public Triple(T t, U u, V v)
     {
-        this.t = t;
-        this.u = u;
-        this.v = v;
+        super(t, u);
+        this._V = v;
     }
 
-    public T getFirst()
-    {
-        return t;
-    }
-
-    public U getSecond()
-    {
-        return u;
-    }
-
+    /**
+     * Getter for the third value.
+     *
+     * @return returns the third value
+     */
     public V getThird()
     {
-        return v;
+        return _V;
     }
 }

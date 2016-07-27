@@ -4,8 +4,7 @@ import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 import net.digital_alexandria.lvm4j.lvm.hmm.HMMParams;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.node.LabelledNode;
-import net.digital_alexandria.lvm4j.lvm.node.LatentLabelledNode;
+import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import org.jdom.Document;
@@ -21,7 +20,6 @@ import java.io.*;
 import java.lang.String;
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -244,8 +242,8 @@ public class File
         ortho.addContent(transitions);
         for (WeightedArc t : ssHMM.transitions())
         {
-            LatentLabelledNode<Character, String> src = (LatentLabelledNode<Character, String>) t.source();
-            LatentLabelledNode<Character, String> sink = (LatentLabelledNode<Character, String>) t.sink();
+            HMMNode<Character, String> src = (HMMNode<Character, String>) t.source();
+            HMMNode<Character, String> sink = (HMMNode<Character, String>) t.sink();
             Element transition = new Element("transition");
             transitions.addContent(transition);
             transition.setAttribute("source", src.state());
@@ -256,8 +254,8 @@ public class File
         ortho.addContent(emissions);
         for (WeightedArc e : ssHMM.emissions())
         {
-            LatentLabelledNode<Character, String> src = (LatentLabelledNode<Character, String>) e.source();
-            LatentLabelledNode<Character, String> sink = (LatentLabelledNode<Character, String>) e.sink();
+            HMMNode<Character, String> src = (HMMNode<Character, String>) e.source();
+            HMMNode<Character, String> sink = (HMMNode<Character, String>) e.sink();
             Element emission = new Element("emission");
             emissions.addContent(emission);
             emission.setAttribute("source", src.state());

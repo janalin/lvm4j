@@ -22,7 +22,7 @@ public class Main
 
     private static final org.slf4j.Logger _LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
     private static HMMFactory _hmmFac = HMMFactory.instance();
-    private static final String _USAGE = "java -jar hmm4j.jar";
+    private static final String _USAGE = "java -jar lvm4j.jar";
     private static final String _DO_PREDICT = "--predict";
     private static final String _DO_TRAIN = "--train";
     private static final ExitCode _EXIT_SUCCESS = ExitCode.EXIT_SUCCESS;
@@ -69,8 +69,8 @@ public class Main
 
     private static int _train(String args[])
     {
-        _LOGGER.info("Training new HMM.");
         ParamsParser parser = _parseTrain(args);
+        _LOGGER.info("Training new HMM.");
         HMM ssHMM = _hmmFac.hmm(parser.getArgument("--hmm"));
         HMMTrainer.instance().train(ssHMM,
                                     parser.getArgument("-s"),

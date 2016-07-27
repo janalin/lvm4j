@@ -1,6 +1,8 @@
 package net.digital_alexandria.lvm4j.lvm.node;
 
 /**
+ * Node factory class!
+ *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public class NodeFactory
@@ -9,6 +11,11 @@ public class NodeFactory
 
     private NodeFactory(){}
 
+    /**
+     * Get an instance of a NodeFactory
+     *
+     * @return returns an NodeFactory object
+     */
     public static NodeFactory instance()
     {
         if (_factory == null)
@@ -16,13 +23,30 @@ public class NodeFactory
         return _factory;
     }
 
-    public <T, U> LatentLabelledNode<T, U> latentLabelledNode(T label, U state, int idx)
+    /**
+     * Instantiates an HMMNode that has a state, a label and an index.
+     *
+     * @param label the label
+     * @param state the state
+     * @param idx the index
+     * @return returns a new instance of an HMMNode
+     */
+    public <T, U> HMMNode<T, U> newHMMNode(T label, U state, int idx)
     {
-        return new LatentLabelledNode<>(label, idx, state);
+        return new HMMNode<>(label, idx, state);
     }
 
-    public <T> LabelledNode<T> labelledNode(T label, int idx)
+    /**
+     * Instantiates an HMMNode that has a state, a label, an index and additionally some edges.
+     *
+     * @param label the label
+     * @param state the state
+     * @param idx the index
+     * @return returns a new instance of an HMMNode
+     */
+    public <T, U> LatentHMMNode<T, U> newLatentHMMNode(T label, U state, int idx)
     {
-        return new LabelledNode<>(label, idx);
+        return new LatentHMMNode<>(label, idx, state);
     }
+
 }

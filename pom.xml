@@ -8,15 +8,11 @@
     <name>lvm4j</name>
     <repositories>
         <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <id>net.digital_alexandria</id>
-            <name>YourName</name>
-            <url>http://digital-alexandria.net/repositories</url>
-            <layout>default</layout>
+            <id>central</id>
+            <url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <dependencies>
@@ -34,7 +30,7 @@
         <dependency>
             <groupId>net.digital_alexandria</groupId>
             <artifactId>commandline-parser</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>jdom</groupId>
