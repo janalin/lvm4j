@@ -8,13 +8,13 @@ import net.digital_alexandria.lvm4j.lvm.node.NodeFactory;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import net.digital_alexandria.lvm4j.util.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.lvm4j.util.Math.combinatorical;
-import static net.digital_alexandria.lvm4j.util.String.toDouble;
+import static net.digital_alexandria.lvm4j.util.Math.combinatorial;
 
 /**
  * HMMFactory class: builds and initializes an HMM
@@ -23,7 +23,7 @@ import static net.digital_alexandria.lvm4j.util.String.toDouble;
  */
 public final class HMMFactory
 {
-
+    private final static Logger _LOGGER = LoggerFactory.getLogger(HMMFactory.class);
     // creator for arcs
     private final static ArcFactory arcFac = ArcFactory.instance();
     // creator for nodes
@@ -36,7 +36,10 @@ public final class HMMFactory
     public static HMMFactory instance()
     {
         if (_factory == null)
+        {
+            _LOGGER.info("Instantiating HMMFactory");
             _factory = new HMMFactory();
+        }
         return _factory;
     }
 
@@ -87,7 +90,7 @@ public final class HMMFactory
     {
         hmm._order = order;
         // recursively get all combinates of strings of over an alphabet state of size order
-        List<String> stateList = combinatorical(states, hmm._order);
+        List<String> stateList = combinatorial(states, hmm._order);
         // set up nodes
         init(hmm, stateList, observations);
         // if the XML provided has trained parameter, initialize a trained HMM
@@ -134,14 +137,6 @@ public final class HMMFactory
             if (aso.state().equals(source) && asi.state().equals(sink))
                 a.weight(prob);
         }
-    }
-
-
-    private void addStartingProbabilities(HMM hmm, double[] probs)
-    {
-        if (probs.length != hmm._STATES.size()) return;
-        for (int i = 0; i < hmm._STATES.size(); i++)
-            hmm._STATES.get(i).startingProbability(probs[i]);
     }
 
     private void addStates(HMM hmm, List<String> states)
@@ -220,19 +215,4 @@ public final class HMMFactory
         source.addEmission(t);
     }
 
-    private double[][] initEmissionMatrix(char[] states, ArrayList<String> list)
-    {
-        double[][] emissions = new double[states.length][];
-        for (int i = 0; i < emissions.length; i++)
-            emissions[i] = toDouble(list.get(i).split("\t"));
-        return emissions;
-    }
-
-    private double[][] initTransitionMatrix(ArrayList<String> l)
-    {
-        double m[][] = new double[l.size()][];
-        for (int i = 0; i < m.length; i++)
-            m[i] = toDouble(l.get(i).split("\t"));
-        return m;
-    }
 }

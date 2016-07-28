@@ -1,6 +1,8 @@
 package net.digital_alexandria.lvm4j.lvm.edge;
 
 import net.digital_alexandria.lvm4j.lvm.node.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory class that produces arcs!
@@ -9,6 +11,8 @@ import net.digital_alexandria.lvm4j.lvm.node.Node;
  */
 public class ArcFactory
 {
+    private final static Logger _LOGGER = LoggerFactory.getLogger(ArcFactory.class);
+    // creator of arcs
     private static ArcFactory _factory;
 
     private ArcFactory(){}
@@ -21,7 +25,10 @@ public class ArcFactory
     public static ArcFactory instance()
     {
         if (_factory == null)
+        {
+            _LOGGER.info("Instantiating ArcFactory");
             _factory = new ArcFactory();
+        }
         return _factory;
     }
 

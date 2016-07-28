@@ -1,5 +1,8 @@
 package net.digital_alexandria.lvm4j.lvm.node;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Node factory class!
  *
@@ -7,6 +10,8 @@ package net.digital_alexandria.lvm4j.lvm.node;
  */
 public class NodeFactory
 {
+    private final static Logger _LOGGER = LoggerFactory.getLogger(NodeFactory.class);
+    // creator for nodes
     private static NodeFactory _factory;
 
     private NodeFactory(){}
@@ -19,7 +24,10 @@ public class NodeFactory
     public static NodeFactory instance()
     {
         if (_factory == null)
+        {
+            _LOGGER.info("Instantiating NodeFactory");
             _factory = new NodeFactory();
+        }
         return _factory;
     }
 

@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.String;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 public class File
 {
 
-    private static Logger _logger = LoggerFactory.getLogger(File.class);
+    private final static Logger _LOGGER = LoggerFactory.getLogger(File.class);
 
     private static final String xmlDefinition = "<hmm>\n" +
                                                 "\t<meta>\n" +
@@ -66,19 +65,21 @@ public class File
         Document document;
         try
         {
+            _LOGGER.info("Parsing hmm xml.");
             document = builder.build(hmmFile);
             setStandardParams(document, params);
             setTrainingParams(document, params);
         }
         catch (IOException | JDOMException e)
         {
-            _logger.error("Error when opening xmlFile: " + e.getMessage());
+            _LOGGER.error("Could not open file: " + e.getMessage());
         }
         return params;
     }
 
     private static void setTrainingParams(Document document, HMMParams params)
     {
+        _LOGGER.info("Parsing training parameters.");
         String exit = "Your XML format is wrong! It should look like this:\n" + xmlDefinitionTrained;
         Element rootNode = document.getRootElement();
         Element ortho = rootNode.getChild("ortho");
@@ -87,7 +88,10 @@ public class File
         if (ortho.getChild("starts") == null ||
             ortho.getChild("emissions") == null ||
             ortho.getChild("transitions") == null)
+        {
+            _LOGGER.error("Some elements in the xml are null.");
             net.digital_alexandria.lvm4j.util.System.exit(exit, ExitCode.EXIT_ERROR);
+        }
 
         Element start = ortho.getChild("starts");
         List list = start.getChildren();
@@ -125,6 +129,7 @@ public class File
 
     private static void setStandardParams(Document document, HMMParams params)
     {
+        _LOGGER.info("Parsing standard parameters.");
         String exit = "Your XML format is wrong! It should look like this:\n" + xmlDefinition;
         Element rootNode = document.getRootElement();
         Element meta = rootNode.getChild("meta");
@@ -145,91 +150,43 @@ public class File
     }
 
     /**
-     * Write a hashmap as fasta file.
+     * Write the HMM parameters to a xml file.
      *
-     * @param map     the hashmap to be written
-     * @param outFile the output file
-     */
-    public static void writeFastaTagFile(Map<String, String> map, String outFile)
-    {
-        try (BufferedWriter bW = new BufferedWriter(new FileWriter(new java.io.File(outFile))))
-        {
-            for (Map.Entry<String, String> e : map.entrySet())
-            {
-                bW.write(e.getKey() + "\n");
-                bW.write(e.getValue() + "\n");
-            }
-        }
-        catch (IOException e)
-        {
-            _logger.error("Could not open file: {0}", e.getMessage());
-        }
-    }
-
-    /**
-     * Read a fasta file into a hashmap where every key is a fasta ID and every value is a sequence.
-     *
-     * @param file the file you want to read
-     * @return a hashmap
-     */
-    public static Map<String, String> readFastaTagFile(java.lang.String file)
-    {
-        Map<String, String> map = new TreeMap<>();
-        try (BufferedReader bR = new BufferedReader(new FileReader(new java.io.File(file))))
-        {
-            String line;
-            String id = "";
-            Matcher m;
-            while ((line = bR.readLine()) != null)
-            {
-                if (line.startsWith(">"))
-                    id = line;
-                else
-                    map.put(id, line);
-            }
-        }
-        catch (IOException e)
-        {
-            _logger.error("Could not open file {0}!", e.getMessage());
-        }
-        return map;
-    }
-
-    /**
-     * Write the trained HMM parameters to a xml file.
-     *
-     * @param ssHMM the hmm of which should be written
+     * @param hmm the hmm of which should be written
      * @param file  the output file
      */
-    public static void writeXML(HMM ssHMM, String file)
+    public static void writeXML(HMM hmm, String file)
     {
         try
         {
+            _LOGGER.info("Writing hmm to xml.");
             Element hmmxml = new Element("hmm");
             Document doc = new Document(hmmxml);
             doc.setRootElement(hmmxml);
 
             Element meta = new Element("meta");
             hmmxml.addContent(meta);
-            Element ortho = new Element("ortho");
-            hmmxml.addContent(ortho);
-
-            addMeta(ssHMM, meta);
-            addOrtho(ssHMM, ortho);
-
+            addMeta(hmm, meta);
+            if (hmm.isTrained())
+            {
+                Element ortho = new Element("ortho");
+                hmmxml.addContent(ortho);
+                addOrtho(hmm, ortho);
+            }
             XMLOutputter xmlOutput = new XMLOutputter();
             xmlOutput.setFormat(Format.getPrettyFormat());
             xmlOutput.output(doc, new FileWriter(file));
         }
         catch (IOException e)
         {
-            _logger.error("Error when writing xmlFile: " + e.getMessage());
+            _LOGGER.error("Error when writing xmlFile: " + e.getMessage());
         }
     }
 
     @SuppressWarnings("unchecked")
     private static void addOrtho(HMM ssHMM, Element ortho)
     {
+        _LOGGER.info("Writing ortho information (trained parameters).");
         Element starts = new Element("starts");
         ortho.addContent(starts);
         ssHMM.states().stream().filter(s -> s.state().length() == 1).forEach(s -> {
@@ -241,31 +198,28 @@ public class File
         Element transitions = new Element("transitions");
         ortho.addContent(transitions);
         for (WeightedArc t : ssHMM.transitions())
-        {
-            HMMNode<Character, String> src = (HMMNode<Character, String>) t.source();
-            HMMNode<Character, String> sink = (HMMNode<Character, String>) t.sink();
-            Element transition = new Element("transition");
-            transitions.addContent(transition);
-            transition.setAttribute("source", src.state());
-            transition.setAttribute("sink", sink.state());
-            transition.setText(String.valueOf(t.weight()));
-        }
+            _add(t, "transition", transitions);
         Element emissions = new Element("emissions");
         ortho.addContent(emissions);
         for (WeightedArc e : ssHMM.emissions())
-        {
-            HMMNode<Character, String> src = (HMMNode<Character, String>) e.source();
-            HMMNode<Character, String> sink = (HMMNode<Character, String>) e.sink();
-            Element emission = new Element("emission");
-            emissions.addContent(emission);
-            emission.setAttribute("source", src.state());
-            emission.setAttribute("sink", sink.state());
-            emission.setText(String.valueOf(e.weight()));
-        }
+            _add(e, "emission", emissions);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void _add(WeightedArc arc, String lab, Element elem)
+    {
+        HMMNode<Character, String> src = (HMMNode<Character, String>) arc.source();
+        HMMNode<Character, String> sink = (HMMNode<Character, String>) arc.sink();
+        Element el = new Element(lab);
+        elem.addContent(el);
+        el.setAttribute("source", src.state());
+        el.setAttribute("sink", sink.state());
+        el.setText(String.valueOf(arc.weight()));
     }
 
     private static void addMeta(HMM ssHMM, Element meta)
     {
+        _LOGGER.info("Writing meta information (trained parameters).");
         Set<String> sb = ssHMM.states().stream()
                               .map(s -> String.valueOf(s.label()))
                               .collect(Collectors.toSet());

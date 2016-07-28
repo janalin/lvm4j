@@ -24,7 +24,7 @@ public class HMMNode<T,U> extends LabelledNode<T>
     @Override
     public String toString()
     {
-        throw new NotImplementedException();
+        return new StringBuilder().append(label()).append("-").append(_STATE).toString();
     }
 
     @Override

@@ -10,11 +10,11 @@ The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is
 
 ## Installation
  
-You can either install the package by hand if you do not want to use maven (why would you?) or just use the standard waytogo installation using a maven project.
+You can either install the package by hand if you do not want to use maven (why would you?) or just use the standard waytogo installation using a maven project (and pom.xml).
 
 ### Install package without maven
 
-1) 	Call 'mvn pacakge' from the source folder.
+1) 	Call './make.sh' from the source folder.
 
 2) 	Include 'lvm4j.jar' as external library in your Java project.
 

@@ -5,21 +5,6 @@ package net.digital_alexandria.lvm4j.util;
  */
 public class String
 {
-
-    /**
-     * Convert an array of strings to an array of integers.
-     *
-     * @param strings an array of strings
-     * @return an array of integers
-     */
-    public static int[] toInt(java.lang.String... strings)
-    {
-        int ints[] = new int[strings.length];
-        for (int i = 0; i < ints.length; i++)
-            ints[i] = Integer.parseInt(strings[i]);
-        return ints;
-    }
-
     /**
      * Convert an array of strings to an array of doubles.
      *

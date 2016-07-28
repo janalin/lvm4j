@@ -14,13 +14,4 @@ public class System
         java.lang.System.err.println(s);
         java.lang.System.exit(exitCode.code());
     }
-
-    public static <K, V> void print(Map<K, V> map)
-    {
-        map.entrySet().stream().forEach(e -> {
-            java.lang.System.out.println(e.getKey());
-            java.lang.System.out.println(e.getValue());
-        });
-
-    }
 }

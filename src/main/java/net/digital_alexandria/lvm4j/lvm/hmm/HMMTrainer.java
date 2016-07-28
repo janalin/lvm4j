@@ -3,6 +3,8 @@ package net.digital_alexandria.lvm4j.lvm.hmm;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
 import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
 import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +17,17 @@ import java.util.Map;
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */ final class HMMTrainer
 {
+    private final static Logger _LOGGER = LoggerFactory.getLogger(HMMTrainer.class);
+    // singleton
     private static HMMTrainer _trainer;
 
     static HMMTrainer instance()
     {
         if (_trainer == null)
+        {
+            _LOGGER.info("Instantiating HMMTrainer");
             _trainer = new HMMTrainer();
+        }
         return _trainer;
     }
 
@@ -31,15 +38,16 @@ import java.util.Map;
      * Train the HMM using two files: a file of observations and a file of
      * latent states that emit these observations.
      *
-     * @param states  a mapping from the id of a state to the real state sequence
-     * @param observations a mapping from the id of an observation to the real observations sequence
+     * @param statesMap  a mapping from the id of a state to the real state sequence
+     * @param observationsMap a mapping from the id of an observation to the real observations sequence
      */
-    final void train(HMM hmm, Map<String, String> states, Map<String, String> observations)
+    final void train(HMM hmm, Map<String, String> statesMap, Map<String, String> observationsMap)
     {
+        _LOGGER.info("Training HMM!");
         initializeEdges(hmm);
-        // a mapping of state label (letter) -> state object
+        // a mapping of state -> state object
         final Map<String, LatentHMMNode<Character, String>> labelStatesMap = nodeMap(hmm.states());
-        // a mapping of state label -> observation label -> emission object
+        // a mapping of state  -> observation label -> emission object
         final Map<String, Map<String, WeightedArc>> labelEmissionsMap = edgeMap(hmm.emissions());
         // a mapping of state label -> state label -> transition object
         final Map<String, Map<String, WeightedArc>> labelTransitionsMap = edgeMap(hmm.transitions());
@@ -48,40 +56,36 @@ import java.util.Map;
          * not known
          */
         final int order = hmm.order();
-        for (Map.Entry<String, String> state : states.entrySet())
+        for (Map.Entry<String, String> statesMapEntry : statesMap.entrySet())
         {
             // convert ith state sequence to char array for easy access
-            String stat = state.getKey();
+            String stateSeq = statesMapEntry.getValue();
             // convert ith observation sequence to char array
-            String[] obs = observations.get(stat).split("");
-            // increase the counter of the state the state sequence begins
-            // with.
+            String[] obsArr = observationsMap.get(statesMapEntry.getKey()).split("");
+            // increase the counter of the state the state sequence begins with.
             for (int i = 0; i < order; i++)
             {
-                String statePrefix = stat.substring(0, i + 1);
+                String statePrefix = stateSeq.substring(0, i + 1);
                 if (i == 0)
                     incStartingStateCount(statePrefix, labelStatesMap);
                 // increase the counter of the emission of state -> observation
-                incEdgeCount(statePrefix, obs[i], labelEmissionsMap);
+                incEdgeCount(statePrefix, obsArr[i], labelEmissionsMap);
                 if (i > 0)
                 {
-                    String lastStatePrefix = stat.substring(0, i);
-                    // increase the counter of the transition of lastState ->
-                    // state
-                    incEdgeCount(lastStatePrefix, statePrefix,
-                                 labelTransitionsMap);
+                    String lastStatePrefix = stateSeq.substring(0, i);
+                    // increase the counter of the transition of lastState ->state
+                    incEdgeCount(lastStatePrefix, statePrefix, labelTransitionsMap);
                 }
             }
-            for (int i = order; i < stat.length(); i++)
+            for (int i = order; i < stateSeq.length(); i++)
             {
-                String lastState = stat.substring(i - order, i);
-                String currentState = stat.substring(i - order + 1, i + 1);
-                String currentObservation = obs[i];
+                String lastState = stateSeq.substring(i - order, i);
+                String currentState = stateSeq.substring(i - order + 1, i + 1);
+                String currentObservation = obsArr[i];
                 // increase the counter of the transition state -> state
                 incEdgeCount(lastState, currentState, labelTransitionsMap);
                 // increase the counter of the emission state -> observation
-                incEdgeCount(currentState, currentObservation,
-                             labelEmissionsMap);
+                incEdgeCount(currentState, currentObservation, labelEmissionsMap);
             }
         }
         normalizeProbabilities(hmm);

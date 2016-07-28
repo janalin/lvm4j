@@ -1,6 +1,8 @@
 package net.digital_alexandria.lvm4j.lvm.hmm;
 
 import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,6 +14,8 @@ import java.util.TreeMap;
  */
 final class HMMPredictor
 {
+    private final static Logger _LOGGER = LoggerFactory.getLogger(HMMPredictor.class);
+    // singleton
     private static HMMPredictor _predictor;
 
     private HMMPredictor() {}
@@ -19,10 +23,12 @@ final class HMMPredictor
     static HMMPredictor instance()
     {
         if (_predictor == null)
+        {
+            _LOGGER.info("Instantiating HMMPredictor");
             _predictor = new HMMPredictor();
+        }
         return _predictor;
     }
-
 
     /**
      * Predict the most probable latent state sequence using a sequence of
@@ -32,6 +38,7 @@ final class HMMPredictor
      */
     final Map<String, String> predict(HMM hmm, Map<String, String> observations)
     {
+        _LOGGER.info("Predicting latent variables using viterbi!");
         checkMatrices(hmm);
         /* calculate log matrices, because then probabilities can be added
          * instead of multiplied: double has maybe too low precision!

@@ -1,8 +1,10 @@
 package net.digital_alexandria.lvm4j.lvm.hmm;
 
+import net.digital_alexandria.lvm4j.lvm.LatentVariableModel;
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
 import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
 import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
+import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Map;
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public final class HMM
+public final class HMM implements LatentVariableModel
 {
     // the order of the HMM -> number of previous states that are considered for prediction
     int _order;
@@ -25,6 +27,7 @@ public final class HMM
     final List<WeightedArc> _TRANSITIONS;
     // arcs between states and observations
     final List<WeightedArc> _EMISSIONS;
+    private boolean _isTrained;
 
     HMM()
     {
@@ -32,6 +35,7 @@ public final class HMM
         this._OBSERVATIONS = new ArrayList<>();
         this._TRANSITIONS = new ArrayList<>();
         this._EMISSIONS = new ArrayList<>();
+        this._isTrained = false;
     }
 
     /**
@@ -44,8 +48,10 @@ public final class HMM
     public void train(Map<String, String> states, Map<String, String> observations)
     {
         HMMTrainer.instance().train(this, states, observations);
+        this._isTrained = true;
     }
 
+    /**
     /**
      * Predict the most probable latent state sequence using a sequence of
      * observations.  Prediciton is done using the viterbi algorithm.
@@ -187,5 +193,22 @@ public final class HMM
      * @return returns the order of the markov chain
      */
     public int order() { return _order; }
+
+    /**
+     * Write the trained HMM parameters to a xml file.
+     *
+     * @param file  the output file
+     */
+    public void writeHMM(String file)
+    {
+        File.writeXML(this, file);
+    }
+
+    /**
+     * Getter for isTrained. True if the HMM has been trained. False if it is the raw HMM.
+     * 
+     * @return returns true if HMM has been trained
+     */
+    public boolean isTrained() {return _isTrained; }
 
 }
