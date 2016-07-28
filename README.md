@@ -15,7 +15,11 @@ You can either install the package by hand if you do not want to use maven (why 
 
 ### Install package without maven
 
-1. Call './make.sh' from the source folder.
+1. Call
+```bash
+'./make.sh'
+```
+ from the source folder.
 
 2. Include 'lvm4j.jar' as external library in your Java project.
 
@@ -23,15 +27,17 @@ You can either install the package by hand if you do not want to use maven (why 
 
 1. Include my maven repository in your 'pom.xml':
 	
-	<repositories>
-    	<repository>
-        	<id>central</id>
-        	<url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
-        	<snapshots>
-        	    <enabled>false</enabled>
-        	</snapshots>
-    	</repository>
-	</repositories>
+```java
+<repositories>
+	<repository>
+    	<id>central</id>
+    	<url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
+    	<snapshots>
+    	    <enabled>false</enabled>
+    	</snapshots>
+	</repository>
+</repositories>
+```
 
 2. Include the dependency in your 'pom.xml':
 	
@@ -65,7 +71,7 @@ char[] observations = new char[]{'X', 'Y', 'Z'};
 HMM hmm = HMMFactory.instance().hmm(states, observations, 1);
 ```
 
-It is easier though to take the constructor that takes a single string only that contains the path to an XML-file (as in <code>/src/test/resources/hmm.xml</code>). 
+It is easier though to take the constructor that takes a single string only that contains the path to an XML-file.
 
 ```java
 String xmlFile = "/src/test/resources/hmm.xml";
