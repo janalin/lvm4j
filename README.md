@@ -61,7 +61,7 @@ Here, we briefly describe how the <code>lvm4j</code> libary is used. So far the 
 
 ### How to use the HMM
 
-[![hmm](/logos/hmm.pdf)](/logos/hmm.pdf)
+[![Link to HMM](/logos/hmm.pdf)](/logos/hmm.pdf)
 
 
 Using an HMM (in v0.1) involves two steps: training of emission and transition probabilities and prediction of the latent state sequence.
