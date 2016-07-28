@@ -23,7 +23,7 @@ You can either install the package by hand if you do not want to use maven (why 
 
 from the source folder.
 
-2) Include 'lvm4j.jar' as external library in your Java project.
+2) Include <code>lvm4j.jar</code> as external library in your Java project.
 
 ### Install package with maven
 
