@@ -17,10 +17,9 @@ You can either install the package by hand if you do not want to use maven (why 
 
 1. Call
 ```bash
-'./make.sh'
+./make.sh
 ```
- from the source folder.
-
+from the source folder.
 2. Include 'lvm4j.jar' as external library in your Java project.
 
 ### Install package with maven
@@ -71,7 +70,7 @@ String xmlFile = "/src/test/resources/hmm.xml";
 HMM hmm = HMMFactory.instance().hmm(xmlFile);
 ```
 Having the HMM initialized, training is done like this:
-```
+```java
 Map<String, String> states = new HashMap<>(){{
 	put("s1", "ABCABC");
 	put("s2", "ABCCCC");
