@@ -16,15 +16,19 @@ You can either install the package by hand if you do not want to use maven (why 
 ### Install package without maven
 
 1. Call
-```bash
+
+```sh
 ./make.sh
 ```
+
 from the source folder.
+
 2. Include 'lvm4j.jar' as external library in your Java project.
 
 ### Install package with maven
 
 1. Include my maven repository in your 'pom.xml':
+
 ```xml
 <repositories>
 	<repository>
@@ -36,14 +40,17 @@ from the source folder.
 	</repository>
 </repositories>
 ```
+
 2. Include the dependency in your 'pom.xml':
-```java	
+
+```xml
 <dependency>
     <groupId>net.digital_alexandria</groupId>
     <artifactId>commandline-parser</artifactId>
     <version>1.1.2</version>
 </dependency>
 ```
+
 3. That's it.
 
 ## Usage
@@ -59,17 +66,22 @@ Using an HMM (in v0.1) involves two steps: training of emission and transition p
 #### Training
 
 First intitialize an HMM using:
+
 ```java
 char[] states = new char[]{'A', 'B', 'C'};
 char[] observations = new char[]{'X', 'Y', 'Z'};
 HMM hmm = HMMFactory.instance().hmm(states, observations, 1);
 ```
+
 It is easier though to take the constructor that takes a single string only that contains the path to an XML-file.
+
 ```java
 String xmlFile = "/src/test/resources/hmm.xml";
 HMM hmm = HMMFactory.instance().hmm(xmlFile);
 ```
+
 Having the HMM initialized, training is done like this:
+
 ```java
 Map<String, String> states = new HashMap<>(){{
 	put("s1", "ABCABC");
@@ -81,21 +93,27 @@ Map<String, String> observations = new HashMap<>(){{
 }};
 hmm.train(states, observations);
 ```
+
 Take care that <code>states</code> and <code>observations</code> have the same keys and equally long values. You can write your trained HMM to a file using:
+
 ```java
 String outFile = "hmm.trained.xml";
 hmm.writeHMM(outFile);
 ```
+
 That is it! 
 
 #### Prediction
 
 First initialize the HMM again:
+
 ```java
 String xmlFile = "/src/test/resources/hmm.trained.xml";
 HMM hmm = HMMFactory.instance().hmm(xmlFile)
 ```
+
 Make sure to use the <code>hmm.trained.xml</code> file containing your trained HMM. Then make a prediction using:
+
 ```java
 Map<String, String> observations = new HashMap<>(){{
 	put("s1", "XYZYXZ");
@@ -103,6 +121,7 @@ Map<String, String> observations = new HashMap<>(){{
 }};
 Map<String, String> pred = hmm.predict(states, observations);
 ```
+
 Congrats! That concludes the tutorial on HMMs. 
 
 ## Author
