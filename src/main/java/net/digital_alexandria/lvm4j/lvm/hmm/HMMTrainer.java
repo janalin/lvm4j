@@ -58,10 +58,15 @@ import java.util.Map;
         final int order = hmm.order();
         for (Map.Entry<String, String> statesMapEntry : statesMap.entrySet())
         {
+            String id = statesMapEntry.getKey();
             // convert ith state sequence to char array for easy access
             String stateSeq = statesMapEntry.getValue();
             // convert ith observation sequence to char array
-            String[] obsArr = observationsMap.get(statesMapEntry.getKey()).split("");
+            if (observationsMap.containsKey(id))
+                throw new IllegalArgumentException("Observation map does not contain:" + id);
+            String[] obsArr = observationsMap.get(id).split("");
+            if (stateSeq.length() != obsArr.length)
+                throw new IllegalArgumentException("Observation sequence and state sequence not equally long");
             // increase the counter of the state the state sequence begins with.
             for (int i = 0; i < order; i++)
             {

@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,14 +19,11 @@ public class HMMTrainTest
     @Before
     public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
     {
-        Method method = HMMFactory.class.getDeclaredMethod("init", HMM.class, char[].class, char[].class, int.class);
-        method.setAccessible(true);
-        hmm = HMMFactory.instance().hmm();
+        hmm = HMMFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
         Map<String, String> m = new HashMap<String, String>() {{
             put("A","ABCABC");
             put("B","ABCABC");
         }};
-        method.invoke(HMMFactory.instance(), hmm, new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
         hmm.train(m, m);
     }
 

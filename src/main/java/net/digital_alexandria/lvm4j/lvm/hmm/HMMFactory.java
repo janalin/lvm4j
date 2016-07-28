@@ -55,9 +55,24 @@ public final class HMMFactory
         return HMMbuilder(hmmFile);
     }
 
-    public HMM hmm()
+    /**
+     * Create a HMM using the provided parameters. No training is done.
+     *
+     * @param states list of chars that represent the states
+     * @param observations ist of chars that represent the observations
+     * @param order the order of the markov chain
+     * @return returns the raw HMM (untrained)
+     */
+    public HMM hmm(char states[], char observations[], int order)
     {
-        return new HMM();
+        return HMMbuilder(states, observations, order);
+    }
+
+    private HMM HMMbuilder(char[] states, char[] observations, int order)
+    {
+        HMM hmm = new HMM();
+        init(hmm, states, observations, order);
+        return hmm;
     }
 
     private HMM HMMbuilder(String hmmFile)
