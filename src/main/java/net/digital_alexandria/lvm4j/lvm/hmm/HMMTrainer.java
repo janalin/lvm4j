@@ -1,10 +1,8 @@
-package net.digital_alexandria.lvm4j.trainer;
+package net.digital_alexandria.lvm4j.lvm.hmm;
 
 import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
 import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
-import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +13,11 @@ import java.util.Map;
  * Training methods for the HMM.
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
- */
-public final class HMMTrainer
+ */ final class HMMTrainer
 {
     private static HMMTrainer _trainer;
 
-    public static HMMTrainer instance()
+    static HMMTrainer instance()
     {
         if (_trainer == null)
             _trainer = new HMMTrainer();
@@ -30,19 +27,16 @@ public final class HMMTrainer
     private HMMTrainer() {}
 
     /**
+
      * Train the HMM using two files: a file of observations and a file of
      * latent states that emit these observations.
      *
-     * @param stateFile        the file of ids and latent states (fasta format)
-     * @param observationsFile the file of ids and observations (fasta format)
+     * @param states  a mapping from the id of a state to the real state sequence
+     * @param observations a mapping from the id of an observation to the real observations sequence
      */
-    public final void train(HMM hmm, String stateFile, String observationsFile)
+    final void train(HMM hmm, Map<String, String> states, Map<String, String> observations)
     {
         initializeEdges(hmm);
-        // a mapping of id -> state sequence
-        final Map<String, String> fastaStatesMap = File.readFastaTagFile(stateFile);
-        // a mapping of id -> observation sequence
-        final Map<String, String> fastaObservationsMap = File.readFastaTagFile(observationsFile);
         // a mapping of state label (letter) -> state object
         final Map<String, LatentHMMNode<Character, String>> labelStatesMap = nodeMap(hmm.states());
         // a mapping of state label -> observation label -> emission object
@@ -54,34 +48,34 @@ public final class HMMTrainer
          * not known
          */
         final int order = hmm.order();
-        for (String s : fastaStatesMap.keySet())
+        for (Map.Entry<String, String> state : states.entrySet())
         {
             // convert ith state sequence to char array for easy access
-            String states = fastaStatesMap.get(s);
+            String stat = state.getKey();
             // convert ith observation sequence to char array
-            String[] obs = fastaObservationsMap.get(s).split("");
+            String[] obs = observations.get(stat).split("");
             // increase the counter of the state the state sequence begins
             // with.
             for (int i = 0; i < order; i++)
             {
-                String statePrefix = states.substring(0, i + 1);
+                String statePrefix = stat.substring(0, i + 1);
                 if (i == 0)
                     incStartingStateCount(statePrefix, labelStatesMap);
                 // increase the counter of the emission of state -> observation
                 incEdgeCount(statePrefix, obs[i], labelEmissionsMap);
                 if (i > 0)
                 {
-                    String lastStatePrefix = states.substring(0, i);
+                    String lastStatePrefix = stat.substring(0, i);
                     // increase the counter of the transition of lastState ->
                     // state
                     incEdgeCount(lastStatePrefix, statePrefix,
                                  labelTransitionsMap);
                 }
             }
-            for (int i = order; i < states.length(); i++)
+            for (int i = order; i < stat.length(); i++)
             {
-                String lastState = states.substring(i - order, i);
-                String currentState = states.substring(i - order + 1, i + 1);
+                String lastState = stat.substring(i - order, i);
+                String currentState = stat.substring(i - order + 1, i + 1);
                 String currentObservation = obs[i];
                 // increase the counter of the transition state -> state
                 incEdgeCount(lastState, currentState, labelTransitionsMap);
@@ -163,16 +157,5 @@ public final class HMMTrainer
             if (!Double.isFinite(p)) p = 0.0;
             s.startingProbability(p);
         }
-    }
-
-    /**
-     * Write an HMM to an xml file.
-     *
-     * @param ssHMM the hmm which parameters should be written
-     * @param file  the output file
-     */
-    public final void write(HMM ssHMM, String file)
-    {
-        net.digital_alexandria.lvm4j.util.File.writeXML(ssHMM, file);
     }
 }

@@ -1,7 +1,6 @@
-package net.digital_alexandria.lvm4j.predictor;
+package net.digital_alexandria.lvm4j.lvm.hmm;
 
 import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,32 +10,27 @@ import java.util.TreeMap;
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public final class HMMPredictor
+final class HMMPredictor
 {
     private static HMMPredictor _predictor;
 
     private HMMPredictor() {}
 
-    public static HMMPredictor instance()
+    static HMMPredictor instance()
     {
         if (_predictor == null)
             _predictor = new HMMPredictor();
         return _predictor;
     }
 
+
     /**
      * Predict the most probable latent state sequence using a sequence of
-     * observations.
-     * Prediciton is done using the viterbi algorithm.
+     * observations.  Prediciton is done using the viterbi algorithm.
      *
-     * @param observationsFile the file of ids and observations (fasta format)
+     * @param observations a mapping from the id of an observation to the real observations sequence
      */
-    public final Map<String, String> predict(HMM hmm, String observationsFile)
-    {
-        return predict(hmm, net.digital_alexandria.lvm4j.util.File.readFastaTagFile(observationsFile));
-    }
-
-    private Map<String, String> predict(HMM hmm, Map<String, String> observationsMap)
+    final Map<String, String> predict(HMM hmm, Map<String, String> observations)
     {
         checkMatrices(hmm);
         /* calculate log matrices, because then probabilities can be added
@@ -46,7 +40,7 @@ public final class HMMPredictor
         double[][] transitionsMatrix = hmm.logTransitionMatrix();
         double[][] emissionsMatrix = hmm.logEmissionMatrix();
         Map<String, String> statesMap = new TreeMap<>();
-        for (Map.Entry<String, String> entry : observationsMap.entrySet())
+        for (Map.Entry<String, String> entry : observations.entrySet())
         {
             char[] obs = entry.getValue().toUpperCase().toCharArray();
             String stateSequence = viterbi(hmm, obs, startProbabilities,

@@ -6,6 +6,7 @@ import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Central HMM class, that contains states, transitions etc.
@@ -17,13 +18,13 @@ public final class HMM
     // the order of the HMM -> number of previous states that are considered for prediction
     int _order;
     // latent variables
-     final List<LatentHMMNode<Character, String>> _STATES;
+    final List<LatentHMMNode<Character, String>> _STATES;
     // observed variables
-     final List<HMMNode<Character, String>> _OBSERVATIONS;
+    final List<HMMNode<Character, String>> _OBSERVATIONS;
     // arcs between states
-     final List<WeightedArc> _TRANSITIONS;
+    final List<WeightedArc> _TRANSITIONS;
     // arcs between states and observations
-     final List<WeightedArc> _EMISSIONS;
+    final List<WeightedArc> _EMISSIONS;
 
     HMM()
     {
@@ -31,6 +32,29 @@ public final class HMM
         this._OBSERVATIONS = new ArrayList<>();
         this._TRANSITIONS = new ArrayList<>();
         this._EMISSIONS = new ArrayList<>();
+    }
+
+    /**
+     * Train the HMM using two files: a file of observations and a file of
+     * latent states that emit these observations.
+     *
+     * @param states       a mapping from the id of a state to the real state sequence
+     * @param observations a mapping from the id of an observation to the real observations sequence
+     */
+    public void train(Map<String, String> states, Map<String, String> observations)
+    {
+        HMMTrainer.instance().train(this, states, observations);
+    }
+
+    /**
+     * Predict the most probable latent state sequence using a sequence of
+     * observations.  Prediciton is done using the viterbi algorithm.
+     *
+     * @param observations a mapping from the id of an observation to the real observations sequence
+     */
+    public Map<String, String> predict(Map<String, String> observations)
+    {
+        return HMMPredictor.instance().predict(this, observations);
     }
 
     /**
@@ -61,7 +85,8 @@ public final class HMM
     }
 
     /**
-     * Returns the log-transformed stochastic matrix of emissions, i.e. what probabilities do single emissions have for a node.
+     * Returns the log-transformed stochastic matrix of emissions, i.e. what probabilities do single emissions have
+     * for a node.
      *
      * @return returns a matrix
      */
@@ -89,7 +114,8 @@ public final class HMM
     }
 
     /**
-     * Returns the log-transformed stochastic matrix of transitions, i.e. what probabilties does a transition have given a hidden state.
+     * Returns the log-transformed stochastic matrix of transitions, i.e. what probabilties does a transition have
+     * given a hidden state.
      *
      * @return returns a matrix
      */
@@ -103,7 +129,7 @@ public final class HMM
     }
 
     /**
-     *  Returns the stochastic matrix of transitions, i.e. what probabilties does a transition have given a hidden state.
+     * Returns the stochastic matrix of transitions, i.e. what probabilties does a transition have given a hidden state.
      *
      * @return returns a matrix
      */

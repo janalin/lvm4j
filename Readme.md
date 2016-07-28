@@ -2,10 +2,15 @@
 lvm4j
 </h1>
 
+## Introduction
+
+Latent variable models are well-established statistical models that consider that some of the data are often not observed. Ill' try to give some basic ideas of how a minority of those models can be implemented in Java. For the sake of simplicity I call every model to be latent if there are two disjoint sets of variables involved, one that is observed and one that is hidden (e.g. we don't have data or they are just not an observable variable at all). 
+
+The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, has so many different applicable fields that it is still routinely found in research (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). With new patches I try to cover more and more latent variable models. For now only HMMs are implemented and an example of how they are used.
 
 ## Installation
  
-Unzip file and change directory to ss-hmm-master:
+Unzip file and change directory to lvm4j-master:
 ```bash
 cd lvm4j-master
 ```
@@ -15,7 +20,7 @@ Then call make:
 ```
 Calling make will create the jars <code>lvm4j.jar</code>  in the current directory. 
 
-## TODO
+## HMM
 
 ##### Observations/states files
 
