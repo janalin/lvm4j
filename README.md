@@ -57,41 +57,33 @@ Using an HMM (in v0.1) involves two steps: training of emission and transition p
 
 First intitialize an HMM using:
 
-´´´
-char[] states = new char[]{'A', 'B', 'C'};
-char[] observations = new char[]{'X', 'Y', 'Z'};
-HMM hmm = HMMFactory.instance().hmm(states, observations, 1);
-´´´
+	char[] states = new char[]{'A', 'B', 'C'};
+	char[] observations = new char[]{'X', 'Y', 'Z'};
+	HMM hmm = HMMFactory.instance().hmm(states, observations, 1);
 
 It is easier though to take the constructor that takes a single string only that contains the path to an XML-file (as in <code>/src/test/resources/hmm.xml</code>). 
 
-´´´
-String xmlFile = "/src/test/resources/hmm.xml";
-HMM hmm = HMMFactory.instance().hmm(xmlFile);
-´´´
+	String xmlFile = "/src/test/resources/hmm.xml";
+	HMM hmm = HMMFactory.instance().hmm(xmlFile);
 
 Having the HMM initialized, training is done like this:
 
-´´´
-Map<String, String> states = new HashMap<>(){{
-	put("s1", "ABCABC");
-	put("s2", "ABCCCC");
-}};
-Map<String, String> observations = new HashMap<>(){{
-	put("s1", "XYZYXZ");
-	put("s2", "XYZYXZ");
-}};
-hmm.train(states, observations);
-´´´
+	Map<String, String> states = new HashMap<>(){{
+		put("s1", "ABCABC");
+		put("s2", "ABCCCC");
+	}};
+	Map<String, String> observations = new HashMap<>(){{
+		put("s1", "XYZYXZ");
+		put("s2", "XYZYXZ");
+	}};
+	hmm.train(states, observations);
 
 Take care that <code>states</code> and <code>observations</code> have the same keys and equally long values.
 
 You can write your trained HMM to a file using 
 
-´´´
-String outFile = "hmm.trained.xml";
-hmm.writeHMM(outFile);
-´´´
+	String outFile = "hmm.trained.xml";
+	hmm.writeHMM(outFile);
 
 That is it! 
 
@@ -99,22 +91,18 @@ That is it!
 
 First initialize the HMM again:
 
-´´´
-String xmlFile = "/src/test/resources/hmm.trained.xml";
-HMM hmm = HMMFactory.instance().hmm(xmlFile)
-´´´
+	String xmlFile = "/src/test/resources/hmm.trained.xml";
+	HMM hmm = HMMFactory.instance().hmm(xmlFile)
 
 Make sure to use the <code>hmm.trained.xml</code> file containing your trained HMM.
 
 Then make a prediction using:
 
-	´´´
-		Map<String, String> observations = new HashMap<>(){{
-			put("s1", "XYZYXZ");
-			put("s2", "XYZYXZ");
-		}};
-		Map<String, String> pred = hmm.predict(states, observations);
-	´´´
+	Map<String, String> observations = new HashMap<>(){{
+		put("s1", "XYZYXZ");
+		put("s2", "XYZYXZ");
+	}};
+	Map<String, String> pred = hmm.predict(states, observations);
 
 Congrats! That concludes the tutorial on HMMs. 
 
