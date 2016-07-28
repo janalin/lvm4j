@@ -20,8 +20,7 @@ public class HMMDoATest
     {
         Method method = HMMFactory.class.getDeclaredMethod("init", HMM.class, char[].class, char[].class, int.class);
         method.setAccessible(true);
-        hmm = HMMFactory.instance().hmm();
-        method.invoke(HMMFactory.instance(), hmm, new char[]{'A', 'B', 'C'}, new char[]{'X', 'Y', 'Z'}, 1);
+        hmm = HMMFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'X', 'Y', 'Z'}, 1);
     }
 
     @Test

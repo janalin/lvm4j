@@ -61,6 +61,8 @@ Here, we briefly describe how the <code>lvm4j</code> libary is used. So far the 
 
 ### How to use the HMM
 
+<iframe src="/logos/hmm.pdf&embedded=true" style="width:200px; height:100px;"></iframe>
+
 Using an HMM (in v0.1) involves two steps: training of emission and transition probabilities and prediction of the latent state sequence.
 
 #### Training

@@ -62,7 +62,7 @@ import java.util.Map;
             // convert ith state sequence to char array for easy access
             String stateSeq = statesMapEntry.getValue();
             // convert ith observation sequence to char array
-            if (observationsMap.containsKey(id))
+            if (!observationsMap.containsKey(id))
                 throw new IllegalArgumentException("Observation map does not contain:" + id);
             String[] obsArr = observationsMap.get(id).split("");
             if (stateSeq.length() != obsArr.length)
