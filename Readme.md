@@ -1,6 +1,6 @@
 <h1 align="center"> lvm4j </h1>
 
-[![Build Status]https://travis-ci.org/rafstraumur/lvm4j.svg?branch=master]
+[![Build Status](https://travis-ci.org/rafstraumur/lvm4j.svg)](https://travis-ci.org/rafstraumur/lvm4j.svg)
 
 ## Introduction
 
