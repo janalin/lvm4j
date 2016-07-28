@@ -15,7 +15,7 @@ You can either install the package by hand if you do not want to use maven (why 
 
 ### Install package without maven
 
-1. Call
+1) Call
 
 ```sh
 ./make.sh
@@ -23,7 +23,7 @@ You can either install the package by hand if you do not want to use maven (why 
 
 from the source folder.
 
-2. Include 'lvm4j.jar' as external library in your Java project.
+2) Include 'lvm4j.jar' as external library in your Java project.
 
 ### Install package with maven
 
