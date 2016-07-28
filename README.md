@@ -98,11 +98,13 @@ Make sure to use the <code>hmm.trained.xml</code> file containing your trained H
 
 Then make a prediction using:
 
+```java
 	Map<String, String> observations = new HashMap<>(){{
 		put("s1", "XYZYXZ");
 		put("s2", "XYZYXZ");
 	}};
 	Map<String, String> pred = hmm.predict(states, observations);
+```
 
 Congrats! That concludes the tutorial on HMMs. 
 
