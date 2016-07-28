@@ -27,7 +27,7 @@ from the source folder.
 
 ### Install package with maven
 
-1. Include my maven repository in your 'pom.xml':
+1) Include my maven repository in your 'pom.xml':
 
 ```xml
 <repositories>
@@ -41,7 +41,7 @@ from the source folder.
 </repositories>
 ```
 
-2. Include the dependency in your 'pom.xml':
+2) Include the dependency in your 'pom.xml':
 
 ```xml
 <dependency>
@@ -51,7 +51,7 @@ from the source folder.
 </dependency>
 ```
 
-3. That's it.
+3) That's it.
 
 ## Usage
 
