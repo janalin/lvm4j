@@ -8,31 +8,41 @@ The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, ha
 
 ## Installation
  
-Unzip file and change directory to lvm4j-master:
-```bash
-cd lvm4j-master
-```
-Then call make:
-```bash
-./make.sh
-```
-Calling make will create the jars <code>lvm4j.jar</code>  in the current directory. 
+You can either install the package by hand if you do not want to use maven (why would you?) or just use the standard waytogo installation using a maven project.
 
-## HMM
+### Install package without maven
 
-##### Observations/states files
+1) 	Call 'mvn pacakge' from the source folder.
+2) 	Include 'lvm4j.jar' as external library in your Java project.
 
-Multiple IDs and observation/state sequences, newline separated.
-* IDs start with ">" and are following by identifier.
-* Observation/state sequence is a string of characters.
+### Install package with maven
 
-##### HMM file
+1)	Include my maven repository in your 'pom.xml':
+	
+		<repositories>
+        	<repository>
+            	<id>central</id>
+            	<url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
+            	<snapshots>
+            	    <enabled>false</enabled>
+            	</snapshots>
+        	</repository>
+    	</repositories>
 
-The HMM xml consists of three major xml-tags:
-* states: all possible hidden states given as concatenated string. In the example file these are H, E and C.
-* observations: all possible observations as concatenated string. In the example file these are Z, W and D.
-* order: the order of the Markov chain, i.e. the prediction of a new state depends on the <i>order</i> previous states. In the example file I used an order of 2.
+2)	Include the dependency in your 'pom.xml':
+
+	 	<dependency>
+    	    <groupId>net.digital_alexandria</groupId>
+    	    <artifactId>commandline-parser</artifactId>
+    	    <version>1.1.2</version>
+        </dependency>
+
+3)	That's it. Info of how to use it under README.md and USAGE.txt
 
 ## Usage
 
-TODO
+Here, we briefly describe how the <code>lvm4j</code> libary is used. So far the following latent variable models are implemented.
+
+* HMM (a discrete-state-discrete-observation latent variable model)
+
+### HMM
