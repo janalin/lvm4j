@@ -1,6 +1,4 @@
-<h1 align="center">
-lvm4j
-</h1>
+<h1 align="center"> lvm4j </h1>
 
 ## Introduction
 

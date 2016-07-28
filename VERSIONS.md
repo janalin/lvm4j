@@ -2,8 +2,7 @@ Versions
 ========
 
 
-0.1
----
+### 0.1
 
 Version .1 comes with classes to use HMMs. However forward, backward and Baum-Welch have NOT been implemented, yet.
 
@@ -15,7 +14,6 @@ Version .1 comes with classes to use HMMs. However forward, backward and Baum-We
 
 
 
-Author
------
+### Author
 
 * Simon Dirmeier <a href="mailto:simon.dirmeier@web.de">simon.dirmeier@web.de</a>
