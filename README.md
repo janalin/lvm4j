@@ -25,7 +25,7 @@ from the source folder.
 ### Install package with maven
 
 1. Include my maven repository in your 'pom.xml':
-```java
+```xml
 <repositories>
 	<repository>
     	<id>central</id>
