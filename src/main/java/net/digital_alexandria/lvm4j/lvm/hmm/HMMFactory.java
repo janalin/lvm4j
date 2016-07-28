@@ -31,7 +31,7 @@ public final class HMMFactory
     // singleton pattern
     private static HMMFactory _factory;
 
-    private HMMFactory(){}
+    private HMMFactory() {}
 
     public static HMMFactory instance()
     {
@@ -52,6 +52,11 @@ public final class HMMFactory
         return HMMbuilder(hmmFile);
     }
 
+    public HMM hmm()
+    {
+        return new HMM();
+    }
+
     private HMM HMMbuilder(String hmmFile)
     {
         HMM hmm = new HMM();
@@ -63,13 +68,13 @@ public final class HMMFactory
     {
         // get relevant options of the HMM
         HMMParams params = File.parseXML(hmmFile);
-        char states[] = params.states();
-        char observations[] = params.observations();
-        hmm._order = params.order();
-        // recursively get all combinates of strings of over an alphabet state of size order
-        List<String> stateList = combinatorical(states, hmm._order);
+        init(hmm, params);
+    }
+
+    private void init(HMM hmm, HMMParams params)
+    {
         // set up nodes
-        init(hmm, stateList, observations);
+        init(hmm, params.states(), params.observations(), params.order());
         // if the XML provided has trained parameter, initialize a trained HMM
         if (params.hasTrainingParams())
             initTrainingParams(hmm,
@@ -78,7 +83,25 @@ public final class HMMFactory
                                params.startProbabilities());
     }
 
-    private void initTrainingParams(HMM hmm ,
+    private void init(HMM hmm, char states[], char observations[], int order)
+    {
+        hmm._order = order;
+        // recursively get all combinates of strings of over an alphabet state of size order
+        List<String> stateList = combinatorical(states, hmm._order);
+        // set up nodes
+        init(hmm, stateList, observations);
+        // if the XML provided has trained parameter, initialize a trained HMM
+    }
+
+    private void init(HMM hmm, List<String> states, char[] observations)
+    {
+        addStates(hmm, states);
+        addObservations(hmm, observations);
+        addTransitions(hmm);
+        addEmissions(hmm);
+    }
+
+    private void initTrainingParams(HMM hmm,
                                     List<Triple<String, String, Double>> emissions,
                                     List<Triple<String, String, Double>> transitions,
                                     List<Pair<String, Double>> startProbabilities)
@@ -89,8 +112,8 @@ public final class HMMFactory
             String state = p.getFirst();
             double prob = p.getSecond();
             hmm._STATES.stream()
-                   .filter(s -> s.state().equals(state))
-                   .forEach(s -> s.startingProbability(prob));
+                       .filter(s -> s.state().equals(state))
+                       .forEach(s -> s.startingProbability(prob));
         }
         // set up the transition probabilities from a state to another state
         transitions.stream().forEach(t -> setUpWeights(t, hmm._TRANSITIONS));
@@ -113,13 +136,6 @@ public final class HMMFactory
         }
     }
 
-    private void init(HMM hmm, List<String> states, char[] observations)
-    {
-        addStates(hmm, states);
-        addObservations(hmm , observations);
-        addTransitions(hmm );
-        addEmissions(hmm );
-    }
 
     private void addStartingProbabilities(HMM hmm, double[] probs)
     {

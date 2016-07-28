@@ -6,6 +6,13 @@
     <packaging>jar</packaging>
     <version>0.1</version>
     <name>lvm4j</name>
+    <distributionManagement>
+    <repository>
+        <id>centralp</id>
+        <name>h2460727.stratoserver.net-releases</name>
+        <url>http://digital-alexandria.net:8081/artifactory/libs-release-local</url>
+    </repository>
+    </distributionManagement>
     <repositories>
         <repository>
             <id>central</id>
@@ -24,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-api</artifactId>
             <version>1.7.21</version>
         </dependency>
         <dependency>
