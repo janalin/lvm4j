@@ -19,7 +19,6 @@ You can either install the package by hand if you do not want to use maven (why 
 
 1)	Include my maven repository in your 'pom.xml':
 	
-	```
 		<repositories>
         	<repository>
             	<id>central</id>
@@ -29,17 +28,14 @@ You can either install the package by hand if you do not want to use maven (why 
             	</snapshots>
         	</repository>
     	</repositories>
-    ```
 
 2)	Include the dependency in your 'pom.xml':
 	
-	```
 	 	<dependency>
     	    <groupId>net.digital_alexandria</groupId>
     	    <artifactId>commandline-parser</artifactId>
     	    <version>1.1.2</version>
         </dependency>
-     ```
 
 3)	That's it.
 
