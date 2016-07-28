@@ -1,9 +1,9 @@
 Versions
 ========
 
-### 0.1
+### v0.1
 
-Version 0.1 comes with classes to use HMMs. However forward, backward and Baum-Welch algorithms have NOT been implemented, yet.
+Version v0.1 comes with classes to use HMMs. However forward, backward and Baum-Welch algorithms have NOT been implemented, yet.
 
 * train a HMM given observational state data and hidden state data
 * predict a sequence of hidden states given observational state data
