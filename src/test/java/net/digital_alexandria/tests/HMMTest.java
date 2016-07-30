@@ -1,7 +1,7 @@
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMMFactory;
+import net.digital_alexandria.lvm4j.hmm.HMM;
+import net.digital_alexandria.lvm4j.hmm.HMMFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class HMMDoATest
+public class HMMTest
 {
     HMM hmm;
 

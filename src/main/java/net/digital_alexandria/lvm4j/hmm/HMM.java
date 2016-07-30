@@ -1,9 +1,9 @@
-package net.digital_alexandria.lvm4j.lvm.hmm;
+package net.digital_alexandria.lvm4j.hmm;
 
-import net.digital_alexandria.lvm4j.lvm.LatentVariableModel;
-import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
-import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
+import net.digital_alexandria.lvm4j.LatentVariableModel;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
+import net.digital_alexandria.lvm4j.nodes.HMMNode;
+import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public final class HMM implements LatentVariableModel
 
     /**
      * Returns the log-transformed stochastic matrix of emissions, i.e. what probabilities do single emissions have
-     * for a node.
+     * for a nodes.
      *
      * @return returns a matrix
      */
@@ -106,7 +106,7 @@ public final class HMM implements LatentVariableModel
     }
 
     /**
-     * Returns the stochastic matrix of emissions, i.e. what probabilities do single emissions have for a node.
+     * Returns the stochastic matrix of emissions, i.e. what probabilities do single emissions have for a nodes.
      *
      * @return returns a matrix
      */

@@ -1,7 +1,7 @@
-package net.digital_alexandria.lvm4j.lvm.node;
+package net.digital_alexandria.lvm4j.nodes;
 
 /**
- * Class for a node that has a label
+ * Class for a nodes that has a label
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */

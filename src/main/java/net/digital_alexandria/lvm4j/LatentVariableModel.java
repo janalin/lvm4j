@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.lvm;
+package net.digital_alexandria.lvm4j;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}

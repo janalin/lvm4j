@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.lvm.node;
+package net.digital_alexandria.lvm4j.nodes;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -62,7 +62,7 @@ public class HMMNode<T,U> extends LabelledNode<T>
     }
 
     /**
-     * Getter for the state of the node.
+     * Getter for the state of the nodes.
      *
      * @return returns the state.
      */

@@ -1,6 +1,6 @@
-package net.digital_alexandria.lvm4j.lvm.node;
+package net.digital_alexandria.lvm4j.nodes;
 
-import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     }
 
     /**
-     * Add a transition to the node.
+     * Add a transition to the nodes.
      *
      * @param t the transition to be added
      */
@@ -36,7 +36,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     }
 
     /**
-     * Add a emission to the node.
+     * Add a emission to the nodes.
      *
      * @param e the transition to be added
      */
@@ -46,7 +46,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     }
 
     /**
-     * Getter for all the emissions the node can produce.
+     * Getter for all the emissions the nodes can produce.
      *
      * @return returns a list of arcs to observed variables
      */
@@ -56,7 +56,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     }
 
     /**
-     * Getter for all the transitions the node can produce.
+     * Getter for all the transitions the nodes can produce.
      *
      * @return returns a list of arcs to hidden variables
      */

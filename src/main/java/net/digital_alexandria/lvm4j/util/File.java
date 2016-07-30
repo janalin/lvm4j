@@ -1,10 +1,10 @@
 package net.digital_alexandria.lvm4j.util;
 
-import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMMParams;
-import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
+import net.digital_alexandria.lvm4j.enums.ExitCode;
+import net.digital_alexandria.lvm4j.hmm.HMM;
+import net.digital_alexandria.lvm4j.hmm.HMMParams;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
+import net.digital_alexandria.lvm4j.nodes.HMMNode;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import org.jdom.Document;

@@ -1,10 +1,10 @@
-package net.digital_alexandria.lvm4j.lvm.hmm;
+package net.digital_alexandria.lvm4j.hmm;
 
-import net.digital_alexandria.lvm4j.lvm.edge.ArcFactory;
-import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
-import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
-import net.digital_alexandria.lvm4j.lvm.node.NodeFactory;
+import net.digital_alexandria.lvm4j.edges.ArcFactory;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
+import net.digital_alexandria.lvm4j.nodes.HMMNode;
+import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
+import net.digital_alexandria.lvm4j.nodes.NodeFactory;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import net.digital_alexandria.lvm4j.structs.Triple;
 import net.digital_alexandria.lvm4j.util.File;
@@ -45,9 +45,9 @@ public final class HMMFactory
 
     /**
      * Create a HMM using the provided file. The HMM can be used for training and prediction.
-     * If the edge weights are binary training has to be done at first.
+     * If the edges weights are binary training has to be done at first.
      *
-     * @param hmmFile the file containing edge/node information
+     * @param hmmFile the file containing edges/nodes information
      * @return an HMM
      */
     public HMM hmm(String hmmFile)

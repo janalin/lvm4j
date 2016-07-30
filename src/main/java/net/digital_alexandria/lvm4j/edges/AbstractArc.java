@@ -1,6 +1,6 @@
-package net.digital_alexandria.lvm4j.lvm.edge;
+package net.digital_alexandria.lvm4j.edges;
 
-import net.digital_alexandria.lvm4j.lvm.node.Node;
+import net.digital_alexandria.lvm4j.nodes.Node;
 
 /**
  * Abstract class that stores two nodes as members
@@ -41,9 +41,9 @@ abstract class AbstractArc implements Arc
     }
 
     /**
-     * Getter for the end node of the arc!
+     * Getter for the end nodes of the arc!
      *
-     * @return returns the sink node
+     * @return returns the sink nodes
      */
     public final Node sink()
     {
@@ -51,9 +51,9 @@ abstract class AbstractArc implements Arc
     }
 
     /**
-     * Getter for the start node of the arc!
+     * Getter for the start nodes of the arc!
      *
-     * @return returns the source node
+     * @return returns the source nodes
      */
     public final Node source()
     {

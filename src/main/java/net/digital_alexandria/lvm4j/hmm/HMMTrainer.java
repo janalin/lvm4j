@@ -1,8 +1,8 @@
-package net.digital_alexandria.lvm4j.lvm.hmm;
+package net.digital_alexandria.lvm4j.hmm;
 
-import net.digital_alexandria.lvm4j.lvm.edge.WeightedArc;
-import net.digital_alexandria.lvm4j.lvm.node.HMMNode;
-import net.digital_alexandria.lvm4j.lvm.node.LatentHMMNode;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
+import net.digital_alexandria.lvm4j.nodes.HMMNode;
+import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

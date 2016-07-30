@@ -1,6 +1,6 @@
-package net.digital_alexandria.lvm4j.lvm.hmm;
+package net.digital_alexandria.lvm4j.hmm;
 
-import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
+import net.digital_alexandria.lvm4j.enums.ExitCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

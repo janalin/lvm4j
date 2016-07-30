@@ -1,12 +1,11 @@
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.lvm.hmm.HMM;
-import net.digital_alexandria.lvm4j.lvm.hmm.HMMFactory;
+import net.digital_alexandria.lvm4j.hmm.HMM;
+import net.digital_alexandria.lvm4j.hmm.HMMFactory;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 

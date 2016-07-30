@@ -1,6 +1,6 @@
-package net.digital_alexandria.lvm4j.lvm.edge;
+package net.digital_alexandria.lvm4j.edges;
 
-import net.digital_alexandria.lvm4j.lvm.node.Node;
+import net.digital_alexandria.lvm4j.nodes.Node;
 
 /**
  * Interface for all kinds of edges
@@ -10,7 +10,7 @@ import net.digital_alexandria.lvm4j.lvm.node.Node;
 public interface Edge
 {
     /**
-     * Getter for the two terminal nodes of the edge.
+     * Getter for the two terminal nodes of the edges.
      *
      * @return returns the terminal nodes
      */

@@ -1,6 +1,6 @@
-package net.digital_alexandria.lvm4j.lvm.edge;
+package net.digital_alexandria.lvm4j.edges;
 
-import net.digital_alexandria.lvm4j.lvm.node.Node;
+import net.digital_alexandria.lvm4j.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +35,8 @@ public class ArcFactory
     /**
      * Instantiates an arc that has two nodes as starting and end points and a weight.
      *
-     * @param source source node of arc
-     * @param sink node that arc points so
+     * @param source source nodes of arc
+     * @param sink nodes that arc points so
      * @param weight weight of the arc
      * @return returns a new instance of a WeightedArc
      */

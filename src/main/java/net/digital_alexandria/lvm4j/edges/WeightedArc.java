@@ -1,16 +1,16 @@
-package net.digital_alexandria.lvm4j.lvm.edge;
+package net.digital_alexandria.lvm4j.edges;
 
 
-import net.digital_alexandria.lvm4j.lvm.node.Node;
+import net.digital_alexandria.lvm4j.nodes.Node;
 
 /**
- * Directed weighted edge class.
+ * Directed weighted edges class.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public final class WeightedArc extends AbstractArc
 {
-    // weight of the edge
+    // weight of the edges
     private double _weight;
 
     WeightedArc(Node source, Node sink, double weight)
@@ -40,7 +40,7 @@ public final class WeightedArc extends AbstractArc
     }
 
     /**
-     * Increases the weight of the edge by one
+     * Increases the weight of the edges by one
      */
     public final void increment()
     {
@@ -48,9 +48,9 @@ public final class WeightedArc extends AbstractArc
     }
 
     /**
-     * Getter for the edge weight
+     * Getter for the edges weight
      *
-     * @return returns weight of the edge
+     * @return returns weight of the edges
      */
     public final double weight()
     {
@@ -58,7 +58,7 @@ public final class WeightedArc extends AbstractArc
     }
 
     /**
-     * Setter for the edge weight
+     * Setter for the edges weight
      *
      * @param weight weight to be set
      */

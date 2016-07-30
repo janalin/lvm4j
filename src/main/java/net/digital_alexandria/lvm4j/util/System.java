@@ -1,8 +1,6 @@
 package net.digital_alexandria.lvm4j.util;
 
-import net.digital_alexandria.lvm4j.lvm.enums.ExitCode;
-
-import java.util.Map;
+import net.digital_alexandria.lvm4j.enums.ExitCode;
 
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}

@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.lvm.node;
+package net.digital_alexandria.lvm4j.nodes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

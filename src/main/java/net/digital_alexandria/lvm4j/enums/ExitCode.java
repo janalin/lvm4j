@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.lvm.enums;
+package net.digital_alexandria.lvm4j.enums;
 
 /**
  * Enum to store exit codes
