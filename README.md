@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/rafstraumur/lvm4j.svg?branch=master)](https://travis-ci.org/rafstraumur/lvm4j.svg?branch=master)
 [![codecov](https://codecov.io/gh/rafstraumur/lvm4j/branch/master/graph/badge.svg)](https://codecov.io/gh/rafstraumur/lvm4j)
 
+Latent variable models for Java.
+
 ## Introduction
 
 Latent variable models are well-established statistical models where some of the data are not observed. I demonstrate implementations of some of these models in Java. For the sake of simplicity I refer to every model as latent if it consists of two disjoint sets of variables, one that is observed and one that is hidden (e.g. we don't have data or they are just not observable at all). 
