@@ -9,7 +9,7 @@ Latent variable models in Java.
 
 Latent variable models are well-established statistical models where some of the data are not observed. I demonstrate implementations of some of these models in Java. For the sake of simplicity I refer to every model as latent if it consists of two disjoint sets of variables, one that is observed and one that is hidden (e.g. we don't have data or they are just not observable at all). 
 
-The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). With new versions I will try to cover more latent variable models. For now only HMMs are implemented and an example of how they are used are included.
+The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). With new versions I will try to cover more latent variable models in <code>lvm4j</code>. For now only HMMs are implemented and an example of how they are used are included.
 
 ## Installation
  
@@ -70,7 +70,7 @@ Using an HMM (in v0.1) involves two steps: training of emission and transition p
 
 #### Training
 
-First intitialize an HMM using:
+First initialize an HMM using:
 
 ```java
 char[] states = new char[]{'A', 'B', 'C'};
