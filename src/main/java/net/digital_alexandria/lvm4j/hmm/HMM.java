@@ -86,7 +86,7 @@ public final class HMM implements LatentVariableModel
     {
         double[] probs = new double[this._STATES.size()];
         for (LatentHMMNode<Character, String> s : _STATES)
-            probs[s.idx()] = (s.startingProbability());
+            probs[s.idx()] = s.startingProbability();
         return probs;
     }
 

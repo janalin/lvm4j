@@ -25,9 +25,9 @@ public final class HMMFactory
 {
     private final static Logger _LOGGER = LoggerFactory.getLogger(HMMFactory.class);
     // creator for arcs
-    private final static ArcFactory arcFac = ArcFactory.instance();
+    private final static ArcFactory _ARC_FACTORY = ArcFactory.instance();
     // creator for nodes
-    private final static NodeFactory nodeFac = NodeFactory.instance();
+    private final static NodeFactory _NODE_FACTORY = NodeFactory.instance();
     // singleton pattern
     private static HMMFactory _factory;
 
@@ -111,7 +111,7 @@ public final class HMMFactory
         // if the XML provided has trained parameter, initialize a trained HMM
     }
 
-    private void init(HMM hmm, List<String> states, char[] observations)
+    private  void init(HMM hmm, List<String> states, char[] observations)
     {
         addStates(hmm, states);
         addObservations(hmm, observations);
@@ -166,8 +166,7 @@ public final class HMMFactory
         {
             String s = states.get(i);
             int length = s.length();
-            hmm._STATES.add(nodeFac.newLatentHMMNode(s.charAt(length - 1), s, i));
-
+            hmm._STATES.add(_NODE_FACTORY.newLatentHMMNode(s.charAt(length - 1), s, i));
         }
     }
 
@@ -175,7 +174,7 @@ public final class HMMFactory
     {
         for (int i = 0; i < observations.length; i++)
             hmm._OBSERVATIONS.add(
-                nodeFac.newHMMNode(observations[i], String.valueOf(observations[i]), i));
+                _NODE_FACTORY.newHMMNode(observations[i], String.valueOf(observations[i]), i));
     }
 
     private void addTransitions(HMM hmm)
@@ -190,7 +189,6 @@ public final class HMMFactory
     private void addTransition(HMM hmm, LatentHMMNode<Character, String> source,
                                HMMNode<Character, String> sink)
     {
-        ArcFactory arcFac = ArcFactory.instance();
         String sourceSeq = source.state();
         String sinkSeq = sink.state();
         int sourceLength = sourceSeq.length();
@@ -212,7 +210,7 @@ public final class HMMFactory
             sinkPrefix = sinkSeq.substring(0, sinkLength - 1);
         if (!sourceSuffix.equals(sinkPrefix))
             return;
-        WeightedArc t = arcFac.weightedArc(source, sink, .0);
+        WeightedArc t = _ARC_FACTORY.weightedArc(source, sink, .0);
         hmm._TRANSITIONS.add(t);
         source.addTransition(t);
     }
@@ -225,7 +223,7 @@ public final class HMMFactory
 
     private void addEmission(HMM hmm, LatentHMMNode source, HMMNode sink)
     {
-        WeightedArc t = arcFac.weightedArc(source, sink, .0);
+        WeightedArc t = _ARC_FACTORY.weightedArc(source, sink, .0);
         hmm._EMISSIONS.add(t);
         source.addEmission(t);
     }

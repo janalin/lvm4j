@@ -41,7 +41,9 @@ import java.util.Map;
      * @param statesMap  a mapping from the id of a state to the real state sequence
      * @param observationsMap a mapping from the id of an observation to the real observations sequence
      */
-    final void train(HMM hmm, Map<String, String> statesMap, Map<String, String> observationsMap)
+    final void train(HMM hmm,
+                     Map<String, String> statesMap,
+                     Map<String, String> observationsMap)
     {
         _LOGGER.info("Training HMM!");
         initializeEdges(hmm);
@@ -72,28 +74,28 @@ import java.util.Map;
             {
                 String statePrefix = stateSeq.substring(0, i + 1);
                 if (i == 0)
-                    incStartingStateCount(statePrefix, labelStatesMap);
+                    _incStartStateCnt(statePrefix, labelStatesMap);
                 // increase the counter of the emission of state -> observation
-                incEdgeCount(statePrefix, obsArr[i], labelEmissionsMap);
+                _incEdgeCount(statePrefix, obsArr[i], labelEmissionsMap);
                 if (i > 0)
                 {
                     String lastStatePrefix = stateSeq.substring(0, i);
                     // increase the counter of the transition of lastState ->state
-                    incEdgeCount(lastStatePrefix, statePrefix, labelTransitionsMap);
+                    _incEdgeCount(lastStatePrefix, statePrefix, labelTransitionsMap);
                 }
             }
             for (int i = order; i < stateSeq.length(); i++)
             {
                 String lastState = stateSeq.substring(i - order, i);
-                String currentState = stateSeq.substring(i - order + 1, i + 1);
-                String currentObservation = obsArr[i];
+                String curState = stateSeq.substring(i - order + 1, i + 1);
+                String curObs = obsArr[i];
                 // increase the counter of the transition state -> state
-                incEdgeCount(lastState, currentState, labelTransitionsMap);
+                _incEdgeCount(lastState, curState, labelTransitionsMap);
                 // increase the counter of the emission state -> observation
-                incEdgeCount(currentState, currentObservation, labelEmissionsMap);
+                _incEdgeCount(curState, curObs, labelEmissionsMap);
             }
         }
-        normalizeProbabilities(hmm);
+        _normalize(hmm);
     }
 
     private void initializeEdges(HMM hmm)
@@ -124,18 +126,18 @@ import java.util.Map;
         return map;
     }
 
-    private void incStartingStateCount(String state, Map<String, LatentHMMNode<Character, String>> map)
+    private void _incStartStateCnt(String state, Map<String, LatentHMMNode<Character, String>> map)
     {
         map.get(state).increment();
     }
 
-    private <T extends WeightedArc> void incEdgeCount(
+    private <T extends WeightedArc> void _incEdgeCount(
         String source, String sink, Map<String, Map<String, T>> map)
     {
         map.get(source).get(sink).increment();
     }
 
-    private void normalizeProbabilities(HMM hmm)
+    private void _normalize(HMM hmm)
     {
         double initStateCount = 0;
         for (LatentHMMNode<Character, String> s : hmm.states())

@@ -50,8 +50,10 @@ final class HMMPredictor
         for (Map.Entry<String, String> entry : observations.entrySet())
         {
             char[] obs = entry.getValue().toUpperCase().toCharArray();
-            String stateSequence = viterbi(hmm, obs, startProbabilities,
-                                           transitionsMatrix, emissionsMatrix);
+            String stateSequence = viterbi(hmm, obs,
+                                           startProbabilities,
+                                           transitionsMatrix,
+                                           emissionsMatrix);
             statesMap.put(entry.getKey(), stateSequence);
         }
         return statesMap;
@@ -64,10 +66,9 @@ final class HMMPredictor
         final double altProbSum = 0.0;
         double[] startProbabilities = hmm.startProbabilities();
         if (!net.digital_alexandria.lvm4j.util.Math.equals(startProbabilities, delta, probSum))
-        {
-            System.err.println("Sum of starting probabilities does not equal 1.00!");
-            System.exit(-1);
-        }
+            net.digital_alexandria.lvm4j.util.System.exit
+                ("Sum of starting probabilities does not equal 1.00!",
+                 ExitCode.EXIT_ERROR);
         double[][] transitionsMatrix = hmm.transitionMatrix();
         for (double row[] : transitionsMatrix)
         {
@@ -82,11 +83,9 @@ final class HMMPredictor
         {
             if (!(net.digital_alexandria.lvm4j.util.Math.equals(row, delta, probSum) ||
                   net.digital_alexandria.lvm4j.util.Math.equals(row, delta, altProbSum)))
-            {
                 net.digital_alexandria.lvm4j.util.System.exit
                     ("Sum of emission probabilities does not equal 1.00!",
                      ExitCode.EXIT_ERROR);
-            }
         }
     }
 
@@ -99,7 +98,9 @@ final class HMMPredictor
      * @param emissionMatrix     matrix of emission probabilities
      * @return returns the sequence of predicted states
      */
-    private String viterbi(HMM hmm, char[] obs, double[] startProbabilities,
+    private String viterbi(HMM hmm,
+                           char[] obs,
+                           double[] startProbabilities,
                            double[][] transitionsMatrix,
                            double[][] emissionMatrix)
 
@@ -120,7 +121,8 @@ final class HMMPredictor
         return backtrace(hmm, probabilityPath, statePath, encodedObservations);
     }
 
-    private void fillPathMatrices(HMM hmm, int[][] statePath,
+    private void fillPathMatrices(HMM hmm,
+                                  int[][] statePath,
                                   double[][] probabilityPath,
                                   int[] encodedObservations,
                                   double[][] transitionsMatrix,
@@ -129,11 +131,18 @@ final class HMMPredictor
         for (int i = 1; i < encodedObservations.length; i++)
         {
             for (int j = 0; j < hmm.states().size(); j++)
-                setPaths(statePath, probabilityPath, i, j, transitionsMatrix, emissionMatrix, encodedObservations[i]);
+                setPaths(statePath,
+                         probabilityPath,
+                         i, j,
+                         transitionsMatrix,
+                         emissionMatrix,
+                         encodedObservations[i]);
         }
     }
 
-    private void initStarts(HMM hmm, double[][] probs, int[][] states,
+    private void initStarts(HMM hmm,
+                            double[][] probs,
+                            int[][] states,
                             double[] startProbabilities,
                             double[][] emissionMatrix,
                             int[] encodedObservations)
@@ -153,7 +162,8 @@ final class HMMPredictor
      * @param statePath       matrix of paths of states
      * @return return a string of the predicted latent states
      */
-    private String backtrace(HMM hmm, final double[][] probabilityPath,
+    private String backtrace(HMM hmm,
+                             final double[][] probabilityPath,
                              final int[][] statePath,
                              int[] encodedObservations)
     {
@@ -204,7 +214,8 @@ final class HMMPredictor
         // calculate the most probable state following after state s[i-1]
         for (int k = 0; k < transitionsMatrix.length; k++)
         {
-            double curr = probabilityPath[k][i - 1] + transitionsMatrix[k][j] +
+            double curr = probabilityPath[k][i - 1] +
+                          transitionsMatrix[k][j] +
                           emissionMatrix[j][o];
             if (curr > trans)
             {

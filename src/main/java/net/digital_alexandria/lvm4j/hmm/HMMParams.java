@@ -43,42 +43,42 @@ import java.util.List;
         this._emissionWeights = new ArrayList<>();
     }
 
-    int order() { return _order; }
+    public final int order() { return _order; }
 
-    char[] observations() { return _observations; }
+    public final char[] observations() { return _observations; }
 
-    char[] states() { return _states; }
+    public final char[] states() { return _states; }
 
-    public void observations(char[] observations)
+    public final void observations(char[] observations)
     {
         this._observations = observations;
     }
 
-    public void order(int order) { this._order = order; }
+    public final void order(int order) { this._order = order; }
 
-    public void states(char[] states) { this._states = states; }
+    public final void states(char[] states) { this._states = states; }
 
-    public List<Pair<String, Double>> startProbabilities()
+    public final List<Pair<String, Double>> startProbabilities()
     {
         return _startWeights;
     }
 
-    public List<Triple<String, String, Double>> transitionProbabilities()
+    public final List<Triple<String, String, Double>> transitionProbabilities()
     {
         return _transitionWeights;
     }
 
-    public List<Triple<String, String, Double>> emissionProbabilities()
+    public final List<Triple<String, String, Double>> emissionProbabilities()
     {
         return _emissionWeights;
     }
 
-    public void setTrainingParam(boolean b)
+    public final void setTrainingParam(boolean b)
     {
         this._isTrainingParam = b;
     }
 
-    boolean hasTrainingParams()
+    public final boolean hasTrainingParams()
     {
         return this._isTrainingParam;
     }
