@@ -39,7 +39,7 @@ public class HMMPredictTest
         }};
         m = hmm.predict(m);
         for (Map.Entry<String, String> e : m.entrySet())
-            assert e.getValue().equals("ABCABC");
+            assert(e.getValue().equals("ABCABC"));
     }
 
 }

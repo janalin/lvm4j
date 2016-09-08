@@ -3,7 +3,7 @@ package net.digital_alexandria.lvm4j.util;
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public class String
+public class Strings
 {
     /**
      * Convert an array of strings to an array of doubles.

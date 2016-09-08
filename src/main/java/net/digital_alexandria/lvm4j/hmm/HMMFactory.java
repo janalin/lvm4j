@@ -103,9 +103,9 @@ public final class HMMFactory
 
     private void init(HMM hmm, char states[], char observations[], int order)
     {
-        hmm._order = order;
+        hmm.order = order;
         // recursively get all combinates of strings of over an alphabet state of size order
-        List<String> stateList = combinatorial(states, hmm._order);
+        List<String> stateList = combinatorial(states, hmm.order);
         // set up nodes
         init(hmm, stateList, observations);
         // if the XML provided has trained parameter, initialize a trained HMM
@@ -129,14 +129,14 @@ public final class HMMFactory
         {
             String state = p.getFirst();
             double prob = p.getSecond();
-            hmm._STATES.stream()
-                       .filter(s -> s.state().equals(state))
-                       .forEach(s -> s.startingProbability(prob));
+            hmm.STATES.stream()
+                      .filter(s -> s.state().equals(state))
+                      .forEach(s -> s.startingProbability(prob));
         }
         // set up the transition probabilities from a state to another state
-        transitions.stream().forEach(t -> setUpWeights(t, hmm._TRANSITIONS));
+        transitions.stream().forEach(t -> setUpWeights(t, hmm.TRANSITIONS));
         // set up the emission probabilities from a state to an observation
-        emissions.stream().forEach(e -> setUpWeights(e, hmm._EMISSIONS));
+        emissions.stream().forEach(e -> setUpWeights(e, hmm.EMISSIONS));
     }
 
     @SuppressWarnings("unchecked")
@@ -166,23 +166,23 @@ public final class HMMFactory
         {
             String s = states.get(i);
             int length = s.length();
-            hmm._STATES.add(_NODE_FACTORY.newLatentHMMNode(s.charAt(length - 1), s, i));
+            hmm.STATES.add(_NODE_FACTORY.newLatentHMMNode(s.charAt(length - 1), s, i));
         }
     }
 
     private void addObservations(HMM hmm, char[] observations)
     {
         for (int i = 0; i < observations.length; i++)
-            hmm._OBSERVATIONS.add(
+            hmm.OBSERVATIONS.add(
                 _NODE_FACTORY.newHMMNode(observations[i], String.valueOf(observations[i]), i));
     }
 
     private void addTransitions(HMM hmm)
     {
-        for (int i = 0; i < hmm._STATES.size(); i++)
+        for (int i = 0; i < hmm.STATES.size(); i++)
         {
-            LatentHMMNode<Character, String> source = hmm._STATES.get(i);
-            hmm._STATES.stream().forEach(sink -> addTransition(hmm, source, sink));
+            LatentHMMNode<Character, String> source = hmm.STATES.get(i);
+            hmm.STATES.stream().forEach(sink -> addTransition(hmm, source, sink));
         }
     }
 
@@ -194,37 +194,37 @@ public final class HMMFactory
         int sourceLength = sourceSeq.length();
         int sinkLength = sinkSeq.length();
         if (sourceLength > sinkLength) return;
-        if (sourceLength == sinkLength && sourceLength < hmm._order)
+        if (sourceLength == sinkLength && sourceLength < hmm.order)
             return;
         if (sourceLength != sinkLength && sourceLength + 1 != sinkLength)
             return;
         String sourceSuffix;
         String sinkPrefix;
-        if (sourceLength < hmm._order)
+        if (sourceLength < hmm.order)
             sourceSuffix = sourceSeq;
         else
             sourceSuffix = sourceSeq.substring(1, sourceLength);
-        if (sinkLength < hmm._order)
+        if (sinkLength < hmm.order)
             sinkPrefix = sinkSeq.substring(0, sourceLength);
         else
             sinkPrefix = sinkSeq.substring(0, sinkLength - 1);
         if (!sourceSuffix.equals(sinkPrefix))
             return;
         WeightedArc t = _ARC_FACTORY.weightedArc(source, sink, .0);
-        hmm._TRANSITIONS.add(t);
+        hmm.TRANSITIONS.add(t);
         source.addTransition(t);
     }
 
     private void addEmissions(HMM hmm)
     {
-        for (LatentHMMNode<Character, String> state : hmm._STATES)
-            hmm._OBSERVATIONS.stream().forEach(obs -> addEmission(hmm, state, obs));
+        for (LatentHMMNode<Character, String> state : hmm.STATES)
+            hmm.OBSERVATIONS.stream().forEach(obs -> addEmission(hmm, state, obs));
     }
 
     private void addEmission(HMM hmm, LatentHMMNode source, HMMNode sink)
     {
         WeightedArc t = _ARC_FACTORY.weightedArc(source, sink, .0);
-        hmm._EMISSIONS.add(t);
+        hmm.EMISSIONS.add(t);
         source.addEmission(t);
     }
 

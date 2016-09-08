@@ -74,14 +74,14 @@ import java.util.Map;
             {
                 String statePrefix = stateSeq.substring(0, i + 1);
                 if (i == 0)
-                    _incStartStateCnt(statePrefix, labelStatesMap);
+                    incStartStateCnt(statePrefix, labelStatesMap);
                 // increase the counter of the emission of state -> observation
-                _incEdgeCount(statePrefix, obsArr[i], labelEmissionsMap);
+                incEdgeCount(statePrefix, obsArr[i], labelEmissionsMap);
                 if (i > 0)
                 {
                     String lastStatePrefix = stateSeq.substring(0, i);
                     // increase the counter of the transition of lastState ->state
-                    _incEdgeCount(lastStatePrefix, statePrefix, labelTransitionsMap);
+                    incEdgeCount(lastStatePrefix, statePrefix, labelTransitionsMap);
                 }
             }
             for (int i = order; i < stateSeq.length(); i++)
@@ -90,12 +90,12 @@ import java.util.Map;
                 String curState = stateSeq.substring(i - order + 1, i + 1);
                 String curObs = obsArr[i];
                 // increase the counter of the transition state -> state
-                _incEdgeCount(lastState, curState, labelTransitionsMap);
+                incEdgeCount(lastState, curState, labelTransitionsMap);
                 // increase the counter of the emission state -> observation
-                _incEdgeCount(curState, curObs, labelEmissionsMap);
+                incEdgeCount(curState, curObs, labelEmissionsMap);
             }
         }
-        _normalize(hmm);
+        normalize(hmm);
     }
 
     private void initializeEdges(HMM hmm)
@@ -126,18 +126,18 @@ import java.util.Map;
         return map;
     }
 
-    private void _incStartStateCnt(String state, Map<String, LatentHMMNode<Character, String>> map)
+    private void incStartStateCnt(String state, Map<String, LatentHMMNode<Character, String>> map)
     {
         map.get(state).increment();
     }
 
-    private <T extends WeightedArc> void _incEdgeCount(
+    private <T extends WeightedArc> void incEdgeCount(
         String source, String sink, Map<String, Map<String, T>> map)
     {
         map.get(source).get(sink).increment();
     }
 
-    private void _normalize(HMM hmm)
+    private void normalize(HMM hmm)
     {
         double initStateCount = 0;
         for (LatentHMMNode<Character, String> s : hmm.states())

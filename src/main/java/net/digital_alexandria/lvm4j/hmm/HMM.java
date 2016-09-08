@@ -18,24 +18,25 @@ import java.util.Map;
 public final class HMM implements LatentVariableModel
 {
     // the order of the HMM -> number of previous states that are considered for prediction
-    int _order;
+    int order;
     // latent variables
-    final List<LatentHMMNode<Character, String>> _STATES;
+    final List<LatentHMMNode<Character, String>> STATES;
     // observed variables
-    final List<HMMNode<Character, String>> _OBSERVATIONS;
+    final List<HMMNode<Character, String>> OBSERVATIONS;
     // arcs between states
-    final List<WeightedArc> _TRANSITIONS;
+    final List<WeightedArc> TRANSITIONS;
     // arcs between states and observations
-    final List<WeightedArc> _EMISSIONS;
-    private boolean _isTrained;
+    final List<WeightedArc> EMISSIONS;
+    // flag whether HMM is trained or raw
+    boolean isTrained;
 
     HMM()
     {
-        this._STATES = new ArrayList<>();
-        this._OBSERVATIONS = new ArrayList<>();
-        this._TRANSITIONS = new ArrayList<>();
-        this._EMISSIONS = new ArrayList<>();
-        this._isTrained = false;
+        this.STATES = new ArrayList<>();
+        this.OBSERVATIONS = new ArrayList<>();
+        this.TRANSITIONS = new ArrayList<>();
+        this.EMISSIONS = new ArrayList<>();
+        this.isTrained = false;
     }
 
     /**
@@ -48,7 +49,7 @@ public final class HMM implements LatentVariableModel
     public void train(Map<String, String> states, Map<String, String> observations)
     {
         HMMTrainer.instance().train(this, states, observations);
-        this._isTrained = true;
+        this.isTrained = true;
     }
 
     /**
@@ -70,9 +71,9 @@ public final class HMM implements LatentVariableModel
      */
     public final double[] logStartProbabilities()
     {
-        double[] probs = new double[this._STATES.size()];
+        double[] probs = new double[this.STATES.size()];
         final double pseudo = 0.000001;
-        for (HMMNode<Character, String> s : _STATES)
+        for (HMMNode<Character, String> s : STATES)
             probs[s.idx()] = Math.log(s.startingProbability() + pseudo);
         return probs;
     }
@@ -84,8 +85,8 @@ public final class HMM implements LatentVariableModel
      */
     public final double[] startProbabilities()
     {
-        double[] probs = new double[this._STATES.size()];
-        for (LatentHMMNode<Character, String> s : _STATES)
+        double[] probs = new double[this.STATES.size()];
+        for (LatentHMMNode<Character, String> s : STATES)
             probs[s.idx()] = s.startingProbability();
         return probs;
     }
@@ -98,9 +99,9 @@ public final class HMM implements LatentVariableModel
      */
     public final double[][] logEmissionMatrix()
     {
-        double[][] emissionMatrix = new double[this._STATES.size()][this._OBSERVATIONS.size()];
+        double[][] emissionMatrix = new double[this.STATES.size()][this.OBSERVATIONS.size()];
         final double pseudo = 0.000001;
-        for (WeightedArc e : _EMISSIONS)
+        for (WeightedArc e : EMISSIONS)
             emissionMatrix[e.source().idx()][e.sink().idx()] = Math.log(e.weight() + pseudo);
         return emissionMatrix;
     }
@@ -113,8 +114,8 @@ public final class HMM implements LatentVariableModel
     public final double[][] emissionMatrix()
     {
         double[][] emissionMatrix =
-            new double[this._STATES.size()][this._OBSERVATIONS.size()];
-        for (WeightedArc e : _EMISSIONS)
+            new double[this.STATES.size()][this.OBSERVATIONS.size()];
+        for (WeightedArc e : EMISSIONS)
             emissionMatrix[e.source().idx()][e.sink().idx()] = e.weight();
         return emissionMatrix;
     }
@@ -127,9 +128,9 @@ public final class HMM implements LatentVariableModel
      */
     public final double[][] logTransitionMatrix()
     {
-        double[][] transitionsMatrix = new double[this._STATES.size()][this._STATES.size()];
+        double[][] transitionsMatrix = new double[this.STATES.size()][this.STATES.size()];
         final double pseudo = 0.000001;
-        for (WeightedArc t : _TRANSITIONS)
+        for (WeightedArc t : TRANSITIONS)
             transitionsMatrix[t.source().idx()][t.sink().idx()] = Math.log(t.weight() + pseudo);
         return transitionsMatrix;
     }
@@ -141,8 +142,8 @@ public final class HMM implements LatentVariableModel
      */
     public double[][] transitionMatrix()
     {
-        double[][] transitionsMatrix = new double[this._STATES.size()][this._STATES.size()];
-        for (WeightedArc t : _TRANSITIONS)
+        double[][] transitionsMatrix = new double[this.STATES.size()][this.STATES.size()];
+        for (WeightedArc t : TRANSITIONS)
             transitionsMatrix[t.source().idx()][t.sink().idx()] = t.weight();
         return transitionsMatrix;
     }
@@ -154,7 +155,7 @@ public final class HMM implements LatentVariableModel
      */
     public List<WeightedArc> transitions()
     {
-        return _TRANSITIONS;
+        return TRANSITIONS;
     }
 
     /**
@@ -164,7 +165,7 @@ public final class HMM implements LatentVariableModel
      */
     public List<WeightedArc> emissions()
     {
-        return _EMISSIONS;
+        return EMISSIONS;
     }
 
     /**
@@ -174,7 +175,7 @@ public final class HMM implements LatentVariableModel
      */
     public List<LatentHMMNode<Character, String>> states()
     {
-        return _STATES;
+        return STATES;
     }
 
     /**
@@ -184,7 +185,7 @@ public final class HMM implements LatentVariableModel
      */
     public List<HMMNode<Character, String>> observations()
     {
-        return _OBSERVATIONS;
+        return OBSERVATIONS;
     }
 
     /**
@@ -192,7 +193,7 @@ public final class HMM implements LatentVariableModel
      *
      * @return returns the order of the markov chain
      */
-    public int order() { return _order; }
+    public int order() { return order; }
 
     /**
      * Write the trained HMM parameters to a xml file.
@@ -209,6 +210,6 @@ public final class HMM implements LatentVariableModel
      * 
      * @return returns true if HMM has been trained
      */
-    public boolean isTrained() {return _isTrained; }
+    public boolean isTrained() {return isTrained; }
 
 }

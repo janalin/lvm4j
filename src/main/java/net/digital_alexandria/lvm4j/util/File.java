@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.String;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,26 +29,26 @@ public class File
     private final static Logger _LOGGER = LoggerFactory.getLogger(File.class);
 
     private static final String xmlDefinition = "<hmm>\n" +
-                                                "\t<meta>\n" +
-                                                "\t\t<states>HEC</states>\n" +
-                                                "\t\t<observations>ZWD" +
-                                                "</observations" +
-                                                ">\n" +
-                                                "\t\t<order>5</order>\n" +
-                                                "\t</meta>\n" +
-                                                "</hmm>\n";
+                                                 "\t<meta>\n" +
+                                                 "\t\t<states>HEC</states>\n" +
+                                                 "\t\t<observations>ZWD" +
+                                                 "</observations" +
+                                                 ">\n" +
+                                                 "\t\t<order>5</order>\n" +
+                                                 "\t</meta>\n" +
+                                                 "</hmm>\n";
 
     private static final String xmlDefinitionTrained = "<hmm>\n" +
-                                                       "\t<meta>\n" +
-                                                       "\t\t<states>HEC</states>\n" +
-                                                       "\t\t<observations>ZWD" +
-                                                       "</observations" +
-                                                       ">\n" +
-                                                       "\t\t<order>5</order>\n" +
-                                                       "\t</meta>\n" +
-                                                       "\t<ortho>\n" +
-                                                       "\t</ortho>\n" +
-                                                       "</hmm>\n";
+                                                        "\t<meta>\n" +
+                                                        "\t\t<states>HEC</states>\n" +
+                                                        "\t\t<observations>ZWD" +
+                                                        "</observations" +
+                                                        ">\n" +
+                                                        "\t\t<order>5</order>\n" +
+                                                        "\t</meta>\n" +
+                                                        "\t<ortho>\n" +
+                                                        "\t</ortho>\n" +
+                                                        "</hmm>\n";
 
 
     /**
@@ -221,8 +220,8 @@ public class File
     {
         _LOGGER.info("Writing meta information (trained parameters).");
         Set<String> sb = ssHMM.states().stream()
-                              .map(s -> String.valueOf(s.label()))
-                              .collect(Collectors.toSet());
+                               .map(s -> String.valueOf(s.label()))
+                               .collect(Collectors.toSet());
         StringBuilder states = new StringBuilder();
         sb.stream().forEach(states::append);
 
