@@ -197,15 +197,15 @@ public class File
         Element transitions = new Element("transitions");
         ortho.addContent(transitions);
         for (WeightedArc t : ssHMM.transitions())
-            _add(t, "transition", transitions);
+            add(t, "transition", transitions);
         Element emissions = new Element("emissions");
         ortho.addContent(emissions);
         for (WeightedArc e : ssHMM.emissions())
-            _add(e, "emission", emissions);
+            add(e, "emission", emissions);
     }
 
     @SuppressWarnings("unchecked")
-    private static void _add(WeightedArc arc, String lab, Element elem)
+    private static void add(WeightedArc arc, String lab, Element elem)
     {
         HMMNode<Character, String> src = (HMMNode<Character, String>) arc.source();
         HMMNode<Character, String> sink = (HMMNode<Character, String>) arc.sink();
