@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.lvm4j.util.Math.combinatorial;
+import static math.linalg.Combinatorial.combinatorial;
 
 /**
  * HMMFactory class: builds and initializes an HMM
@@ -33,6 +33,11 @@ public final class HMMFactory
 
     private HMMFactory() {}
 
+    /**
+     * Instance method to create an HMMFactory object.
+     *
+     * @return returns an instance of HMMFactory
+     */
     public static HMMFactory instance()
     {
         if (_factory == null)
