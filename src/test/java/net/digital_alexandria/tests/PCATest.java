@@ -2,18 +2,11 @@ package net.digital_alexandria.tests;
 
 import net.digital_alexandria.lvm4j.dimensionreduction.DimensionReductionFactory;
 import net.digital_alexandria.lvm4j.dimensionreduction.PCA;
-import net.digital_alexandria.lvm4j.edges.WeightedArc;
-import net.digital_alexandria.lvm4j.hmm.HMM;
-import net.digital_alexandria.lvm4j.hmm.HMMFactory;
-import net.digital_alexandria.lvm4j.nodes.HMMNode;
-import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
