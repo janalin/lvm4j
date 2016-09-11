@@ -58,7 +58,7 @@ public final class PCA implements LatentVariableModel
         SimpleMatrix V = this._SVD.getV();
         for (int i = 0; i < V.numRows(); i++)
             eigens[i] = new Pair<>(i, V.get(i, i));
-        algo.sort.Sort.sortSecond(eigens, true);
+        net.digital_alexandria.lvm4j.sort.Sort.sortSecond(eigens, true);
         return eigens;
     }
 

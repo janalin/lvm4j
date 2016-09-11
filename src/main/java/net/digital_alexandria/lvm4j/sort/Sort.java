@@ -1,4 +1,4 @@
-package algo.sort;
+package net.digital_alexandria.lvm4j.sort;
 
 import net.digital_alexandria.lvm4j.structs.Pair;
 
@@ -23,7 +23,7 @@ public class Sort
                                                                                      boolean descending)
     {
         if (descending)
-            Arrays.sort(pairs, (o1, o2) -> o2.getSecond().compareTo(o1.getSecond()));
+            Arrays.sort(pairs, (o1, o2) -> (-1) * o1.getSecond().compareTo(o2.getSecond()));
         else
             Arrays.sort(pairs, (o1, o2) -> o1.getSecond().compareTo(o2.getSecond()));
     }

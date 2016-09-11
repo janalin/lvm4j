@@ -65,15 +65,15 @@ final class HMMPredictor
         final double probSum = 1.0;
         final double altProbSum = 0.0;
         double[] startProbabilities = hmm.startProbabilities();
-        if (!net.digital_alexandria.lvm4j.util.Math.equals(startProbabilities, delta, probSum))
+        if (!net.digital_alexandria.lvm4j.util.Math.sumEquals(startProbabilities, delta, probSum))
             net.digital_alexandria.lvm4j.util.System.exit
                 ("Sum of starting probabilities does not equal 1.00!",
                  ExitCode.EXIT_ERROR);
         double[][] transitionsMatrix = hmm.transitionMatrix();
         for (double row[] : transitionsMatrix)
         {
-            if (!(net.digital_alexandria.lvm4j.util.Math.equals(row, delta, probSum) ||
-                  net.digital_alexandria.lvm4j.util.Math.equals(row, delta, altProbSum)))
+            if (!(net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, probSum) ||
+                  net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, altProbSum)))
                 net.digital_alexandria.lvm4j.util.System.exit
                     ("Sum of transition probabilities does not equal 1.00!",
                      ExitCode.EXIT_ERROR);
@@ -81,8 +81,8 @@ final class HMMPredictor
         double[][] emissionsMatrix = hmm.emissionMatrix();
         for (double row[] : emissionsMatrix)
         {
-            if (!(net.digital_alexandria.lvm4j.util.Math.equals(row, delta, probSum) ||
-                  net.digital_alexandria.lvm4j.util.Math.equals(row, delta, altProbSum)))
+            if (!(net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, probSum) ||
+                  net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, altProbSum)))
                 net.digital_alexandria.lvm4j.util.System.exit
                     ("Sum of emission probabilities does not equal 1.00!",
                      ExitCode.EXIT_ERROR);

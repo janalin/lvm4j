@@ -5,6 +5,8 @@ package net.digital_alexandria.lvm4j.util;
  */
 public class Strings
 {
+
+    private Strings(){}
     /**
      * Convert an array of strings to an array of doubles.
      *

@@ -7,6 +7,8 @@ import net.digital_alexandria.lvm4j.enums.ExitCode;
  */
 public class System
 {
+    private System(){}
+
     public static void exit(java.lang.String s, ExitCode exitCode)
     {
         java.lang.System.err.println(s);
