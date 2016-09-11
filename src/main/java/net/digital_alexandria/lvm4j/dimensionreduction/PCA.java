@@ -6,7 +6,6 @@ import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Class that calculates a PCA
@@ -24,8 +23,13 @@ public final class PCA implements LatentVariableModel
 
     PCA(double m[][])
     {
-        this._N = m.length;
-        this._X = new SimpleMatrix(m);
+        this(new SimpleMatrix(m));
+    }
+
+    PCA(SimpleMatrix X)
+    {
+        this._N = X.numRows();
+        this._X = X;
         this._VCOV = math.linalg.Statistics.vcov(_X);
         this._SVD = math.linalg.Statistics.svd(_VCOV);
         this._EIGEN_VECTORS = _SVD.getU();
@@ -35,13 +39,19 @@ public final class PCA implements LatentVariableModel
     /**
      * Computes the rotation matrix of the original dataset using the first k principal components.
      *
-     * @param k the number of principal components
+     * @param K the number of principal components
      * @return returns the rotation matrix.
      */
-    public double[][] run(int k)
+    public final SimpleMatrix run(int K)
     {
-
-        return null;
+        SimpleMatrix eigvec = new SimpleMatrix(this._EIGEN_VECTORS.numRows(), K);
+        for (int i = 0; i < K; i++)
+        {
+            final int idx = this._EIGEN_VALUES[K].getFirst();
+            for (int j = 0; j < this._EIGEN_VECTORS.numRows(); j++)
+                eigvec.set(j, i, this._EIGEN_VECTORS.get(j, idx));
+        }
+        return this._X.mult(eigvec);
     }
 
     private Pair<Integer, Double>[] eigenValues()

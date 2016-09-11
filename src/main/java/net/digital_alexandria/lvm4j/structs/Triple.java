@@ -5,7 +5,7 @@ package net.digital_alexandria.lvm4j.structs;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class Triple<T, U, V> extends Pair<T, U>
+public class Triple<T extends Comparable<T>, U extends Comparable<U>, V> extends Pair<T, U>
 {
     private final V _V;
 
