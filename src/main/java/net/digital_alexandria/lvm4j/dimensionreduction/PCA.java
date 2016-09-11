@@ -5,8 +5,6 @@ import net.digital_alexandria.lvm4j.structs.Pair;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
 
-import java.util.Arrays;
-
 /**
  * Class that calculates a PCA
  *
@@ -60,11 +58,7 @@ public final class PCA implements LatentVariableModel
         SimpleMatrix V = this._SVD.getV();
         for (int i = 0; i < V.numRows(); i++)
             eigens[i] = new Pair<>(i, V.get(i, i));
-        Arrays.sort(eigens, (o1, o2) -> {
-            if (o2.getSecond() > o1.getSecond()) return 1;
-            else if (o2.getSecond() < o1.getSecond()) return -1;
-            return 0;
-        });
+        algo.sort.Sort.sortSecond(eigens, true);
         return eigens;
     }
 
