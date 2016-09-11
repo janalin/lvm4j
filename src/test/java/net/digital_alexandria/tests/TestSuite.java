@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    HMMTest.class ,HMMTrainTest.class, HMMPredictTest.class,
+    HMMTest.class, HMMTrainTest.class, HMMPredictTest.class,
     PCATest.class
 })
 public class TestSuite

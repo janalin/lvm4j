@@ -1,4 +1,4 @@
-package math.linalg;
+package net.digital_alexandria.lvm4j.linalg;
 
 import java.util.ArrayList;
 import java.util.List;

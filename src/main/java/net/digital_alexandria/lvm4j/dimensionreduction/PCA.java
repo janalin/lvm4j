@@ -30,8 +30,8 @@ public final class PCA implements LatentVariableModel
     {
         this._N = X.numRows();
         this._X = X;
-        this._VCOV = math.linalg.Statistics.vcov(_X);
-        this._SVD = math.linalg.Statistics.svd(_VCOV);
+        this._VCOV = net.digital_alexandria.lvm4j.linalg.Statistics.vcov(_X);
+        this._SVD = net.digital_alexandria.lvm4j.linalg.Statistics.svd(_VCOV);
         this._EIGEN_VECTORS = _SVD.getU();
         this._EIGEN_VALUES = eigenValues();
     }
