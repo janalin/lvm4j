@@ -61,10 +61,10 @@ public class PCATest
     @Before
     public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
     {
-        this.iris = readFile("iris.tsv");
+        this.iris     = readFile("iris.tsv");
         this.rotation = readFile("iris_rotation.tsv");
-        this.scores = readFile("iris_scores.tsv");
-        this.sd = readFile("iris_sdev.tsv");
+        this.scores   = readFile("iris_scores.tsv");
+        this.sd       = readFile("iris_sdev.tsv");
         pca = DimensionReductionFactory.instance().pca(this.iris);
     }
 
@@ -88,6 +88,7 @@ public class PCATest
         {
             for (int j = 0; j < s.numCols(); j++)
             {
+                // results can be rotation-invariant
                 assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
                                                                      Math.abs(this.rotation[i][j]), .01);
             }
@@ -103,6 +104,7 @@ public class PCATest
         {
             for (int j = 0; j < s.numCols(); j++)
             {
+                // results can be rotation-invariant
                 assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
                                                                      Math.abs(this.scores[i][j]), .01);
             }

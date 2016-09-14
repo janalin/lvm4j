@@ -29,6 +29,7 @@ public final class PCA implements LatentVariableModel
     {
         this._X = X;
         this._SVD = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
+        System.out.println(_SVD.getV());
         this._LOADINGS = _SVD.getV();
         this._SD = new ArrayList<>();
         for (int i = 0; i < this._X.numCols(); i++)
