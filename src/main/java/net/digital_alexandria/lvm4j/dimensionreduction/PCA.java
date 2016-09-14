@@ -25,6 +25,7 @@ public final class PCA implements LatentVariableModel
 
     PCA(SimpleMatrix _X)
     {
+        // TODO matrix scaling
         SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
         this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();

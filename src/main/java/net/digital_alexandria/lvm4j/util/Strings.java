@@ -3,7 +3,7 @@ package net.digital_alexandria.lvm4j.util;
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public class Strings
+public final class Strings
 {
 
     private Strings(){}

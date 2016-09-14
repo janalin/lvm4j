@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public class File
+public final class File
 {
 
     private final static Logger _LOGGER = LoggerFactory.getLogger(File.class);

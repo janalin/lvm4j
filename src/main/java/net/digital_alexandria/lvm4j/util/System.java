@@ -5,7 +5,7 @@ import net.digital_alexandria.lvm4j.enums.ExitCode;
 /**
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public class System
+public final class System
 {
     private System(){}
 
