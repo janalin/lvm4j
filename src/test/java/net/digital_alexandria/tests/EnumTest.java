@@ -1,7 +1,6 @@
 package net.digital_alexandria.tests;
 
 import net.digital_alexandria.lvm4j.enums.ExitCode;
-import net.digital_alexandria.lvm4j.sort.Sort;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
