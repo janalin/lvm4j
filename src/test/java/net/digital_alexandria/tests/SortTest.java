@@ -1,6 +1,6 @@
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.sort.Sort;
+import net.digital_alexandria.lvm4j.algorithm.sort.Sort;
 import net.digital_alexandria.lvm4j.structs.Pair;
 import org.junit.Before;
 import org.junit.Test;
