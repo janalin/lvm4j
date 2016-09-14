@@ -114,8 +114,10 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.2.201409121644</version>
                 <configuration>
-                    <exclude>net/digital_alexandria/lvm4j/util/File.java</exclude>
-                    <exclude>net/digital_alexandria/lvm4j/util/System.java</exclude>
+                    <excludes>
+                        <exclude>net/digital_alexandria/lvm4j/util/File.class</exclude>
+                        <exclude>net/digital_alexandria/lvm4j/util/System.class</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
