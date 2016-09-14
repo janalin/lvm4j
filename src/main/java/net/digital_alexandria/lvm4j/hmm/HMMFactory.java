@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.lvm4j.linalg.Combinatorial.combinatorial;
+import static net.digital_alexandria.lvm4j.math.linalg.Combinatorial.combinatorial;
 
 /**
  * HMMFactory class: builds and initializes an HMM

@@ -1,4 +1,4 @@
-package net.digital_alexandria.lvm4j.linalg;
+package net.digital_alexandria.lvm4j.math.linalg;
 
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
@@ -37,4 +37,5 @@ public class Statistics
     {
         return X.svd();
     }
+
 }

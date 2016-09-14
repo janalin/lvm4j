@@ -13,11 +13,9 @@ import org.ejml.simple.SimpleSVD;
 public final class PCA implements LatentVariableModel
 {
     private final SimpleMatrix _X;
-    private final SimpleMatrix _VCOV;
     private final SimpleSVD _SVD;
-    private final SimpleMatrix _EIGEN_VECTORS;
-    private final SimpleMatrix _EIGEN_VALUES;
-    private final Pair<Integer, Double>[] _EIGEN_VALUES_PAIRS;
+    private final SimpleMatrix _LOADINGS;
+    private final SimpleMatrix _SCORES;
 
     PCA(double m[][])
     {
@@ -27,11 +25,9 @@ public final class PCA implements LatentVariableModel
     PCA(SimpleMatrix X)
     {
         this._X = X;
-        this._VCOV = net.digital_alexandria.lvm4j.linalg.Statistics.vcov(_X);
-        this._SVD = net.digital_alexandria.lvm4j.linalg.Statistics.svd(_VCOV);
-        this._EIGEN_VECTORS = _SVD.getU();
-        this._EIGEN_VALUES = _SVD.getV();
-        this._EIGEN_VALUES_PAIRS = eigenValuePairs();
+        this._SVD = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
+        this._LOADINGS = _SVD.getV();
+        this._SCORES = this._X.mult(_LOADINGS);
     }
 
     /**
@@ -42,34 +38,7 @@ public final class PCA implements LatentVariableModel
      */
     public final SimpleMatrix run(int K)
     {
-        SimpleMatrix eigvec = new SimpleMatrix(this._EIGEN_VECTORS.numRows(), K);
-        for (int i = 0; i < K; i++)
-        {
-            final int idx = this._EIGEN_VALUES_PAIRS[K].getFirst();
-            for (int j = 0; j < this._EIGEN_VECTORS.numRows(); j++)
-                eigvec.set(j, i, this._EIGEN_VECTORS.get(j, idx));
-        }
-        return this._X.mult(eigvec);
-    }
-
-    private Pair<Integer, Double>[] eigenValuePairs()
-    {
-        Pair<Integer, Double>[] eigens = new Pair[this._EIGEN_VECTORS.numCols()];
-        SimpleMatrix V = this._SVD.getV();
-        for (int i = 0; i < V.numRows(); i++)
-            eigens[i] = new Pair<>(i, V.get(i, i));
-        net.digital_alexandria.lvm4j.sort.Sort.sortSecond(eigens, true);
-        return eigens;
-    }
-
-    /**
-     * Getter for the result of the SVD.
-     *
-     * @return returns the SVD
-     */
-    public SimpleSVD svd()
-    {
-        return this._SVD;
+        return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0 , K);
     }
 
     /**
@@ -77,28 +46,9 @@ public final class PCA implements LatentVariableModel
      *
      * @return returns the eigen-value matrix
      */
-    public SimpleMatrix eigenValues()
+    public SimpleMatrix loadings()
     {
-        return this._EIGEN_VALUES;
+        return this._LOADINGS;
     }
 
-    /**
-     * Getter for the eigen-vector matrix V.
-     *
-     * @return returns the eigen-vector matrix
-     */
-    public SimpleMatrix eigenVectors()
-    {
-        return this._EIGEN_VECTORS;
-    }
-
-    /**
-     * Getter for the variance-covariance matrix.
-     *
-     * @return returns the variance-covariance matrix
-     */
-    public SimpleMatrix vcov()
-    {
-        return this._VCOV;
-    }
 }
