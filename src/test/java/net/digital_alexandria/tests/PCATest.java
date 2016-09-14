@@ -88,7 +88,8 @@ public class PCATest
         {
             for (int j = 0; j < s.numCols(); j++)
             {
-                assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i, j), this.rotation[i][j], .01);
+                assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
+                                                                     Math.abs(this.rotation[i][j]), .01);
             }
         }
     }
@@ -102,7 +103,8 @@ public class PCATest
         {
             for (int j = 0; j < s.numCols(); j++)
             {
-                assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i, j), this.scores[i][j], .01);
+                assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
+                                                                     Math.abs(this.scores[i][j]), .01);
             }
         }
     }
