@@ -23,4 +23,18 @@ public class Math
         for (double d : vec) sum += d;
         return (equals - delta <= sum && sum <= equals + delta);
     }
+
+    /**
+     * Test if one value is approximately equal to a number.
+     *
+     * @param val    the value to be compared
+     * @param delta  a threshold of which the sum may deviate from the sumEquals
+     *               value
+     * @param equals the value val is compared to
+     * @return returns true of values are equal
+     */
+    public static boolean equals(double val, double equals, double delta)
+    {
+        return (equals - delta <= val && val <= equals + delta);
+    }
 }

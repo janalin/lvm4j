@@ -39,7 +39,7 @@ public class PCATest
             {
                 String[] toks = line.split("\t");
                 List<Double> el = new ArrayList<>();
-                for (int i = 0; i < toks.length - 1; i++)
+                for (int i = 0; i < toks.length; i++)
                     el.add(Double.parseDouble(toks[i]));
                 li.add(el);
             }
@@ -72,25 +72,38 @@ public class PCATest
     @SuppressWarnings("unchecked")
     public void testSD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-
-
+        List<Double> s = pca.standardDeviations();
+        for (int i = 0; i < s.size(); i++)
+        {
+            assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i), this.sd[i][0], .01);
+        }
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testLoadings() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        // TODO
         SimpleMatrix s = pca.loadings();
-
+        for (int i = 0; i < s.numRows(); i++)
+        {
+            for (int j = 0; j < s.numCols(); j++)
+            {
+                assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i, j), this.rotation[i][j], .01);
+            }
+        }
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testScores() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        // TODO
         SimpleMatrix s = pca.run(4);
-
+        for (int i = 0; i < s.numRows(); i++)
+        {
+            for (int j = 0; j < s.numCols(); j++)
+            {
+                assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i, j), this.scores[i][j], .01);
+            }
+        }
     }
 }

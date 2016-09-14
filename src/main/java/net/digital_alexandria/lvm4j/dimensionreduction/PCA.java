@@ -1,9 +1,11 @@
 package net.digital_alexandria.lvm4j.dimensionreduction;
 
 import net.digital_alexandria.lvm4j.LatentVariableModel;
-import net.digital_alexandria.lvm4j.structs.Pair;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class that calculates a PCA
@@ -15,6 +17,7 @@ public final class PCA implements LatentVariableModel
     private final SimpleMatrix _X;
     private final SimpleSVD _SVD;
     private final SimpleMatrix _LOADINGS;
+    private final List<Double> _SD;
     private final SimpleMatrix _SCORES;
 
     PCA(double m[][])
@@ -27,6 +30,9 @@ public final class PCA implements LatentVariableModel
         this._X = X;
         this._SVD = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
         this._LOADINGS = _SVD.getV();
+        this._SD = new ArrayList<>();
+        for (int i = 0; i < this._X.numCols(); i++)
+            _SD.add(this._SVD.getW().get(i, i) / Math.sqrt(_X.numRows() - 1));
         this._SCORES = this._X.mult(_LOADINGS);
     }
 
@@ -38,17 +44,26 @@ public final class PCA implements LatentVariableModel
      */
     public final SimpleMatrix run(int K)
     {
-        return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0 , K);
+        return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0, K);
     }
 
     /**
-     * Getter for the eigen-value matrix U.
+     * Getter for the loadings matrix.
      *
-     * @return returns the eigen-value matrix
+     * @return returns the loadings matrix
      */
     public SimpleMatrix loadings()
     {
         return this._LOADINGS;
     }
 
+    /**
+     * Getter for the standard deviations of the singular values.
+     *
+     * @return returns the standard deviations of the singular values
+     */
+    public List<Double> standardDeviations()
+    {
+        return this._SD;
+    }
 }
