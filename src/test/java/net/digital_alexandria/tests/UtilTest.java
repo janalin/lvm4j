@@ -27,4 +27,23 @@ public class UtilTest
     {
         assert net.digital_alexandria.lvm4j.util.Strings.toDouble("2")[0] == 2;
     }
+
+    @Test
+    public void testMean() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+        assert net.digital_alexandria.lvm4j.math.Statistics.mean(new double[]{1,3}) == 2;
+    }
+
+    @Test
+    public void testVariance() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+        assert net.digital_alexandria.lvm4j.math.Statistics.variance(new double[]{1,3}) == 2;
+    }
+
+    @Test
+    public void testStandardDeviation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+        double std =  net.digital_alexandria.lvm4j.math.Statistics.standardDeviation(new double[]{1,3});
+        assert net.digital_alexandria.lvm4j.util.Math.equals(std*std, 2, .1);
+    }
 }

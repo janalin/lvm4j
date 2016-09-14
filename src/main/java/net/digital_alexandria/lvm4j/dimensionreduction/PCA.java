@@ -14,8 +14,6 @@ import java.util.List;
  */
 public final class PCA implements LatentVariableModel
 {
-    private final SimpleMatrix _X;
-    private final SimpleSVD _SVD;
     private final SimpleMatrix _LOADINGS;
     private final List<Double> _SD;
     private final SimpleMatrix _SCORES;
@@ -25,15 +23,14 @@ public final class PCA implements LatentVariableModel
         this(new SimpleMatrix(m));
     }
 
-    PCA(SimpleMatrix X)
+    PCA(SimpleMatrix _X)
     {
-        this._X = X;
-        this._SVD = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
-        this._LOADINGS = _SVD.getV();
+        SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
+        this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();
-        for (int i = 0; i < this._X.numCols(); i++)
-            _SD.add(this._SVD.getW().get(i, i) / Math.sqrt(_X.numRows() - 1));
-        this._SCORES = this._X.mult(_LOADINGS);
+        for (int i = 0; i < _X.numCols(); i++)
+            _SD.add(svd.getW().get(i, i) / Math.sqrt(_X.numRows() - 1));
+        this._SCORES = _X.mult(_LOADINGS);
     }
 
     /**
