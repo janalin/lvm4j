@@ -112,16 +112,22 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.5.201505241946</version>
+                <version>0.7.2.201409121644</version>
                 <configuration>
-                    <excludes>
-                        <exclude>**/lvm4j/util/*</exclude>
-                    </excludes>
+                    <exclude>net/digital_alexandria/lvm4j/util/File.java</exclude>
+                    <exclude>net/digital_alexandria/lvm4j/util/System.java</exclude>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                     <execution>
