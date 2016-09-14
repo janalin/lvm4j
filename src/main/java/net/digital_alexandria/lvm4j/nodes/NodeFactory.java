@@ -34,6 +34,8 @@ public class NodeFactory
     /**
      * Instantiates an HMMNode that has a state, a label and an index.
      *
+     * @param <T> generic for node label
+     * @param <U> generic for node state
      * @param label the label
      * @param state the state
      * @param idx the index
@@ -47,6 +49,8 @@ public class NodeFactory
     /**
      * Instantiates an HMMNode that has a state, a label, an index and additionally some edges.
      *
+     * @param <T> generic for node label
+     * @param <U> generic for node state
      * @param label the label
      * @param state the state
      * @param idx the index

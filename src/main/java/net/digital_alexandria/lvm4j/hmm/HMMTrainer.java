@@ -15,7 +15,8 @@ import java.util.Map;
  * Training methods for the HMM.
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
- */ final class HMMTrainer
+ */
+final class HMMTrainer
 {
     private final static Logger _LOGGER = LoggerFactory.getLogger(HMMTrainer.class);
     // singleton

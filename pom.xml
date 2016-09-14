@@ -115,7 +115,7 @@
                 <version>0.7.5.201505241946</version>
                 <configuration>
                     <excludes>
-                        <exclude>net.digital_alexandria.lvm4j.util.*java</exclude>
+                        <exclude>**/lvm4j/util/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

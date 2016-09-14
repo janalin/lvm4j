@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
- public final class HMMParams
+public final class HMMParams
 {
     // the possible latent variables of an HMM as characters (i.e. discrete space)
     private char[] _states;

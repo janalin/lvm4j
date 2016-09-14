@@ -53,11 +53,11 @@ public final class HMM implements LatentVariableModel
     }
 
     /**
-    /**
      * Predict the most probable latent state sequence using a sequence of
      * observations.  Prediciton is done using the viterbi algorithm.
      *
      * @param observations a mapping from the id of an observation to the real observations sequence
+     * @return returns a map the predicted states for given sequences
      */
     public Map<String, String> predict(Map<String, String> observations)
     {

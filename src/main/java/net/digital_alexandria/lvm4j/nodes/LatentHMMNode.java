@@ -10,6 +10,8 @@ import java.util.List;
  * Most importantly it is latend in an HMM.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
+ * @param <T> generic for label of node
+ * @param <U> generic for state of node
  */
 public final class LatentHMMNode<T,U> extends HMMNode <T,U>
 {

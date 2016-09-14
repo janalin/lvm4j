@@ -1,9 +1,11 @@
 package net.digital_alexandria.lvm4j.nodes;
 
 /**
- * Abstract class that stores a nodes that as an arbitrary
+ *Abstract class that stores a nodes that as an arbitrary
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
+ *
+ * @param <T> generic for label of node
  */
 abstract class AbstractLabelledNode<T> extends AbstractNode
 {
