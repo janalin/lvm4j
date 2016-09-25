@@ -27,11 +27,10 @@
         </developer>
     </developers>
     <distributionManagement>
-    <repository>
-        <id>central</id>
-        <name>h2460727.stratoserver.net-releases</name>
-        <url>http://digital-alexandria.net:8081/artifactory/libs-release-local</url>
-    </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
     <dependencies>
         <dependency>
