@@ -1,5 +1,6 @@
 package net.digital_alexandria.tests;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -9,11 +10,12 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    HMMTest.class, HMMTrainTest.class, HMMPredictTest.class,
-    PCATest.class, SortTest.class, EnumTest.class, UtilTest.class
+    PCATest.class, SortTest.class, EnumTest.class, UtilTest.class,
+    HMMTest.class, HMMTrainTest.class, HMMPredictTest.class
 })
 public class TestSuite
 {
+
     @BeforeClass
     public static void setup()
     {

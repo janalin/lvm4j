@@ -1,6 +1,5 @@
 package net.digital_alexandria.lvm4j.edges;
 
-
 import net.digital_alexandria.lvm4j.nodes.Node;
 
 /**
