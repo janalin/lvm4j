@@ -38,7 +38,7 @@ If you use Maven just put this into your pom.xml:
 
 You can also build the <code>jar</code> and then include it in your package.
 
-1) Clone github repository:
+1) Clone the github repository:
 
     $ git clone https://github.com/dirmeier/lvm4j.git
 
@@ -51,7 +51,7 @@ You can also build the <code>jar</code> and then include it in your package.
 
 ## Usage
 
-Here, we briefly describe how the <code>lvm4j</code> libary is used. So far the following latent variable models are implemented.
+Here, we briefly describe how the <code>lvm4j</code> libary is used. So far the following latent variable models are implemented:
 
 * HMM (a discrete-state-discrete-observation latent variable model)
 * PCA (a dimension reduction method with latent *loadings* and observable *scores*)
