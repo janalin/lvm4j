@@ -6,7 +6,7 @@
 
     <groupId>net.digital-alexandria</groupId>
     <artifactId>lvm4j</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
 
     <name>lvm4j</name>
@@ -134,17 +134,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
+           
         </plugins>
     </build>
 
@@ -195,5 +185,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
