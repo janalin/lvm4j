@@ -19,7 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.dimensionreduction;
+package net.digital_alexandria.lvm4j.decomposition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,25 +29,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class DimensionReductionFactory
+public class Decomposition
 {
-    private final static Logger _LOGGER = LoggerFactory.getLogger(DimensionReductionFactory.class);
+    private final static Logger _LOGGER = LoggerFactory.getLogger(Decomposition.class);
     // singleton pattern
-    private static DimensionReductionFactory _factory;
+    private static Decomposition _factory;
 
-    private DimensionReductionFactory() {}
+    private Decomposition() {}
 
     /**
      * Instance method to create an DimensionReductionFactory object.
      *
      * @return returns an instance of DimensionReductionFactory
      */
-    public static DimensionReductionFactory instance()
+    public static Decomposition instance()
     {
         if (_factory == null)
         {
-            _LOGGER.info("Instantiating DimensionReductionFactory");
-            _factory = new DimensionReductionFactory();
+            _LOGGER.info("Instantiating " + Decomposition.class.getSimpleName());
+            _factory = new Decomposition();
         }
         return _factory;
     }
@@ -55,11 +55,22 @@ public class DimensionReductionFactory
     /**
      * Create a PCA object with a given matrix that is used for the dimension reduction.
      *
-     * @param mat the matrix for which the PCA is calculated
+     * @param X the matrix for which the PCA is calculated
      * @return returns an PCA object
      */
-    public PCA pca(double[][] mat)
+    public PCA pca(double[][] X)
     {
-        return new PCA(mat);
+        return new PCA(X);
+    }
+
+    /**
+     * Create an FA object with a given matrix that is used for the dimension reduction.
+     *
+     * @param X the matrix for which the FA is calculated
+     * @return returns an FA object
+     */
+    public FactorAnalysis factorAnalysis(double[][] X)
+    {
+        return new FactorAnalysis(X);
     }
 }

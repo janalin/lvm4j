@@ -24,9 +24,9 @@ package net.digital_alexandria.lvm4j.math;
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class Statistics
+public class Moments
 {
-    private Statistics(){}
+    private Moments(){}
 
     /**
      * Calculate the mean of an array.

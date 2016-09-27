@@ -21,8 +21,8 @@
 
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.dimensionreduction.DimensionReductionFactory;
-import net.digital_alexandria.lvm4j.dimensionreduction.PCA;
+import net.digital_alexandria.lvm4j.decomposition.Decomposition;
+import net.digital_alexandria.lvm4j.decomposition.PCA;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +86,7 @@ public class PCATest
         this.rotation = readFile("iris_rotation.tsv");
         this.scores   = readFile("iris_scores.tsv");
         this.sd       = readFile("iris_sdev.tsv");
-        pca = DimensionReductionFactory.instance().pca(this.iris);
+        pca = Decomposition.instance().pca(this.iris);
     }
 
     @Test

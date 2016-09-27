@@ -21,6 +21,7 @@
 
 package net.digital_alexandria.tests;
 
+import net.digital_alexandria.lvm4j.math.Moments;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,19 +53,19 @@ public class UtilTest
     @Test
     public void testMean() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        assert net.digital_alexandria.lvm4j.math.Statistics.mean(new double[]{1,3}) == 2;
+        assert Moments.mean(new double[]{1,3}) == 2;
     }
 
     @Test
     public void testVariance() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        assert net.digital_alexandria.lvm4j.math.Statistics.variance(new double[]{1,3}) == 2;
+        assert Moments.variance(new double[]{1,3}) == 2;
     }
 
     @Test
     public void testStandardDeviation() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        double std =  net.digital_alexandria.lvm4j.math.Statistics.standardDeviation(new double[]{1,3});
+        double std =  Moments.standardDeviation(new double[]{1,3});
         assert net.digital_alexandria.lvm4j.util.Math.equals(std*std, 2, .1);
     }
 }

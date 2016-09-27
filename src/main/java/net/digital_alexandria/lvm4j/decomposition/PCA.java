@@ -19,7 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.dimensionreduction;
+package net.digital_alexandria.lvm4j.decomposition;
 
 import net.digital_alexandria.lvm4j.LatentVariableModel;
 import org.ejml.simple.SimpleMatrix;
@@ -39,20 +39,20 @@ public final class PCA implements LatentVariableModel
     private final List<Double> _SD;
     private final SimpleMatrix _SCORES;
 
-    PCA(double m[][])
+    PCA(double X[][])
     {
-        this(new SimpleMatrix(m));
+        this(new SimpleMatrix(X));
     }
 
-    PCA(SimpleMatrix _X)
+    PCA(SimpleMatrix X)
     {
         // TODO matrix scaling
-        SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(_X);
+        SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(X);
         this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();
-        for (int i = 0; i < _X.numCols(); i++)
-            _SD.add(svd.getW().get(i, i) / Math.sqrt(_X.numRows() - 1));
-        this._SCORES = _X.mult(_LOADINGS);
+        for (int i = 0; i < X.numCols(); i++)
+            _SD.add(svd.getW().get(i, i) / Math.sqrt(X.numRows() - 1));
+        this._SCORES = X.mult(_LOADINGS);
     }
 
     /**
