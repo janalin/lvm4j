@@ -22,8 +22,8 @@
 package net.digital_alexandria.lvm4j.util;
 
 import net.digital_alexandria.lvm4j.enums.ExitCode;
-import net.digital_alexandria.lvm4j.hmm.HMM;
-import net.digital_alexandria.lvm4j.hmm.HMMParams;
+import net.digital_alexandria.lvm4j.markovmodel.HMM;
+import net.digital_alexandria.lvm4j.markovmodel.HMMParams;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.nodes.HMMNode;
 import net.digital_alexandria.lvm4j.structs.Pair;
@@ -49,7 +49,7 @@ public final class File
 
     private final static Logger _LOGGER = LoggerFactory.getLogger(File.class);
 
-    private static final String xmlDefinition = "<hmm>\n" +
+    private static final String xmlDefinition = "<markovmodel>\n" +
                                                  "\t<meta>\n" +
                                                  "\t\t<states>HEC</states>\n" +
                                                  "\t\t<observations>ZWD" +
@@ -57,9 +57,9 @@ public final class File
                                                  ">\n" +
                                                  "\t\t<order>5</order>\n" +
                                                  "\t</meta>\n" +
-                                                 "</hmm>\n";
+                                                 "</markovmodel>\n";
 
-    private static final String xmlDefinitionTrained = "<hmm>\n" +
+    private static final String xmlDefinitionTrained = "<markovmodel>\n" +
                                                         "\t<meta>\n" +
                                                         "\t\t<states>HEC</states>\n" +
                                                         "\t\t<observations>ZWD" +
@@ -69,13 +69,13 @@ public final class File
                                                         "\t</meta>\n" +
                                                         "\t<ortho>\n" +
                                                         "\t</ortho>\n" +
-                                                        "</hmm>\n";
+                                                        "</markovmodel>\n";
 
 
     /**
-     * Parse the parameters of an hmm.xml file for an HMM object as HMMParams object.
+     * Parse the parameters of an markovmodel.xml file for an HMM object as HMMParams object.
      *
-     * @param hmmFile the string to the hmm file
+     * @param hmmFile the string to the markovmodel file
      * @return a HMMParams object containing all relevant parameters for the HMM
      */
     public static HMMParams parseXML(java.lang.String hmmFile)
@@ -85,7 +85,7 @@ public final class File
         Document document;
         try
         {
-            _LOGGER.info("Parsing hmm xml.");
+            _LOGGER.info("Parsing markovmodel xml.");
             document = builder.build(hmmFile);
             setStandardParams(document, params);
             setTrainingParams(document, params);
@@ -172,15 +172,15 @@ public final class File
     /**
      * Write the HMM parameters to a xml file.
      *
-     * @param hmm the hmm of which should be written
+     * @param hmm the markovmodel of which should be written
      * @param file  the output file
      */
     public static void writeXML(HMM hmm, String file)
     {
         try
         {
-            _LOGGER.info("Writing hmm to xml.");
-            Element hmmxml = new Element("hmm");
+            _LOGGER.info("Writing markovmodel to xml.");
+            Element hmmxml = new Element("markovmodel");
             Document doc = new Document(hmmxml);
             doc.setRootElement(hmmxml);
 

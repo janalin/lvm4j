@@ -19,11 +19,11 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.mixture;
+package net.digital_alexandria.lvm4j.markovmodel;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class GaussianMixture
+public final class SSM
 {
 }

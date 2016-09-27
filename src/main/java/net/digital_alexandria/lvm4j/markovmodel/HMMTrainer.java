@@ -19,7 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.hmm;
+package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.nodes.HMMNode;

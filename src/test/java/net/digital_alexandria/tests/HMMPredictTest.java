@@ -21,8 +21,8 @@
 
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.hmm.HMM;
-import net.digital_alexandria.lvm4j.hmm.HMMFactory;
+import net.digital_alexandria.lvm4j.markovmodel.HMM;
+import net.digital_alexandria.lvm4j.markovmodel.HMMFactory;
 import org.junit.Before;
 import org.junit.Test;
 

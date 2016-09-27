@@ -19,7 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.hmm;
+package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.enums.ExitCode;
 import org.slf4j.Logger;
@@ -251,7 +251,7 @@ final class HMMPredictor
     /**
      * Convert a char array to an array of int indexes.
      *
-     * @param hmm the hmm
+     * @param hmm the markovmodel
      * @param obs the array of observations to be encoded
      * @return the array of encoded integers
      */
