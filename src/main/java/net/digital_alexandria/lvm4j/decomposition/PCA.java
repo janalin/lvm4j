@@ -50,6 +50,7 @@ public final class PCA implements LatentVariableModel
         SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(X);
         this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();
+        // add standard deviations
         for (int i = 0; i < X.numCols(); i++)
             _SD.add(svd.getW().get(i, i) / Math.sqrt(X.numRows() - 1));
         this._SCORES = X.mult(_LOADINGS);

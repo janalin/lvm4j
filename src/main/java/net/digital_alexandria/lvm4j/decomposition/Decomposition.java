@@ -69,8 +69,8 @@ public class Decomposition
      * @param X the matrix for which the FA is calculated
      * @return returns an FA object
      */
-    public FactorAnalysis factorAnalysis(double[][] X)
+    public FA factorAnalysis(double[][] X)
     {
-        return new FactorAnalysis(X);
+        return new FA(X);
     }
 }

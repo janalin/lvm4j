@@ -29,15 +29,15 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class FactorAnalysis implements LatentVariableModel
+public final class FA implements LatentVariableModel
 {
 
-    FactorAnalysis(double X[][])
+    FA(double X[][])
     {
         this(new SimpleMatrix(X));
     }
 
-    FactorAnalysis(SimpleMatrix X)
+    FA(SimpleMatrix X)
     {
 
     }
