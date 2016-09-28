@@ -134,7 +134,6 @@
                 <configuration>
                     <excludes>
                         <exclude>net/digital_alexandria/lvm4j/util/File.class</exclude>
-                        <exclude>net/digital_alexandria/lvm4j/util/System.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
