@@ -54,9 +54,6 @@
         <repository>
             <id>central</id>
             <url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
         </repository>
     </repositories>
 
