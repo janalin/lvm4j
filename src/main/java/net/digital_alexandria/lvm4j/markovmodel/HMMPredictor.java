@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -21,12 +21,14 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.lvm4j.enums.ExitCode;
+import net.digital_alexandria.sgl4j.enums.ExitCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
+
+import static net.digital_alexandria.sgl4j.numeric.Math.sumEquals;
 
 /**
  * Class that predict the hidden state sequence given a sequence of observations.
@@ -86,25 +88,25 @@ final class HMMPredictor
         final double probSum = 1.0;
         final double altProbSum = 0.0;
         double[] startProbabilities = hmm.startProbabilities();
-        if (!net.digital_alexandria.lvm4j.util.Math.sumEquals(startProbabilities, delta, probSum))
-            net.digital_alexandria.lvm4j.util.System.exit
+        if (!sumEquals(startProbabilities, delta, probSum))
+            net.digital_alexandria.sgl4j.System.exit
                 ("Sum of starting probabilities does not equal 1.00!",
                  ExitCode.EXIT_ERROR);
         double[][] transitionsMatrix = hmm.transitionMatrix();
         for (double row[] : transitionsMatrix)
         {
-            if (!(net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, probSum) ||
-                  net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, altProbSum)))
-                net.digital_alexandria.lvm4j.util.System.exit
+            if (!(sumEquals(row, delta, probSum) ||
+                  sumEquals(row, delta, altProbSum)))
+                net.digital_alexandria.sgl4j.System.exit
                     ("Sum of transition probabilities does not equal 1.00!",
                      ExitCode.EXIT_ERROR);
         }
         double[][] emissionsMatrix = hmm.emissionMatrix();
         for (double row[] : emissionsMatrix)
         {
-            if (!(net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, probSum) ||
-                  net.digital_alexandria.lvm4j.util.Math.sumEquals(row, delta, altProbSum)))
-                net.digital_alexandria.lvm4j.util.System.exit
+            if (!(sumEquals(row, delta, probSum) ||
+                  sumEquals(row, delta, altProbSum)))
+                net.digital_alexandria.sgl4j.System.exit
                     ("Sum of emission probabilities does not equal 1.00!",
                      ExitCode.EXIT_ERROR);
         }

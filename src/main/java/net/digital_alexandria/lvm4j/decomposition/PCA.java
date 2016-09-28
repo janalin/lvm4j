@@ -22,6 +22,7 @@
 package net.digital_alexandria.lvm4j.decomposition;
 
 import net.digital_alexandria.lvm4j.LatentVariableModel;
+import net.digital_alexandria.sgl4j.numeric.Statistics;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
 
@@ -47,7 +48,7 @@ public final class PCA implements LatentVariableModel
     PCA(SimpleMatrix X)
     {
         // TODO matrix scaling
-        SimpleSVD svd = net.digital_alexandria.lvm4j.math.linalg.Statistics.svd(X);
+        SimpleSVD svd = Statistics.svd(X);
         this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();
         // add standard deviations

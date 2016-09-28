@@ -96,7 +96,7 @@ public class PCATest
         List<Double> s = pca.standardDeviations();
         for (int i = 0; i < s.size(); i++)
         {
-            assert net.digital_alexandria.lvm4j.util.Math.equals(s.get(i), this.sd[i][0], .01);
+            assert net.digital_alexandria.sgl4j.numeric.Math.equals(s.get(i), this.sd[i][0], .01);
         }
     }
 
@@ -110,7 +110,7 @@ public class PCATest
             for (int j = 0; j < s.numCols(); j++)
             {
                 // results can be rotation-invariant
-                assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
+                assert net.digital_alexandria.sgl4j.numeric.Math.equals(Math.abs(s.get(i, j)),
                                                                      Math.abs(this.rotation[i][j]), .01);
             }
         }
@@ -126,7 +126,7 @@ public class PCATest
             for (int j = 0; j < s.numCols(); j++)
             {
                 // results can be rotation-invariant
-                assert net.digital_alexandria.lvm4j.util.Math.equals(Math.abs(s.get(i, j)),
+                assert net.digital_alexandria.sgl4j.numeric.Math.equals(Math.abs(s.get(i, j)),
                                                                      Math.abs(this.scores[i][j]), .01);
             }
         }

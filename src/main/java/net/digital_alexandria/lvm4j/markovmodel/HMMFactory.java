@@ -26,8 +26,8 @@ import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.nodes.HMMNode;
 import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import net.digital_alexandria.lvm4j.nodes.NodeFactory;
-import net.digital_alexandria.lvm4j.structs.Pair;
-import net.digital_alexandria.lvm4j.structs.Triple;
+import net.digital_alexandria.sgl4j.datastructures.Pair;
+import net.digital_alexandria.sgl4j.datastructures.Triple;
 import net.digital_alexandria.lvm4j.util.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.lvm4j.math.Combinatorial.combinatorial;
+import static net.digital_alexandria.sgl4j.numeric.Combinatorial.combinatorial;
 
 /**
  * HMMFactory class: builds and initializes an HMM

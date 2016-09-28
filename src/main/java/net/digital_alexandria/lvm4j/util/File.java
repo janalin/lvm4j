@@ -21,13 +21,13 @@
 
 package net.digital_alexandria.lvm4j.util;
 
-import net.digital_alexandria.lvm4j.enums.ExitCode;
+import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.markovmodel.HMM;
 import net.digital_alexandria.lvm4j.markovmodel.HMMParams;
-import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.nodes.HMMNode;
-import net.digital_alexandria.lvm4j.structs.Pair;
-import net.digital_alexandria.lvm4j.structs.Triple;
+import net.digital_alexandria.sgl4j.datastructures.Pair;
+import net.digital_alexandria.sgl4j.datastructures.Triple;
+import net.digital_alexandria.sgl4j.enums.ExitCode;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -37,8 +37,10 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +112,7 @@ public final class File
             ortho.getChild("transitions") == null)
         {
             _LOGGER.error("Some elements in the xml are null.");
-            net.digital_alexandria.lvm4j.util.System.exit(exit, ExitCode.EXIT_ERROR);
+            net.digital_alexandria.sgl4j.System.exit(exit, ExitCode.EXIT_ERROR);
         }
 
         Element start = ortho.getChild("starts");
@@ -157,13 +159,13 @@ public final class File
             meta.getChild("states") == null ||
             meta.getChild("observations") == null ||
             meta.getChild("order") == null)
-                net.digital_alexandria.lvm4j.util.System.exit(exit,  ExitCode.EXIT_ERROR);
+                net.digital_alexandria.sgl4j.System.exit(exit,  ExitCode.EXIT_ERROR);
         char states[] = meta.getChild("states").getValue().toCharArray();
         char observations[] = meta.getChild("observations").getValue()
                                   .toCharArray();
         int order = Integer.parseInt(meta.getChild("order").getValue());
         if (states.length == 0 || observations.length == 0)
-            net.digital_alexandria.lvm4j.util.System.exit(exit,  ExitCode.EXIT_ERROR);
+            net.digital_alexandria.sgl4j.System.exit(exit,  ExitCode.EXIT_ERROR);
         params.observations(observations);
         params.order(order);
         params.states(states);

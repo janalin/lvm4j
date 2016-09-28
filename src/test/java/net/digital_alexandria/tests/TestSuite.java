@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    PCATest.class, SortTest.class, EnumTest.class, UtilTest.class,
+    PCATest.class,
     HMMTest.class, HMMTrainTest.class, HMMPredictTest.class
 })
 public class TestSuite

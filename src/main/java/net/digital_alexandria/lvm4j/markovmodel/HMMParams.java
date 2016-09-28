@@ -21,8 +21,8 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.lvm4j.structs.Pair;
-import net.digital_alexandria.lvm4j.structs.Triple;
+import net.digital_alexandria.sgl4j.datastructures.Pair;
+import net.digital_alexandria.sgl4j.datastructures.Triple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public final class HMMParams
     // weightings in case the HMM is trained
     private List<Pair<String, Double>> _startWeights;
     // transition probabilities in case the HMM is trained
-    private List<Triple<String, String, Double> > _transitionWeights;
+    private List<Triple<String, String, Double>> _transitionWeights;
     // emission probabilities in case the HMM is trained
     private List<Triple<String, String, Double>> _emissionWeights;
 
