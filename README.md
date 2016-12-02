@@ -1,6 +1,6 @@
 <h1 align="center"> lvm4j </h1>
 
-[![Build Status](https://travis-ci.org/dirmeier/lvm4j.svg?branch=master)](https://travis-ci.org/dirmeier/lvm4j.svg?branch=master)
+[![Build Status](https://travis-ci.org/dirmeier/lvm4j.svg?branch=master)](https://travis-ci.org/dirmeier/lvm4j)
 [![codecov](https://codecov.io/gh/dirmeier/lvm4j/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/lvm4j)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/28c9723c26b04237b94895f035dc5b32)](https://www.codacy.com/app/simon-dirmeier/lvm4j?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirmeier/lvm4j&amp;utm_campaign=Badge_Grade)
 [![Javadocs](http://javadoc.io/badge/net.digital-alexandria/lvm4j.svg)](http://javadoc.io/doc/net.digital-alexandria/lvm4j)
@@ -10,13 +10,15 @@ Latent variable models in Java.
 
 ## Introduction
 
-Latent variable models are well-established statistical models where some of the data are not observed. I demonstrate implementations of some of these models in Java. For the sake of simplicity I refer to every model as latent if it consists of two disjoint sets of variables, one that is observed and one that is hidden (e.g. we don't have data or they are just not observable at all). 
-
-The most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). 
-
-<i>Principal Component Analysis</i> is a simple (probably the simplest) method for dimension reduction. Here you try to find a linear orthogonal transformation onto a new feature space where every basis vector has maximal variance. It's open to debate if this is a *true* latent variale model.
+Latent variable models (*LVM*s) are well-established statistical models where some of the variables are not observed. ```lvm4j``` implements popular *LVM*s in the ```Java``` programming language. For the sake of simplicity I refer to every model as latent if it consists of two disjoint sets of variables, one that is observed and one that is hidden (e.g. we don't have data or they are just not observable at all). 
 
 With new versions I will try to cover more latent variable models in <code>lvm4j</code>.
+
+### Implemented models
+
+One of the most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). 
+
+<i>Principal Component Analysis</i> is a simple (probably the simplest) method for dimension reduction. Here you try to find a linear orthogonal transformation onto a new feature space where every basis vector has maximal variance. It's open to debate if this is a *true* latent variale model.
 
 ## Installation
  
