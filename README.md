@@ -4,8 +4,8 @@
 [![Build Status](https://travis-ci.org/dirmeier/lvm4j.svg?branch=master)](https://travis-ci.org/dirmeier/lvm4j)
 [![codecov](https://codecov.io/gh/dirmeier/lvm4j/branch/master/graph/badge.svg)](https://codecov.io/gh/dirmeier/lvm4j)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/28c9723c26b04237b94895f035dc5b32)](https://www.codacy.com/app/simon-dirmeier/lvm4j?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dirmeier/lvm4j&amp;utm_campaign=Badge_Grade)
-[![Javadocs](http://javadoc.io/badge/net.digital-alexandria/lvm4j.svg)](http://javadoc.io/doc/net.digital-alexandria/lvm4j)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.digital-alexandria/lvm4j/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.digital-alexandria/lvm4j)
+[![Javadocs](http://javadoc.io/badge/net.digital-alexandria/lvm4j.svg)](http://javadoc.io/doc/net.digital-alexandria/lvm4j)
 
 Latent variable models in Java.
 
