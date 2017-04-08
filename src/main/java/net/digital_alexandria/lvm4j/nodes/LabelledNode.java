@@ -28,9 +28,9 @@ package net.digital_alexandria.lvm4j.nodes;
  *
  * @param <T> generic for label of node
  */
-abstract class LabelledNode<T> extends AbstractLabelledNode<T>
+public abstract class LabelledNode<T> extends AbstractLabelledNode<T>
 {
-    LabelledNode(T label, int idx)
+    public LabelledNode(T label, int idx)
     {
         super(label, idx);
     }

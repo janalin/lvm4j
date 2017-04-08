@@ -24,7 +24,7 @@ package net.digital_alexandria.lvm4j.util;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.markovmodel.HMM;
 import net.digital_alexandria.lvm4j.markovmodel.HMMParams;
-import net.digital_alexandria.lvm4j.nodes.HMMNode;
+import net.digital_alexandria.lvm4j.markovmodel.HMMNode;
 import net.digital_alexandria.sgl4j.datastructures.Pair;
 import net.digital_alexandria.sgl4j.datastructures.Triple;
 import net.digital_alexandria.sgl4j.enums.ExitCode;

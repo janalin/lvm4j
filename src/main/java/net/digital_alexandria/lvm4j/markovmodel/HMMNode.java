@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -19,12 +19,14 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.nodes;
+package net.digital_alexandria.lvm4j.markovmodel;
 
+import net.digital_alexandria.lvm4j.nodes.LabelledNode;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * Node class that has a label and a state, a couple of transitions and a couple of emissions.
+ * Node class that has a label and a state, a couple of transitions and a
+ * couple of emissions.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  *
@@ -38,7 +40,7 @@ public class HMMNode<T, U> extends LabelledNode<T>
     // the startng probability
     private double _probStart;
 
-    HMMNode(T label, int idx, U state)
+    protected HMMNode(T label, int idx, U state)
     {
         super(label, idx);
         this._STATE = state;
@@ -48,7 +50,8 @@ public class HMMNode<T, U> extends LabelledNode<T>
     @Override
     public String toString()
     {
-        return new StringBuilder().append(label()).append("-").append(_STATE).toString();
+        return new StringBuilder().append(label()).append("-").append(_STATE)
+                                  .toString();
     }
 
     @Override

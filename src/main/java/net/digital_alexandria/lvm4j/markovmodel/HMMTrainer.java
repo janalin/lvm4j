@@ -22,8 +22,6 @@
 package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
-import net.digital_alexandria.lvm4j.nodes.HMMNode;
-import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +37,8 @@ import java.util.Map;
  */
 final class HMMTrainer
 {
-    private final static Logger _LOGGER = LoggerFactory.getLogger(HMMTrainer
-                                                                    .class);
+    private final static Logger _LOGGER =
+      LoggerFactory.getLogger(HMMTrainer.class);
     // singleton
     private static HMMTrainer _trainer;
 
@@ -57,11 +55,10 @@ final class HMMTrainer
     private HMMTrainer() {}
 
     /**
-
      * Train the HMM using two files: a file of observations and a file of
      * latent states that emit these observations.
      *
-     * @param statesMap  a mapping from the id of a state to the real state
+     * @param statesMap a mapping from the id of a state to the real state
      * sequence
      * @param observationsMap a mapping from the id of an observation to the
      * real observations sequence

@@ -22,8 +22,6 @@
 package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
-import net.digital_alexandria.lvm4j.nodes.HMMNode;
-import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
 import net.digital_alexandria.lvm4j.util.File;
 
 import java.util.ArrayList;
@@ -37,7 +35,8 @@ import java.util.Map;
  */
 public final class HMM
 {
-    // the order of the HMM -> number of previous states that are considered for prediction
+    // the order of the HMM -> number of previous states that are
+    // considered for prediction
     int order;
     // latent variables
     final List<LatentHMMNode<Character, String>> STATES;
@@ -63,10 +62,13 @@ public final class HMM
      * Train the HMM using two files: a file of observations and a file of
      * latent states that emit these observations.
      *
-     * @param states       a mapping from the id of a state to the real state sequence
-     * @param observations a mapping from the id of an observation to the real observations sequence
+     * @param states       a mapping from the id of a state to the
+     * real state sequence
+     * @param observations a mapping from the id of an observation to the
+     * real observations sequence
      */
-    public void train(Map<String, String> states, Map<String, String> observations)
+    public void train(Map<String, String> states,
+                      Map<String, String> observations)
     {
         HMMTrainer.instance().train(this, states, observations);
         this.isTrained = true;
@@ -76,7 +78,8 @@ public final class HMM
      * Predict the most probable latent state sequence using a sequence of
      * observations.  Prediciton is done using the viterbi algorithm.
      *
-     * @param observations a mapping from the id of an observation to the real observations sequence
+     * @param observations a mapping from the id of an observation to the real
+     * observations sequence
      * @return returns a map the predicted states for given sequences
      */
     public Map<String, String> predict(Map<String, String> observations)
@@ -112,22 +115,26 @@ public final class HMM
     }
 
     /**
-     * Returns the log-transformed stochastic matrix of emissions, i.e. what probabilities do single emissions have
+     * Returns the log-transformed stochastic matrix of emissions, i.e. what
+     * probabilities do single emissions have
      * for a nodes.
      *
      * @return returns a matrix
      */
     public final double[][] logEmissionMatrix()
     {
-        double[][] emissionMatrix = new double[this.STATES.size()][this.OBSERVATIONS.size()];
+        double[][] emissionMatrix =
+          new double[this.STATES.size()][this.OBSERVATIONS.size()];
         final double pseudo = 0.000001;
         for (WeightedArc e : EMISSIONS)
-            emissionMatrix[e.source().idx()][e.sink().idx()] = Math.log(e.weight() + pseudo);
+            emissionMatrix[e.source().idx()][e.sink().idx()] =
+              Math.log(e.weight() + pseudo);
         return emissionMatrix;
     }
 
     /**
-     * Returns the stochastic matrix of emissions, i.e. what probabilities do single emissions have for a nodes.
+     * Returns the stochastic matrix of emissions, i.e. what probabilities do
+     * single emissions have for a nodes.
      *
      * @return returns a matrix
      */
@@ -141,28 +148,32 @@ public final class HMM
     }
 
     /**
-     * Returns the log-transformed stochastic matrix of transitions, i.e. what probabilties does a transition have
-     * given a hidden state.
+     * Returns the log-transformed stochastic matrix of transitions,
+     * i.e. what probabilties does a transition have given a hidden state.
      *
      * @return returns a matrix
      */
     public final double[][] logTransitionMatrix()
     {
-        double[][] transitionsMatrix = new double[this.STATES.size()][this.STATES.size()];
+        double[][] transitionsMatrix =
+          new double[this.STATES.size()][this.STATES.size()];
         final double pseudo = 0.000001;
         for (WeightedArc t : TRANSITIONS)
-            transitionsMatrix[t.source().idx()][t.sink().idx()] = Math.log(t.weight() + pseudo);
+            transitionsMatrix[t.source().idx()][t.sink().idx()] =
+              Math.log(t.weight() + pseudo);
         return transitionsMatrix;
     }
 
     /**
-     * Returns the stochastic matrix of transitions, i.e. what probabilties does a transition have given a hidden state.
+     * Returns the stochastic matrix of transitions,
+     * i.e. what probabilties does a transition have given a hidden state.
      *
      * @return returns a matrix
      */
     public double[][] transitionMatrix()
     {
-        double[][] transitionsMatrix = new double[this.STATES.size()][this.STATES.size()];
+        double[][] transitionsMatrix =
+          new double[this.STATES.size()][this.STATES.size()];
         for (WeightedArc t : TRANSITIONS)
             transitionsMatrix[t.source().idx()][t.sink().idx()] = t.weight();
         return transitionsMatrix;
@@ -227,7 +238,7 @@ public final class HMM
 
     /**
      * Getter for isTrained. True if the HMM has been trained. False if it is the raw HMM.
-     * 
+     *
      * @return returns true if HMM has been trained
      */
     public boolean isTrained() {return isTrained; }

@@ -19,7 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j.nodes;
+package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 
@@ -41,7 +41,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     // emissions of a state
     private final List<WeightedArc> _EMISSIONS;
 
-    LatentHMMNode(T label, int idx, U state)
+    protected LatentHMMNode(T label, int idx, U state)
     {
         super(label, idx, state);
         this._TRANSITIONS = new ArrayList<>();

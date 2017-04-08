@@ -24,8 +24,8 @@ package net.digital_alexandria.tests;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.markovmodel.HMM;
 import net.digital_alexandria.lvm4j.markovmodel.HMMFactory;
-import net.digital_alexandria.lvm4j.nodes.HMMNode;
-import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
+import net.digital_alexandria.lvm4j.markovmodel.HMMNode;
+import net.digital_alexandria.lvm4j.markovmodel.LatentHMMNode;
 import org.junit.Before;
 import org.junit.Test;
 
