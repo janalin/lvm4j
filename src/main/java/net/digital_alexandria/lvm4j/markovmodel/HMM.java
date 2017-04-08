@@ -21,7 +21,6 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.lvm4j.LatentVariableModel;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.nodes.HMMNode;
 import net.digital_alexandria.lvm4j.nodes.LatentHMMNode;
@@ -36,7 +35,7 @@ import java.util.Map;
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public final class HMM implements LatentVariableModel
+public final class HMM
 {
     // the order of the HMM -> number of previous states that are considered for prediction
     int order;

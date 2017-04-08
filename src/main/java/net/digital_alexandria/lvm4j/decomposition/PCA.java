@@ -21,7 +21,6 @@
 
 package net.digital_alexandria.lvm4j.decomposition;
 
-import net.digital_alexandria.lvm4j.LatentVariableModel;
 import net.digital_alexandria.sgl4j.numeric.Statistics;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
@@ -34,7 +33,7 @@ import java.util.List;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class PCA implements LatentVariableModel
+public final class PCA
 {
     private final SimpleMatrix _LOADINGS;
     private final List<Double> _SD;

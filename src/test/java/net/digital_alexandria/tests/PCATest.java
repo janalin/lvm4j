@@ -21,7 +21,6 @@
 
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.decomposition.Decomposition;
 import net.digital_alexandria.lvm4j.decomposition.PCA;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
