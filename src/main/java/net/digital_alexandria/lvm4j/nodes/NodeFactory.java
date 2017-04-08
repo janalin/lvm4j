@@ -31,7 +31,8 @@ import org.slf4j.LoggerFactory;
  */
 public class NodeFactory
 {
-    private final static Logger _LOGGER = LoggerFactory.getLogger(NodeFactory.class);
+    private final static Logger _LOGGER =
+      LoggerFactory.getLogger(NodeFactory.class);
     // creator for nodes
     private static NodeFactory _factory;
 
