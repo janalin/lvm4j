@@ -23,17 +23,13 @@
 package net.digital_alexandria.lvm4j.decomposition;
 
 import org.ejml.simple.SimpleMatrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * DimensionReductionFactory class: builds and initializes model for
- * dimension reduction
+ * Interface for all decomposition methods
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public interface Decomposition
 {
     public SimpleMatrix run(final int K);
-
 }

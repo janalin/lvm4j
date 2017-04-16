@@ -32,26 +32,8 @@ public final class DecompositionFactory
 {
     private final static Logger _LOGGER =
       LoggerFactory.getLogger(DecompositionFactory.class);
-    // singleton pattern
-    private static DecompositionFactory _factory;
 
     private DecompositionFactory() {}
-
-    /**
-     * Instance method to create an DimensionReductionFactory object.
-     *
-     * @return returns an instance of DimensionReductionFactory
-     */
-    public static DecompositionFactory instance()
-    {
-        if (_factory == null)
-        {
-            _LOGGER.info
-              ("Instantiating " + DecompositionFactory.class.getSimpleName());
-            _factory = new DecompositionFactory();
-        }
-        return _factory;
-    }
 
     /**
      * Create a PCA object with a given matrix that is used for the dimension
@@ -61,7 +43,7 @@ public final class DecompositionFactory
      *
      * @return returns an PCA object
      */
-    public final PCA pca(double[][] X)
+    public static  PCA pca(double[][] X)
     {
         return new PCA(X);
     }
@@ -73,7 +55,7 @@ public final class DecompositionFactory
      * @param X the matrix for which the FA is calculated
      * @return returns an FA object
      */
-    public final FactorAnalysis factorAnalysis(double[][] X)
+    public static FactorAnalysis factorAnalysis(double[][] X)
     {
         return new FactorAnalysis(X);
     }
