@@ -68,9 +68,10 @@ public final class FactorAnalysis implements Decomposition
             final double[] sdevs = sds(psis);
             final SimpleSVD xn = svd(_X, sdevs);
             final double[] s = getSingularValues(xn, K);
-            final SimpleMatrix V = getRightSingularVectors(xn.getV(), K);
+             SimpleMatrix V = getRightSingularVectors(xn.getV(), K);
             final double unexp = unexplainedVariance(xn, K);
             SimpleMatrix W = trans(s, V);
+            V  = null;
         }
 
         return null;
@@ -78,8 +79,10 @@ public final class FactorAnalysis implements Decomposition
 
     private SimpleMatrix trans(double[] s, SimpleMatrix v)
     {
-
-        return null;
+        SimpleMatrix m = new SimpleMatrix(1, s.length);
+        for (int i = 0; i < s.length; i++)
+            m.set(0, i, Math.max(s[i] - 1, 0.));
+        return m.mult(v);
     }
 
     private double unexplainedVariance(final SimpleSVD xn, final int k)
