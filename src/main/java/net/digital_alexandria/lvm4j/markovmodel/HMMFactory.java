@@ -41,8 +41,8 @@ import static net.digital_alexandria.sgl4j.numeric.Combinatorial.combinatorial;
  */
 public final class HMMFactory
 {
-    private final static Logger _LOGGER = LoggerFactory.getLogger(HMMFactory
-                                                                    .class);
+    private final static Logger _LOGGER =
+      LoggerFactory.getLogger(HMMFactory.class);
     // creator for arcs
     private final static ArcFactory _ARC_FACTORY = ArcFactory.instance();
     // singleton pattern

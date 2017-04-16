@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -25,13 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  DimensionReductionFactory class: builds and initializes model for dimension reduction
+ * DimensionReductionFactory class: builds and initializes model for
+ * dimension reduction
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class Decomposition
+public final class Decomposition
 {
-    private final static Logger _LOGGER = LoggerFactory.getLogger(Decomposition.class);
+    private final static Logger _LOGGER =
+      LoggerFactory.getLogger(Decomposition.class);
     // singleton pattern
     private static Decomposition _factory;
 
@@ -46,20 +48,35 @@ public class Decomposition
     {
         if (_factory == null)
         {
-            _LOGGER.info("Instantiating " + Decomposition.class.getSimpleName());
+            _LOGGER.info
+              ("Instantiating " + Decomposition.class.getSimpleName());
             _factory = new Decomposition();
         }
         return _factory;
     }
 
     /**
-     * Create a PCA object with a given matrix that is used for the dimension reduction.
+     * Create a PCA object with a given matrix that is used for the dimension
+     * reduction.
      *
      * @param X the matrix for which the PCA is calculated
+     *
      * @return returns an PCA object
      */
-    public PCA pca(double[][] X)
+    public final PCA pca(double[][] X)
     {
         return new PCA(X);
+    }
+
+    /**
+     * Create a FactorAnalysis object with a given matrix that is used for
+     * creation of a latent space.
+     *
+     * @param X the matrix for which the FA is calculated
+     * @return returns an FA object
+     */
+    public final FactorAnalysis factorAnalysis(double[][] X)
+    {
+        return new FactorAnalysis(X);
     }
 }

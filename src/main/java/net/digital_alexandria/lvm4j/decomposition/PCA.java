@@ -21,6 +21,7 @@
 
 package net.digital_alexandria.lvm4j.decomposition;
 
+import net.digital_alexandria.sgl4j.numeric.Matrix;
 import net.digital_alexandria.sgl4j.numeric.Statistics;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
@@ -46,7 +47,7 @@ public final class PCA
 
     PCA(SimpleMatrix X)
     {
-        // TODO matrix scaling
+        X = Matrix.scale(X, true, true);
         SimpleSVD svd = Statistics.svd(X);
         this._LOADINGS = svd.getV();
         this._SD = new ArrayList<>();
@@ -57,12 +58,13 @@ public final class PCA
     }
 
     /**
-     * Computes the rotation matrix of the original dataset using the first k principal components.
+     * Computes the rotation matrix of the original dataset using the first
+     * k principal components.
      *
      * @param K the number of principal components
      * @return returns the rotation matrix.
      */
-    public final SimpleMatrix run(int K)
+    public final SimpleMatrix run(final int K)
     {
         return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0, K);
     }
@@ -72,7 +74,7 @@ public final class PCA
      *
      * @return returns the loadings matrix
      */
-    public SimpleMatrix loadings()
+    public final SimpleMatrix loadings()
     {
         return this._LOADINGS;
     }
@@ -82,7 +84,7 @@ public final class PCA
      *
      * @return returns the standard deviations of the singular values
      */
-    public List<Double> standardDeviations()
+    public final List<Double> standardDeviations()
     {
         return this._SD;
     }

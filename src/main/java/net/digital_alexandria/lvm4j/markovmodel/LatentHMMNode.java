@@ -41,7 +41,7 @@ public final class LatentHMMNode<T,U> extends HMMNode <T,U>
     // emissions of a state
     private final List<WeightedArc> _EMISSIONS;
 
-    protected LatentHMMNode(T label, int idx, U state)
+    LatentHMMNode(T label, int idx, U state)
     {
         super(label, idx, state);
         this._TRANSITIONS = new ArrayList<>();
