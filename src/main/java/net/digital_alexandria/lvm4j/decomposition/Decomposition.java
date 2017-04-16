@@ -19,8 +19,10 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j.decomposition;
 
+import org.ejml.simple.SimpleMatrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,53 +32,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class Decomposition
+public interface Decomposition
 {
-    private final static Logger _LOGGER =
-      LoggerFactory.getLogger(Decomposition.class);
-    // singleton pattern
-    private static Decomposition _factory;
+    public SimpleMatrix run(final int K);
 
-    private Decomposition() {}
-
-    /**
-     * Instance method to create an DimensionReductionFactory object.
-     *
-     * @return returns an instance of DimensionReductionFactory
-     */
-    public static Decomposition instance()
-    {
-        if (_factory == null)
-        {
-            _LOGGER.info
-              ("Instantiating " + Decomposition.class.getSimpleName());
-            _factory = new Decomposition();
-        }
-        return _factory;
-    }
-
-    /**
-     * Create a PCA object with a given matrix that is used for the dimension
-     * reduction.
-     *
-     * @param X the matrix for which the PCA is calculated
-     *
-     * @return returns an PCA object
-     */
-    public final PCA pca(double[][] X)
-    {
-        return new PCA(X);
-    }
-
-    /**
-     * Create a FactorAnalysis object with a given matrix that is used for
-     * creation of a latent space.
-     *
-     * @param X the matrix for which the FA is calculated
-     * @return returns an FA object
-     */
-    public final FactorAnalysis factorAnalysis(double[][] X)
-    {
-        return new FactorAnalysis(X);
-    }
 }

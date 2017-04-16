@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j.decomposition;
 
 import net.digital_alexandria.sgl4j.numeric.Matrix;
@@ -34,7 +35,7 @@ import java.util.List;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class PCA
+public final class PCA implements Decomposition
 {
     private final SimpleMatrix _LOADINGS;
     private final List<Double> _SD;
@@ -64,6 +65,7 @@ public final class PCA
      * @param K the number of principal components
      * @return returns the rotation matrix.
      */
+    @Override
     public final SimpleMatrix run(final int K)
     {
         return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0, K);

@@ -19,6 +19,7 @@
  * along with lvm4j. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j.decomposition;
 
 import net.digital_alexandria.sgl4j.numeric.Matrix;
@@ -30,17 +31,25 @@ import org.ejml.simple.SimpleMatrix;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class FactorAnalysis
+public final class FactorAnalysis implements Decomposition
 {
     private final SimpleMatrix _X;
+    private final double _THRESHOLD = 0.0000001;
+    private final int _MAXIT = 10000;
 
-    FactorAnalysis(double X[][])
+    FactorAnalysis(final double X[][])
     {
         this(new SimpleMatrix(X));
     }
 
-    FactorAnalysis(SimpleMatrix X)
+    FactorAnalysis(final SimpleMatrix X)
     {
         this._X = Matrix.scale(X, true, true);
+    }
+
+    @Override
+    public final SimpleMatrix run(final int K)
+    {
+        return null;
     }
 }
