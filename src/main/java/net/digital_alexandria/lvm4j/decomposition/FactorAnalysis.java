@@ -25,9 +25,11 @@ package net.digital_alexandria.lvm4j.decomposition;
 import net.digital_alexandria.sgl4j.numeric.Matrix;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
+
 import java.util.Arrays;
 
 import static java.lang.Double.max;
+import static java.lang.Math.sqrt;
 import static net.digital_alexandria.sgl4j.numeric.Math.log;
 import static net.digital_alexandria.sgl4j.numeric.Math.sum;
 import static net.digital_alexandria.sgl4j.numeric.Math.var;
@@ -62,13 +64,14 @@ public final class FactorAnalysis implements Decomposition
     @Override
     public final SimpleMatrix run(final int K)
     {
+//        SimpleMatrix PSI = new SimpleMatrix();
+//        PSI.extractDiag().set(1);
+
         double[] psis = new double[_P];
         Arrays.fill(psis, 1.0);
-
         double[] var = var(_X, false);
-
         double loglik = Double.MIN_VALUE;
-        double oldLoglik = Double.MIN_VALUE;
+        double oldLoglik;
         int niter = 0;
         do
         {
@@ -78,36 +81,69 @@ public final class FactorAnalysis implements Decomposition
             final double[] s = getSingularValues(xn, K);
             SimpleMatrix U = getRightSingularVectors(xn.getV(), K);
             final double unexp = unexplainedVariance(xn, K);
-            SimpleMatrix F = trans(s, U, sdevs);
+            SimpleMatrix F = factorUpdate(s, U, sdevs);
             U = null;
             loglik = sum(log(s)) + unexp + sum(log(psis));
             psis = update(var, F);
+            System.out.println(loglik);
         }
-        while (niter++ < _MAXIT && java.lang.Math.abs(loglik - oldLoglik) > _THRESHOLD);
+        while (niter++ < _MAXIT &&
+               java.lang.Math.abs(loglik - oldLoglik) > _THRESHOLD);
         return null;
     }
 
-    private double[] update(double[] var, SimpleMatrix w)
+    private double[] sds(final double[] psis)
     {
-        SimpleMatrix fft = w.mult(w.transpose());
-        double[] psi = new double[fft.numCols()];
-        for (int i = 0; i < psi.length; i++)
+        double[] sds = new double[psis.length];
+        for (int i = 0; i < sds.length; i++)
         {
-            psi[i] = max(var[i] - fft.get(i, i), 0);
+            sds[i] = sqrt(psis[i]) + PSEUDO_COUNT;
         }
-        return psi;
+        return sds;
     }
 
-    private SimpleMatrix trans(
+    private SimpleSVD svd(final SimpleMatrix x, final double[] sdevs)
+    {
+        final double nsqrt = sqrt(_N);
+        for (int i = 0; i < sdevs.length; i++)
+        {
+            x.extractVector(false, i).divide(sdevs[i] * nsqrt);
+        }
+        return x.svd(true);
+    }
+
+    private  double[] getSingularValues(final SimpleSVD xn,
+                                             final int k)
+    {
+        final SimpleMatrix S = xn.getW();
+        double[] s = new double[k];
+        for (int i = 0; i < k; i++) s[i] = Math.pow(S.get(i, i), 2);
+        return s;
+    }
+
+    private SimpleMatrix getRightSingularVectors(final SimpleMatrix V,
+                                                       final int K)
+    {
+        return V.extractMatrix(0, K, 0, V.numCols());
+    }
+
+    private SimpleMatrix factorUpdate(
       final double[] s, final SimpleMatrix v, final double[] sdevs)
     {
         SimpleMatrix m = new SimpleMatrix(1, s.length);
         for (int i = 0; i < s.length; i++)
-            m.set(0, i, Math.max(s[i] - 1, 0.));
+            m.set(0, i, sqrt(Math.max(s[i] - 1, 0.)));
         SimpleMatrix W = m.mult(v);
         for (int i = 0; i < W.numCols(); i++)
         {
-            W.extractVector(false, i).scale(sdevs[i]);
+            try
+            {
+                W.extractVector(false, i).scale(sdevs[i]);
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+                int k = 2;
+            }
         }
         return W;
     }
@@ -124,38 +160,14 @@ public final class FactorAnalysis implements Decomposition
         return var;
     }
 
-    private final double[] getSingularValues(final SimpleSVD xn,
-                                             final int k)
+    private double[] update(final double[] var, final SimpleMatrix w)
     {
-        final SimpleMatrix S = xn.getW();
-        double[] s = new double[k];
-        for (int i = 0; i < k; i++) s[i] = Math.pow(S.get(i, i), 2);
-        return s;
-    }
-
-    private final SimpleMatrix getRightSingularVectors
-      (final SimpleMatrix V, final int K)
-    {
-        return V.extractMatrix(0, K, 0, V.numCols());
-    }
-
-    private SimpleSVD svd(final SimpleMatrix x, final double[] sdevs)
-    {
-        final double nsqrt = Math.sqrt(_N);
-        for (int i = 0; i < sdevs.length; i++)
+        SimpleMatrix fft = w.transpose().mult(w);
+        double[] psi = new double[fft.numCols()];
+        for (int i = 0; i < psi.length; i++)
         {
-            x.extractVector(false, i).divide(sdevs[i] * nsqrt);
+            psi[i] = max(var[i] - fft.get(i, i), 0);
         }
-        return x.svd();
-    }
-
-    private final double[] sds(final double[] psis)
-    {
-        double[] sds = new double[psis.length];
-        for (int i = 0; i < sds.length; i++)
-        {
-            sds[i] = Math.sqrt(psis[i]) + PSEUDO_COUNT;
-        }
-        return sds;
+        return psi;
     }
 }

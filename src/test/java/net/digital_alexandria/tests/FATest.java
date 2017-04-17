@@ -21,27 +21,37 @@
 
 package net.digital_alexandria.tests;
 
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import net.digital_alexandria.lvm4j.decomposition.DecompositionFactory;
+import net.digital_alexandria.lvm4j.decomposition.FactorAnalysis;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    PCATest.class, FATest.class,
-    HMMTest.class, HMMTrainTest.class, HMMPredictTest.class
-})
-public class TestSuite
+public class FATest
 {
+    FactorAnalysis fa;
+    double[][] iris;
+    double[][] factors;
 
-    @BeforeClass
-    public static void setup()
+
+    @Before
+    public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
     {
-        org.apache.log4j.ConsoleAppender appender = new org.apache.log4j.ConsoleAppender();
-        appender.setWriter(new java.io.OutputStreamWriter(java.lang.System.out));
-        appender.setLayout(new org.apache.log4j.PatternLayout("%-5p [%t]: %m%n"));
-        org.apache.log4j.Logger.getRootLogger().addAppender(appender);
+        FileIO io = new FileIO();
+        this.iris     = io.readFile("iris.tsv");
+//        this.factors     = io.readFile("iris_factors.tsv");
+        fa = DecompositionFactory.factorAnalysis(this.iris);
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testFA() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+       fa.run(2);
+    }
+
 }
