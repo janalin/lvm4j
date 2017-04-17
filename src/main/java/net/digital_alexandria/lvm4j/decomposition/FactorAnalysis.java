@@ -23,13 +23,14 @@
 package net.digital_alexandria.lvm4j.decomposition;
 
 import net.digital_alexandria.sgl4j.numeric.Matrix;
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
+import static java.lang.Double.max;
+import static net.digital_alexandria.sgl4j.numeric.Math.log;
+import static net.digital_alexandria.sgl4j.numeric.Math.sum;
+import static net.digital_alexandria.sgl4j.numeric.Math.var;
 
 /**
  * Class that calculates a factor analysis
@@ -53,7 +54,7 @@ public final class FactorAnalysis implements Decomposition
 
     FactorAnalysis(final SimpleMatrix X)
     {
-        this._X = Matrix.scale(X, true, true);
+        this._X = Matrix.scale(X, true, false);
         this._N = _X.numRows();
         this._P = _X.numCols();
     }
@@ -63,26 +64,52 @@ public final class FactorAnalysis implements Decomposition
     {
         double[] psis = new double[_P];
         Arrays.fill(psis, 1.0);
-        for (int i = 0; i < _MAXIT; i++)
+
+        double[] var = var(_X, false);
+
+        double loglik = Double.MIN_VALUE;
+        double oldLoglik = Double.MIN_VALUE;
+        int niter = 0;
+        do
         {
+            oldLoglik = loglik;
             final double[] sdevs = sds(psis);
             final SimpleSVD xn = svd(_X, sdevs);
             final double[] s = getSingularValues(xn, K);
-             SimpleMatrix V = getRightSingularVectors(xn.getV(), K);
+            SimpleMatrix U = getRightSingularVectors(xn.getV(), K);
             final double unexp = unexplainedVariance(xn, K);
-            SimpleMatrix W = trans(s, V);
-            V  = null;
+            SimpleMatrix F = trans(s, U, sdevs);
+            U = null;
+            loglik = sum(log(s)) + unexp + sum(log(psis));
+            psis = update(var, F);
         }
-
+        while (niter++ < _MAXIT && java.lang.Math.abs(loglik - oldLoglik) > _THRESHOLD);
         return null;
     }
 
-    private SimpleMatrix trans(double[] s, SimpleMatrix v)
+    private double[] update(double[] var, SimpleMatrix w)
+    {
+        SimpleMatrix fft = w.mult(w.transpose());
+        double[] psi = new double[fft.numCols()];
+        for (int i = 0; i < psi.length; i++)
+        {
+            psi[i] = max(var[i] - fft.get(i, i), 0);
+        }
+        return psi;
+    }
+
+    private SimpleMatrix trans(
+      final double[] s, final SimpleMatrix v, final double[] sdevs)
     {
         SimpleMatrix m = new SimpleMatrix(1, s.length);
         for (int i = 0; i < s.length; i++)
             m.set(0, i, Math.max(s[i] - 1, 0.));
-        return m.mult(v);
+        SimpleMatrix W = m.mult(v);
+        for (int i = 0; i < W.numCols(); i++)
+        {
+            W.extractVector(false, i).scale(sdevs[i]);
+        }
+        return W;
     }
 
     private double unexplainedVariance(final SimpleSVD xn, final int k)
@@ -102,7 +129,7 @@ public final class FactorAnalysis implements Decomposition
     {
         final SimpleMatrix S = xn.getW();
         double[] s = new double[k];
-        for (int i = 0; i < k; i++) s[i] = Math.pow(2., S.get(i, i));
+        for (int i = 0; i < k; i++) s[i] = Math.pow(S.get(i, i), 2);
         return s;
     }
 
