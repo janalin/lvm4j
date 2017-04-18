@@ -30,9 +30,7 @@ import java.util.Arrays;
 
 import static java.lang.Double.max;
 import static java.lang.Math.sqrt;
-import static net.digital_alexandria.sgl4j.numeric.Math.log;
-import static net.digital_alexandria.sgl4j.numeric.Math.sum;
-import static net.digital_alexandria.sgl4j.numeric.Math.var;
+import static net.digital_alexandria.sgl4j.numeric.Math.*;
 
 /**
  * Class that calculates a factor analysis
@@ -49,6 +47,9 @@ public final class FactorAnalysis implements Decomposition
     private final int _N;
     private final int _P;
 
+    private SimpleMatrix f;
+    private double[] _psi;
+
     FactorAnalysis(final double X[][])
     {
         this(new SimpleMatrix(X));
@@ -56,7 +57,7 @@ public final class FactorAnalysis implements Decomposition
 
     FactorAnalysis(final SimpleMatrix X)
     {
-        this._X = Matrix.scale(X, true, false);
+        this._X = X;
         this._N = _X.numRows();
         this._P = _X.numCols();
     }
@@ -64,12 +65,19 @@ public final class FactorAnalysis implements Decomposition
     @Override
     public final SimpleMatrix run(final int K)
     {
-//        SimpleMatrix PSI = new SimpleMatrix();
-//        PSI.extractDiag().set(1);
 
-        double[] psis = new double[_P];
-        Arrays.fill(psis, 1.0);
-        double[] var = var(_X, false);
+        fit(K);
+        return decomp(K);
+    }
+    private void fit(final int K)
+    {
+        SimpleMatrix F;
+
+        SimpleMatrix PSI = new SimpleMatrix(_P, _P);
+        PSI.extractDiag().set(1);
+        double[] means = mean(_X, false);
+        double[] var = var(_X, means, false);
+
         double loglik = Double.MIN_VALUE;
         double oldLoglik;
         int niter = 0;
@@ -81,7 +89,7 @@ public final class FactorAnalysis implements Decomposition
             final double[] s = getSingularValues(xn, K);
             SimpleMatrix U = getRightSingularVectors(xn.getV(), K);
             final double unexp = unexplainedVariance(xn, K);
-            SimpleMatrix F = factorUpdate(s, U, sdevs);
+            F = factorUpdate(s, U, sdevs);
             U = null;
             loglik = sum(log(s)) + unexp + sum(log(psis));
             psis = update(var, F);
@@ -89,6 +97,17 @@ public final class FactorAnalysis implements Decomposition
         }
         while (niter++ < _MAXIT &&
                java.lang.Math.abs(loglik - oldLoglik) > _THRESHOLD);
+
+        this.f = F;
+        this._psi = psis;
+    }
+
+    private SimpleMatrix decomp(final int K)
+    {
+        SimpleMatrix eye =  new SimpleMatrix(K, K);
+        eye.extractDiag().set(1);
+        f
+
         return null;
     }
 
