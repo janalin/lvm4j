@@ -43,11 +43,14 @@ You can also build the <code>jar</code> and then include it in your package.
 
 1) Clone the github repository:
 
-    $ git clone https://github.com/dirmeier/lvm4j.git
-
+  ```sh
+     git clone https://github.com/dirmeier/lvm4j.git
+  ```
 2) Then build the package:
- 
-    $ mvn clean package -P standalone
+
+   ```sh
+      mvn clean package -P standalone
+   ```
 
 3) This gives you a <code>lvm4j-standalone.jar</code> that can be added to your project (make sure to call this correctly).
 
