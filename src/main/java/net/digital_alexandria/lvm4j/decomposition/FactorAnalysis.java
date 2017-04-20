@@ -25,12 +25,15 @@ package net.digital_alexandria.lvm4j.decomposition;
 import net.digital_alexandria.sgl4j.numeric.Matrix;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.Arrays;
 
 import static java.lang.Double.max;
 import static java.lang.Math.sqrt;
 import static net.digital_alexandria.sgl4j.numeric.Math.*;
+import static org.nd4j.linalg.ops.transforms.Transforms.sin;
 
 /**
  * Class that calculates a factor analysis
@@ -43,23 +46,23 @@ public final class FactorAnalysis implements Decomposition
     private static final int _MAXIT = 10000;
     private static final double PSEUDO_COUNT = 1e-12;
 
-    private final SimpleMatrix _X;
+    private final INDArray _X;
     private final int _N;
     private final int _P;
 
-    private SimpleMatrix f;
-    private double[] _psi;
+    private INDArray _f;
+    private INDArray _psi;
 
     FactorAnalysis(final double X[][])
     {
-        this(new SimpleMatrix(X));
+        this(Nd4j.create(X));
     }
 
-    FactorAnalysis(final SimpleMatrix X)
+    FactorAnalysis(final INDArray X)
     {
         this._X = X;
-        this._N = _X.numRows();
-        this._P = _X.numCols();
+        this._N = _X.rows();
+        this._P = _X.columns();
     }
 
     @Override
@@ -69,14 +72,13 @@ public final class FactorAnalysis implements Decomposition
         fit(K);
         return decomp(K);
     }
+
     private void fit(final int K)
     {
-        SimpleMatrix F;
-
-        SimpleMatrix PSI = new SimpleMatrix(_P, _P);
-        PSI.extractDiag().set(1);
-        double[] means = mean(_X, false);
-        double[] var = var(_X, means, false);
+        INDArray F;
+        final INDArray means = _X.mean(1);
+        final INDArray vars = _X.var(1);
+        INDArray psis = Nd4j.eye(_P);
 
         double loglik = Double.MIN_VALUE;
         double oldLoglik;
@@ -84,41 +86,35 @@ public final class FactorAnalysis implements Decomposition
         do
         {
             oldLoglik = loglik;
-            final double[] sdevs = sds(psis);
-            final SimpleSVD xn = svd(_X, sdevs);
-            final double[] s = getSingularValues(xn, K);
-            SimpleMatrix U = getRightSingularVectors(xn.getV(), K);
-            final double unexp = unexplainedVariance(xn, K);
+            final INDArray sdevs = psis.std(1);
+            double d[] = _X.data().asDouble();
+            int k = 2;
+            // CHANGE TO OWN METHOD USING
+            SimpleSVD svd = svd
+              (new SimpleMatrix(_N, _P, true, d), sdevs.data().asDouble());
+            INDArray s = getSingularValues(svd.getW(), K);
+            INDArray U = getRightSingularVectors(svd.getV(), K);
+            final double unexp = unexplainedVariance(svd.getW(), K);
             F = factorUpdate(s, U, sdevs);
             U = null;
-            loglik = sum(log(s)) + unexp + sum(log(psis));
-            psis = update(var, F);
-            System.out.println(loglik);
+            loglik = sum(log(s.data().asDouble())) +
+                     unexp +
+                     sum(log(psis.data().asDouble()));
+            psis = update(vars, F);
         }
         while (niter++ < _MAXIT &&
                java.lang.Math.abs(loglik - oldLoglik) > _THRESHOLD);
-
-        this.f = F;
+        this._f = F;
         this._psi = psis;
     }
 
     private SimpleMatrix decomp(final int K)
     {
-        SimpleMatrix eye =  new SimpleMatrix(K, K);
+        SimpleMatrix eye = new SimpleMatrix(K, K);
         eye.extractDiag().set(1);
-        f
+        //f
 
         return null;
-    }
-
-    private double[] sds(final double[] psis)
-    {
-        double[] sds = new double[psis.length];
-        for (int i = 0; i < sds.length; i++)
-        {
-            sds[i] = sqrt(psis[i]) + PSEUDO_COUNT;
-        }
-        return sds;
     }
 
     private SimpleSVD svd(final SimpleMatrix x, final double[] sdevs)
@@ -131,45 +127,24 @@ public final class FactorAnalysis implements Decomposition
         return x.svd(true);
     }
 
-    private  double[] getSingularValues(final SimpleSVD xn,
-                                             final int k)
+    private INDArray getSingularValues(final SimpleMatrix S,
+                                       final int k)
     {
-        final SimpleMatrix S = xn.getW();
-        double[] s = new double[k];
-        for (int i = 0; i < k; i++) s[i] = Math.pow(S.get(i, i), 2);
+        final double[] diag = S.extractDiag().getMatrix().data;
+        INDArray s = Nd4j.create(k);
+        for (int i = 0; i < k; i++) s.getColumn(i).assign(Math.pow(diag[i], 2));
         return s;
     }
 
-    private SimpleMatrix getRightSingularVectors(final SimpleMatrix V,
-                                                       final int K)
+    private INDArray getRightSingularVectors(final SimpleMatrix V,
+                                             final int K)
     {
-        return V.extractMatrix(0, K, 0, V.numCols());
+        return Nd4j.create
+          (V.extractMatrix(0, K, 0, V.numCols()).getMatrix().data);
     }
 
-    private SimpleMatrix factorUpdate(
-      final double[] s, final SimpleMatrix v, final double[] sdevs)
+    private double unexplainedVariance(final SimpleMatrix S, final int k)
     {
-        SimpleMatrix m = new SimpleMatrix(1, s.length);
-        for (int i = 0; i < s.length; i++)
-            m.set(0, i, sqrt(Math.max(s[i] - 1, 0.)));
-        SimpleMatrix W = m.mult(v);
-        for (int i = 0; i < W.numCols(); i++)
-        {
-            try
-            {
-                W.extractVector(false, i).scale(sdevs[i]);
-            }
-            catch (ArrayIndexOutOfBoundsException e)
-            {
-                int k = 2;
-            }
-        }
-        return W;
-    }
-
-    private double unexplainedVariance(final SimpleSVD xn, final int k)
-    {
-        SimpleMatrix S = xn.getW();
         double var = 0.0;
         for (int i = k; i < S.numCols(); i++)
         {
@@ -179,13 +154,37 @@ public final class FactorAnalysis implements Decomposition
         return var;
     }
 
-    private double[] update(final double[] var, final SimpleMatrix w)
+    private INDArray factorUpdate
+      (final INDArray s, final INDArray v, final INDArray sdevs)
     {
-        SimpleMatrix fft = w.transpose().mult(w);
-        double[] psi = new double[fft.numCols()];
-        for (int i = 0; i < psi.length; i++)
+        final int sNcol = s.columns();
+        INDArray m = Nd4j.create(sNcol);
+        for (int i = 0; i < sNcol; i++)
+            m.getColumn(i).assign(sqrt(Math.max(s.getDouble(i) - 1, 0.)));
+        INDArray W = m.mmul(v);
+        for (int i = 0; i < W.columns(); i++)
         {
-            psi[i] = max(var[i] - fft.get(i, i), 0);
+            try
+            {
+                W.getColumn(i).div(sdevs.getDouble(i));
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+            }
+        }
+        return W;
+    }
+
+
+    private INDArray update(final INDArray var, final INDArray w)
+    {
+        INDArray fft = w.transpose().mmul(w);
+        INDArray psi = Nd4j.create(fft.columns());
+        for (int i = 0; i < psi.columns(); i++)
+        {
+            psi
+              .getColumn(i)
+              .assign(max(var.getDouble(i) - fft.getDouble(i, i), 0));
         }
         return psi;
     }
