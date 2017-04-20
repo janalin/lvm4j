@@ -3,8 +3,8 @@ jdk:
   - oraclejdk8
 
 before_install:
- - git clone https://github.com/dirmeier/sgl4j.git
- - cd sgl4j && mvn install 
+ - git clone https://github.com/dirmeier/std4j.git
+ - cd std4j && mvn install 
 
 script: mvn test
 
