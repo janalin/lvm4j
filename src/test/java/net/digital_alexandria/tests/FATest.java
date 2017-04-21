@@ -44,14 +44,14 @@ public class FATest
         FileIO io = new FileIO();
         this.iris     = io.readFile("iris.tsv");
 //        this.factors     = io.readFile("iris_factors.tsv");
-        fa = DecompositionFactory.factorAnalysis(this.iris);
+//        fa = DecompositionFactory.factorAnalysis(this.iris);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testFA() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-       fa.run(2);
+//       fa.run(2);
     }
 
 }

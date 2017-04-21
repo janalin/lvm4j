@@ -29,7 +29,8 @@
 
     <scm>
         <connection>scm:git:git://github.com/dirmeier/lvm4j.git</connection>
-        <developerConnection>scm:git:ssh://github.com:dirmeier/lvm4j.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com:dirmeier/lvm4j.git
+        </developerConnection>
         <url>https://github.com/dirmeier/lvm4j/tree/master</url>
     </scm>
 
@@ -40,7 +41,8 @@
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+            </url>
         </repository>
     </distributionManagement>
 
@@ -53,7 +55,8 @@
     <repositories>
         <repository>
             <id>central</id>
-            <url>http://digital-alexandria.net:8081/artifactory/libs-release</url>
+            <url>http://digital-alexandria.net:8081/artifactory/libs-release
+            </url>
         </repository>
     </repositories>
 
@@ -97,6 +100,41 @@
         </dependency>
     </dependencies>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.20</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>5.6</version>
+                <configuration>
+                    <rulesets>
+                        <ruleset>ruleset.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <build>
         <plugins>
             <plugin>
@@ -135,7 +173,8 @@
                 <version>0.7.2.201409121644</version>
                 <configuration>
                     <excludes>
-                        <exclude>net/digital_alexandria/lvm4j/util/File.class</exclude>
+                        <exclude>net/digital_alexandria/lvm4j/util/File.class
+                        </exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -261,7 +300,8 @@
                             <finalName>lvm4j-standalone</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                                <descriptorRef>jar-with-dependencies
+                                </descriptorRef>
                             </descriptorRefs>
                         </configuration>
                     </plugin>
