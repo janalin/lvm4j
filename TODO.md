@@ -2,7 +2,7 @@
 
 * Autoencoder
 * BMM
-* Factor analysis
+* <strike>Factor analysis</strike>
 * Fisher discriminant analysis
 * GMM
 * GPLVM

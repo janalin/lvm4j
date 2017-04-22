@@ -17,9 +17,11 @@ With new versions I will try to cover more latent variable models in <code>lvm4j
 
 ### Implemented models
 
-One of the most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). 
+ * One of the most famous and magnificient of them all, the <i>Hidden Markov Model</i>, is applicable to a diverse number of fields (e.g. for secondary structure prediction or alignment of viral RNA to a reference genome). 
 
-<i>Principal Component Analysis</i> is a simple (probably the simplest) method for dimension reduction. Here you try to find a linear orthogonal transformation onto a new feature space where every basis vector has maximal variance. It's open to debate if this is a *true* latent variale model.
+* <i>Principal Component Analysis</i> is a simple (probably the simplest) method for dimension reduction. We try to find a linear orthogonal transformation onto a new feature space where every basis vector has maximal variance. It's open to debate if this is a *true* latent variale model.
+
+* <i>Factor Analysis<i> is essentially a propabilistic version of PCA (and closely resembles PPCA). Here we additionally include Gaussian noise since our data-points don't exactly lie on a linear subspace.
 
 ## Installation
  
@@ -33,7 +35,7 @@ If you use Maven just put this into your pom.xml:
 <dependency>
     <groupId>net.digital-alexandria</groupId>
     <artifactId>lvm4j</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 </dependency>
 ```
 
@@ -57,81 +59,7 @@ You can also build the <code>jar</code> and then include it in your package.
 
 ## Usage
 
-Here, we briefly describe how the <code>lvm4j</code> libary is used. Also make sure to check out the [```javadocs```](http://javadoc.io/doc/net.digital-alexandria/lvm4j).
-
-So far the following latent variable models are implemented:
-
-* HMM (a discrete-state-discrete-observation latent variable model)
-* PCA (a dimension reduction method with latent *loadings* and observable *scores*)
-
-### How to use the HMM
-
-Using an HMM (in v0.1) involves two steps: training of emission and transition probabilities and prediction of the latent state sequence.
-
-#### Training
-
-First initialize an HMM using:
-
-```java
-char[] states = new char[]{'A', 'B', 'C'};
-char[] observations = new char[]{'X', 'Y', 'Z'};
-HMM hmm = HMMFactory.instance().hmm(states, observations, 1);
-```
-
-It is easier though to take the constructor that takes a single string only that contains the path to an XML-file.
-
-```java
-String xmlFile = "/src/test/resources/hmm.xml";
-HMM hmm = HMMFactory.instance().hmm(xmlFile);
-```
-
-Having the HMM initialized, training is done like this:
-
-```java
-Map<String, String> states = new HashMap<>(){{
-	put("s1", "ABCABC");
-	put("s2", "ABCCCC");
-}};
-Map<String, String> observations = new HashMap<>(){{
-	put("s1", "XYZYXZ");
-	put("s2", "XYZYXZ");
-}};
-hmm.train(states, observations);
-```
-
-Take care that <code>states</code> and <code>observations</code> have the same keys and equally long values. You can write your trained HMM to a file using:
-
-```java
-String outFile = "hmm.trained.xml";
-hmm.writeHMM(outFile);
-```
-
-That is it! 
-
-#### Prediction
-
-First initialize the HMM again:
-
-```java
-String xmlFile = "/src/test/resources/hmm.trained.xml";
-HMM hmm = HMMFactory.instance().hmm(xmlFile)
-```
-
-Make sure to use the <code>hmm.trained.xml</code> file containing your trained HMM. Then make a prediction using:
-
-```java
-Map<String, String> observations = new HashMap<>(){{
-	put("s1", "XYZYXZ");
-	put("s2", "XYZYXZ");
-}};
-Map<String, String> pred = hmm.predict(states, observations);
-```
-
-Congrats! That concludes the tutorial on HMMs. 
-
-### How to use PCA
-
-TODO
+For usage check out [```javadocs```](http://javadoc.io/doc/net.digital-alexandria/lvm4j) and the [```tutorial```](http://dirmeier.github.io/lvm4j).
 
 ## Author
 

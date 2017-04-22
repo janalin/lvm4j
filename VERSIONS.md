@@ -1,10 +1,14 @@
 ## Versions
 
+### v0.2
+
+* PCA
+* FA
+* refactoring to Nd4j
 
 ### v0.1
 
 * hosting on maven central repository
-* PCA
 * HMM: train a HMM given observational state data and hidden state data, 
        predict a sequence of hidden states given observational state data
 * code coverage using jacoco
