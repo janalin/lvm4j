@@ -42,11 +42,17 @@ import static net.digital_alexandria.lvm4j.util.Matrix.svd;
  */
 public final class PCA implements Decomposition
 {
+    // the input data matrix
     private final INDArray _X;
+    // number of rows
     private final int _N;
+    // number of columns
     private final int _P;
+    // the computed transformation matrix
     private final INDArray _LOADINGS;
+    // the standard deviations of each component
     private final List<Double> _SD;
+    // the transformed matrix
     private final INDArray _SCORES;
 
     PCA(final double X[][])
