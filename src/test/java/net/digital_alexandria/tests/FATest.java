@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import net.digital_alexandria.lvm4j.decomposition.DecompositionFactory;
 import net.digital_alexandria.lvm4j.decomposition.FactorAnalysis;
 import org.junit.Before;
 import org.junit.Test;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -39,19 +40,28 @@ public class FATest
 
 
     @Before
-    public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
+    public void setUp() throws InvocationTargetException,
+                               IllegalAccessException,
+                               NoSuchMethodException
     {
         FileIO io = new FileIO();
-        this.iris     = io.readFile("iris.tsv");
-//        this.factors     = io.readFile("iris_factors.tsv");
-//        fa = DecompositionFactory.factorAnalysis(this.iris);
+        this.iris = io.readFile("iris.tsv");
+        this.factors = io.readFile("iris_factors.tsv");
+        fa = DecompositionFactory.factorAnalysis(this.iris);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testFA() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testFA() throws NoSuchMethodException,
+                                InvocationTargetException,
+                                IllegalAccessException
     {
-//       fa.run(2);
+        INDArray ar = fa.run(1);
+        for (int i = 0; i < ar.columns(); i++)
+        {
+            assert net.digital_alexandria.sgl4j.numeric.Math.equals(
+              ar.getDouble(i), this.factors[i][0], 0.2);
+        }
     }
 
 }
