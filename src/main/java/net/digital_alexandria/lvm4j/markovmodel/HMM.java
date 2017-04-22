@@ -19,6 +19,7 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
@@ -27,6 +28,7 @@ import net.digital_alexandria.lvm4j.util.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Central HMM class, that contains states, transitions etc.

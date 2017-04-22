@@ -22,40 +22,59 @@
 
 package net.digital_alexandria.lvm4j.decomposition;
 
-import net.digital_alexandria.sgl4j.numeric.Matrix;
-import net.digital_alexandria.sgl4j.numeric.Statistics;
-import org.ejml.simple.SimpleMatrix;
+import net.digital_alexandria.lvm4j.Decomposition;
 import org.ejml.simple.SimpleSVD;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.sqrt;
+import static net.digital_alexandria.lvm4j.util.Matrix.scale;
+import static net.digital_alexandria.lvm4j.util.Matrix.svd;
+
+
 /**
- * Class that calculates a PCA
+ * Class that calculates a PCA.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 public final class PCA implements Decomposition
 {
-    private final SimpleMatrix _LOADINGS;
+    private final INDArray _X;
+    private final int _N;
+    private final int _P;
+    private final INDArray _LOADINGS;
     private final List<Double> _SD;
-    private final SimpleMatrix _SCORES;
+    private final INDArray _SCORES;
 
-    PCA(double X[][])
+    PCA(final double X[][])
     {
-        this(new SimpleMatrix(X));
+        this(Nd4j.create(X));
     }
 
-    PCA(SimpleMatrix X)
+    PCA(final INDArray X)
     {
-        X = Matrix.scale(X, true, true);
-        SimpleSVD svd = Statistics.svd(X);
-        this._LOADINGS = svd.getV();
-        this._SD = new ArrayList<>();
+        this._X = scale(X, true, true);
+        this._N = _X.rows();
+        this._P = _X.columns();
+
+        SimpleSVD svd = svd(_X);
+
+        this._LOADINGS = Nd4j.create(
+          svd.getV()
+             .transpose()
+             .getMatrix().getData(),
+          new int[]{_P, _P}, 'r');
+
         // add standard deviations
-        for (int i = 0; i < X.numCols(); i++)
-            _SD.add(svd.getW().get(i, i) / Math.sqrt(X.numRows() - 1));
-        this._SCORES = X.mult(_LOADINGS);
+        this._SD = new ArrayList<>();
+        final double sq = sqrt(X.rows() - 1);
+        for (int i = 0; i < _X.columns(); i++)
+            _SD.add(svd.getW().get(i, i) / sq);
+
+        this._SCORES = X.mmul(_LOADINGS);
     }
 
     /**
@@ -63,12 +82,18 @@ public final class PCA implements Decomposition
      * k principal components.
      *
      * @param K the number of principal components
+     *
      * @return returns the rotation matrix.
      */
     @Override
-    public final SimpleMatrix run(final int K)
+    public final INDArray run(final int K)
     {
-        return this._SCORES.extractMatrix(0, _SCORES.numRows(), 0, K);
+        final int[] cols = new int[K];
+        for (int i = 0; i < cols.length; i++)
+        {
+            cols[i] = i;
+        }
+        return this._SCORES.getColumns(cols);
     }
 
     /**
@@ -76,7 +101,7 @@ public final class PCA implements Decomposition
      *
      * @return returns the loadings matrix
      */
-    public final SimpleMatrix loadings()
+    public final INDArray loadings()
     {
         return this._LOADINGS;
     }

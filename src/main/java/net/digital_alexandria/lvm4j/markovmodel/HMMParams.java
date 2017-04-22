@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -21,11 +21,13 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.sgl4j.datastructures.Pair;
-import net.digital_alexandria.sgl4j.datastructures.Triple;
+
+import net.digital_alexandria.lvm4j.datastructures.Pair;
+import net.digital_alexandria.lvm4j.datastructures.Triple;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * HMMParam class stores several attributes a HMM must have.
@@ -34,7 +36,8 @@ import java.util.List;
  */
 public final class HMMParams
 {
-    // the possible latent variables of an HMM as characters (i.e. discrete space)
+    // the possible latent variables of an HMM as characters
+    // (i.e. discrete space)
     private char[] _states;
     // the possible observed variables of an HMM as characters (i.e. discrete space)
     private char[] _observations;

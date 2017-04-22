@@ -22,16 +22,14 @@
 
 package net.digital_alexandria.lvm4j.decomposition;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.nd4j.linalg.api.ndarray.INDArray;
+
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
 public final class DecompositionFactory
 {
-    private final static Logger _LOGGER =
-      LoggerFactory.getLogger(DecompositionFactory.class);
 
     private DecompositionFactory() {}
 
@@ -43,7 +41,7 @@ public final class DecompositionFactory
      *
      * @return returns an PCA object
      */
-    public static  PCA pca(double[][] X)
+    public static PCA pca(double[][] X)
     {
         return new PCA(X);
     }
@@ -53,9 +51,23 @@ public final class DecompositionFactory
      * creation of a latent space.
      *
      * @param X the matrix for which the FA is calculated
+     *
      * @return returns an FA object
      */
     public static FactorAnalysis factorAnalysis(double[][] X)
+    {
+        return new FactorAnalysis(X);
+    }
+
+    /**
+     * Create a FactorAnalysis object with a given matrix that is used for
+     * creation of a latent space.
+     *
+     * @param X the matrix for which the FA is calculated
+     *
+     * @return returns an FA object
+     */
+    public static FactorAnalysis factorAnalysis(INDArray X)
     {
         return new FactorAnalysis(X);
     }

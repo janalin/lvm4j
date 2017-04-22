@@ -1,4 +1,4 @@
-### Models to be implemented
+## Models to be implemented
 
 * Autoencoder
 * BMM
@@ -16,3 +16,6 @@
 * Kalman filter
 * tSNE
 
+## Author
+
+* Simon Dirmeier <a href="mailto:mail@simon-dirmeier.net">mail@simon-dirmeier.net</a>

@@ -22,7 +22,7 @@
 
 package net.digital_alexandria.lvm4j.decomposition;
 
-import net.digital_alexandria.sgl4j.numeric.Matrix;
+import net.digital_alexandria.lvm4j.Decomposition;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -30,31 +30,37 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.inverse.InvertMatrix;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
-import java.util.Arrays;
-
 import static java.lang.Double.max;
 import static java.lang.Math.sqrt;
-import static net.digital_alexandria.sgl4j.numeric.Math.*;
+import static net.digital_alexandria.lvm4j.util.Math.log;
+import static net.digital_alexandria.lvm4j.util.Math.sum;
+import static net.digital_alexandria.lvm4j.util.Matrix.scale;
 import static org.nd4j.linalg.factory.Nd4j.diag;
-import static org.nd4j.linalg.factory.Nd4j.linspace;
-import static org.nd4j.linalg.ops.transforms.Transforms.sin;
 
 /**
  * Class that calculates a factor analysis
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class FactorAnalysis
+public final class FactorAnalysis implements Decomposition
 {
+    // stop criterion: threshold if likelihood does not change any more
     private static final double _THRESHOLD = 0.0001;
+    // stop criterion: maximal number of iterations
     private static final int _MAXIT = 10000;
+    // a small pseudocount for numerical stability
     private static final double PSEUDO_COUNT = 1e-12;
 
+    // the input data matrix
     private final INDArray _X;
+    // number of rows
     private final int _N;
+    // number of columns
     private final int _P;
 
+    // factor loading matrix
     private INDArray _f;
+    // vcov matrix of Gaussian errors
     private INDArray _psi;
 
     FactorAnalysis(final double X[][])
@@ -64,70 +70,70 @@ public final class FactorAnalysis
 
     FactorAnalysis(final INDArray X)
     {
-        this._X = X;
+        this._X = scale(X, true, false);
         this._N = _X.rows();
         this._P = _X.columns();
     }
 
-
+    /**
+     * Runs the factor analysis and computes the score matrix with K factors.
+     *
+     * @param K the number of factors that are computed for the score matrix.
+     *
+     * @return returns the transformed matrix
+     */
+    @Override
     public final INDArray run(final int K)
     {
-
         fit(K);
         return decomp(K);
     }
 
     private void fit(final int K)
     {
-        INDArray F;
-        final INDArray means = _X.mean(0);
         final INDArray vars = _X.var(0);
+        INDArray F;
         INDArray psis = Nd4j.eye(_P);
-
-        for (int i = 0; i < _X.columns(); i++)
-            _X.getColumn(i).assign(_X.getColumn(i).add(-means.getDouble(i)));
 
         double loglik = Double.MIN_VALUE;
         double oldLoglik;
+
         int niter = 0;
         do
         {
             oldLoglik = loglik;
-            final INDArray sqrt_psis = Transforms.sqrt(diag(psis)).add
-              (PSEUDO_COUNT);
-            // CHANGE TO OWN METHOD USING
+            final INDArray sqrt_psis = sqrtPsis(psis);
+
             INDArray X = _X.dup();
-            SimpleSVD svd = svd
-              (X, sqrt_psis.data().asDouble());
-            final INDArray s = getSingularValues(svd.getW(), K);
-            final INDArray V = getRightSingularVectors(svd.getV(), K);
-            final double unexp = unexplainedVariance(svd.getW(), K);
+            SimpleSVD svd;
+            double unexp = .0;
+            INDArray s, V;
+
+            // TODO: CHANGE TO OWN METHOD USING
+            {
+                svd = svd
+                  (X, sqrt_psis.data().asDouble());
+                s = getSingularValues(svd.getW(), K);
+                V = getRightSingularVectors(svd.getV(), K);
+                unexp = unexplainedVariance(svd.getW(), K);
+            }
+
+            // update the likelihood
+            loglik = proploglik(s, unexp, psis);
+            // update the factor matrix and variances AFTERWARDS
             F = factorUpdate(s, V, sqrt_psis);
-            loglik = sum(log(s.data().asDouble())) +
-                     unexp +
-                     sum(log(diag(psis).data().asDouble()));
-            psis = update(vars, F);
+            psis = vcovUpdate(vars, F);
         }
         while (niter++ < _MAXIT && Math.abs(loglik - oldLoglik) > _THRESHOLD);
+
+        // set the member variables to the computed values
         this._f = F;
         this._psi = psis;
     }
 
-    private INDArray decomp(final int K)
+    private INDArray sqrtPsis(INDArray psis)
     {
-        INDArray m = Nd4j.eye(K);
-        INDArray psiw = this._f.dup();
-        INDArray ps = diag(_psi);
-        for (int i = 0; i < psiw.rows(); i++)
-            psiw.getRow(i).assign(psiw.getRow(i).div(ps));
-        INDArray b = psiw.mmul(this._f.transpose());
-        INDArray coz;
-        if (K == 1)
-            coz = Nd4j.ones(1).div(m.add(b));
-        else
-             coz = InvertMatrix.invert(m.add(b), false);
-        INDArray res = _X.mmul(psiw.transpose()).mmul(coz);
-        return res;
+        return Transforms.sqrt(diag(psis)).add(PSEUDO_COUNT);
     }
 
     private SimpleSVD svd(final INDArray X, final double[] sdevs)
@@ -168,8 +174,9 @@ public final class FactorAnalysis
         return var;
     }
 
-    private INDArray factorUpdate
-      (final INDArray singVals, final INDArray V, final INDArray sqrt_psis)
+    private INDArray factorUpdate(final INDArray singVals,
+                                  final INDArray V,
+                                  final INDArray sqrt_psis)
     {
         final int sNcol = singVals.columns();
         INDArray m = Nd4j.create(sNcol);
@@ -187,8 +194,7 @@ public final class FactorAnalysis
         return W;
     }
 
-
-    private INDArray update(final INDArray var, final INDArray w)
+    private INDArray vcovUpdate(final INDArray var, final INDArray w)
     {
         INDArray fft = Transforms.pow(w, 2);
         INDArray psi = fft.sum(0);
@@ -199,5 +205,39 @@ public final class FactorAnalysis
               .assign(max(var.getDouble(i) - psi.getDouble(i), PSEUDO_COUNT));
         }
         return Nd4j.diag(psi);
+    }
+
+    private double proploglik(final INDArray s,
+                              final double unexp,
+                              final INDArray psis)
+    {
+        return sum(log(s.data().asDouble())) +
+               unexp +
+               sum(log(diag(psis).data().asDouble()));
+    }
+
+    private INDArray decomp(final int K)
+    {
+        INDArray m = Nd4j.eye(K);
+        INDArray psiw = wpsi();
+        INDArray b = psiw.mmul(this._f.transpose());
+        INDArray coz = coz(K, m, b);
+        return _X.mmul(psiw.transpose()).mmul(coz);
+    }
+
+    private INDArray wpsi()
+    {
+        INDArray psiw = this._f.dup();
+        INDArray ps = diag(this._psi);
+        for (int i = 0; i < psiw.rows(); i++)
+            psiw.getRow(i).assign(psiw.getRow(i).div(ps));
+        return psiw;
+    }
+
+    private INDArray coz(final int K, final INDArray m, final INDArray b)
+    {
+        return (K == 1)
+          ? Nd4j.ones(1).div(m.add(b))
+          : InvertMatrix.invert(m.add(b), false);
     }
 }

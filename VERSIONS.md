@@ -1,5 +1,5 @@
-Versions
-========
+## Versions
+
 
 ### v0.1
 
@@ -13,6 +13,6 @@ Versions
 * travis ci binding
 * code coverage using codecov
 
-### Author
+## Author
 
-* Simon Dirmeier <a href="mailto:simon.dirmeier@gmx.de">simon.dirmeier@gmx.de</a>
+* Simon Dirmeier <a href="mailto:mail@simon-dirmeier.net">mail@simon-dirmeier.net</a>

@@ -21,14 +21,17 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.sgl4j.enums.ExitCode;
+
+import net.digital_alexandria.lvm4j.enums.ExitCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import static net.digital_alexandria.sgl4j.numeric.Math.sumEquals;
+import static net.digital_alexandria.lvm4j.util.Math.sumEquals;
+import static net.digital_alexandria.lvm4j.util.System.exit;
+
 
 /**
  * Class that predict the hidden state sequence given a sequence of
@@ -92,26 +95,23 @@ final class HMMPredictor
         final double altProbSum = 0.0;
         double[] startProbabilities = hmm.startProbabilities();
         if (!sumEquals(startProbabilities, delta, probSum))
-            net.digital_alexandria.sgl4j.System.exit
-              ("Sum of starting probabilities does not equal 1.00!",
-               ExitCode.EXIT_ERROR);
+            exit("Sum of starting probabilities does not equal 1.00!",
+                 ExitCode.EXIT_ERROR);
         double[][] transitionsMatrix = hmm.transitionMatrix();
         for (double row[] : transitionsMatrix)
         {
             if (!(sumEquals(row, delta, probSum) ||
                   sumEquals(row, delta, altProbSum)))
-                net.digital_alexandria.sgl4j.System.exit
-                  ("Sum of transition probabilities does not equal 1.00!",
-                   ExitCode.EXIT_ERROR);
+                exit("Sum of transition probabilities does not equal 1.00!",
+                     ExitCode.EXIT_ERROR);
         }
         double[][] emissionsMatrix = hmm.emissionMatrix();
         for (double row[] : emissionsMatrix)
         {
             if (!(sumEquals(row, delta, probSum) ||
                   sumEquals(row, delta, altProbSum)))
-                net.digital_alexandria.sgl4j.System.exit
-                  ("Sum of emission probabilities does not equal 1.00!",
-                   ExitCode.EXIT_ERROR);
+                exit("Sum of emission probabilities does not equal 1.00!",
+                     ExitCode.EXIT_ERROR);
         }
     }
 

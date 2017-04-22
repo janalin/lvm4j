@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- * <p>
+ *
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- * <p>
+ *
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -20,16 +20,31 @@
  */
 
 
-package net.digital_alexandria.lvm4j.decomposition;
+package net.digital_alexandria.lvm4j.util;
 
-import org.ejml.simple.SimpleMatrix;
+
+import net.digital_alexandria.lvm4j.enums.ExitCode;
 
 /**
- * Interface for all decomposition methods
+ * Class that is used for exiting, printing to stderr, etc.
  *
- * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
+ * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public interface Decomposition
+public final class System
 {
-    public SimpleMatrix run(final int K);
+    /** private constructor to avoid instantiation **/
+    private System() {}
+
+    /**
+     * Print a message to the error stream and exit the program with a
+     * specific error code.
+     *
+     * @param message the message to be printed
+     * @param exitCode the error code that is returned
+     */
+    public static void exit(final String message, final ExitCode exitCode)
+    {
+        java.lang.System.err.println(message);
+        java.lang.System.exit(exitCode.code());
+    }
 }

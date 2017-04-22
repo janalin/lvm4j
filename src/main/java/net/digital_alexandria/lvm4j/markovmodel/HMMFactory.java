@@ -21,10 +21,11 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
+import net.digital_alexandria.lvm4j.datastructures.Pair;
+import net.digital_alexandria.lvm4j.datastructures.Triple;
 import net.digital_alexandria.lvm4j.edges.ArcFactory;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
-import net.digital_alexandria.sgl4j.datastructures.Pair;
-import net.digital_alexandria.sgl4j.datastructures.Triple;
+
 import net.digital_alexandria.lvm4j.util.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import static net.digital_alexandria.sgl4j.numeric.Combinatorial.combinatorial;
+import static net.digital_alexandria.lvm4j.util.Combinatorial.combinatorial;
+
 
 /**
  * HMMFactory class: builds and initializes an HMM
