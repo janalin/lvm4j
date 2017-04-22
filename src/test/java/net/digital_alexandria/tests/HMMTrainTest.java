@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -38,25 +38,33 @@ public class HMMTrainTest
     HMM hmm;
 
     @Before
-    public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
+    public void setUp() throws InvocationTargetException,
+                               IllegalAccessException,
+                               NoSuchMethodException
     {
-        hmm = DiscreteStateMarkovModelFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
-        Map<String, String> m = new HashMap<String, String>() {{
-            put("A","ABCABC");
-            put("B","ABCABC");
+        hmm = DiscreteStateMarkovModelFactory
+          .hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
+        Map<String, String> m = new HashMap<String, String>()
+        {{
+            put("A", "ABCABC");
+            put("B", "ABCABC");
         }};
         hmm.train(m, m);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testTransitionValues() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testTransitionValues() throws NoSuchMethodException,
+                                              InvocationTargetException,
+                                              IllegalAccessException
     {
 
         for (WeightedArc arc : hmm.transitions())
         {
-            LatentHMMNode<Character, String> source = (LatentHMMNode<Character, String>) arc.source();
-            LatentHMMNode<Character, String> sink = (LatentHMMNode<Character, String>) arc.sink();
+            LatentHMMNode<Character, String> source =
+              (LatentHMMNode<Character, String>) arc.source();
+            LatentHMMNode<Character, String> sink = (LatentHMMNode<Character,
+              String>) arc.sink();
             if (source.state().equals(sink.state()))
                 assert arc.weight() == 0.0;
         }
@@ -64,12 +72,16 @@ public class HMMTrainTest
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testEmissionValues() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testEmissionValues() throws NoSuchMethodException,
+                                            InvocationTargetException,
+                                            IllegalAccessException
     {
         for (WeightedArc arc : hmm.emissions())
         {
-            LatentHMMNode<Character, String> source = (LatentHMMNode<Character, String>) arc.source();
-            HMMNode<Character, String> sink = (HMMNode<Character, String>) arc.sink();
+            LatentHMMNode<Character, String> source =
+              (LatentHMMNode<Character, String>) arc.source();
+            HMMNode<Character, String> sink = (HMMNode<Character, String>)
+              arc.sink();
             if (source.state().equals(sink.state()))
                 assert arc.weight() == 1;
             else assert arc.weight() == 0;

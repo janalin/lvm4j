@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -38,9 +38,12 @@ public class HMMPredictTest
     HMM hmm;
 
     @Before
-    public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void setUp() throws NoSuchMethodException,
+                               InvocationTargetException,
+                               IllegalAccessException
     {
-        hmm = DiscreteStateMarkovModelFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
+        hmm = DiscreteStateMarkovModelFactory
+          .hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
         Map<String, String> m = new HashMap<String, String>()
         {{
             put("A", "ABCABC");
@@ -50,9 +53,10 @@ public class HMMPredictTest
     }
 
     @Test
-    public void testPredict() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testPredict() throws NoSuchMethodException,
+                                     InvocationTargetException,
+                                     IllegalAccessException
     {
-
         Map<String, String> m = new HashMap<String, String>()
         {{
             put("A", "ABCABC");
@@ -60,7 +64,7 @@ public class HMMPredictTest
         }};
         m = hmm.predict(m);
         for (Map.Entry<String, String> e : m.entrySet())
-            assert(e.getValue().equals("ABCABC"));
+            assert (e.getValue().equals("ABCABC"));
     }
 
 }

@@ -59,7 +59,7 @@ public class FATest
         INDArray ar = fa.run(1);
         for (int i = 0; i < ar.columns(); i++)
         {
-            assert net.digital_alexandria.sgl4j.numeric.Math.equals(
+            assert net.digital_alexandria.lvm4j.util.Math.equals(
               ar.getDouble(i), this.factors[i][0], 0.2);
         }
     }

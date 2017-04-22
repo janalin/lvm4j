@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ import net.digital_alexandria.lvm4j.decomposition.PCA;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.Before;
 import org.junit.Test;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -43,55 +44,67 @@ public class PCATest
 
 
     @Before
-    public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
+    public void setUp() throws InvocationTargetException,
+                               IllegalAccessException, NoSuchMethodException
     {
         FileIO io = new FileIO();
-        this.iris     = io.readFile("iris.tsv");
+        this.iris = io.readFile("iris.tsv");
         this.rotation = io.readFile("iris_rotation.tsv");
-        this.scores   = io.readFile("iris_scores.tsv");
-        this.sd       = io.readFile("iris_sdev.tsv");
+        this.scores = io.readFile("iris_scores.tsv");
+        this.sd = io.readFile("iris_sdev.tsv");
         pca = DecompositionFactory.pca(this.iris);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testSD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testSD() throws NoSuchMethodException,
+                                InvocationTargetException,
+                                IllegalAccessException
     {
         List<Double> s = pca.standardDeviations();
         for (int i = 0; i < s.size(); i++)
         {
-            assert net.digital_alexandria.sgl4j.numeric.Math.equals(s.get(i), this.sd[i][0], .01);
+            assert net.digital_alexandria.lvm4j.util.Math.equals(
+              s.get(i), this.sd[i][0], .2);
         }
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testLoadings() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testLoadings() throws NoSuchMethodException,
+                                      InvocationTargetException,
+                                      IllegalAccessException
     {
-        SimpleMatrix s = pca.loadings();
-        for (int i = 0; i < s.numRows(); i++)
+        INDArray s = pca.loadings();
+        for (int i = 0; i < s.rows(); i++)
         {
-            for (int j = 0; j < s.numCols(); j++)
+            for (int j = 0; j < s.columns(); j++)
             {
                 // results can be rotation-invariant
-                assert net.digital_alexandria.sgl4j.numeric.Math.equals(Math.abs(s.get(i, j)),
-                                                                     Math.abs(this.rotation[i][j]), .01);
+                assert net.digital_alexandria.lvm4j.util.Math.equals
+                  (Math.abs(s.getDouble(i, j)),
+                   Math.abs(this.rotation[i][j]),
+                   .2);
             }
         }
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testScores() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testScores() throws NoSuchMethodException,
+                                    InvocationTargetException,
+                                    IllegalAccessException
     {
-        SimpleMatrix s = pca.run(4);
-        for (int i = 0; i < s.numRows(); i++)
+        INDArray s = pca.run(4);
+        for (int i = 0; i < s.rows(); i++)
         {
-            for (int j = 0; j < s.numCols(); j++)
+            for (int j = 0; j < s.columns(); j++)
             {
                 // results can be rotation-invariant
-                assert net.digital_alexandria.sgl4j.numeric.Math.equals(Math.abs(s.get(i, j)),
-                                                                     Math.abs(this.scores[i][j]), .01);
+                assert net.digital_alexandria.lvm4j.util.Math.equals(
+                  Math.abs(s.getDouble(i, j)),
+                  Math.abs(this.scores[i][j]),
+                  .2);
             }
         }
     }

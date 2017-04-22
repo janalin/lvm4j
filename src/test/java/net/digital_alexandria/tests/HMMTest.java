@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -37,27 +37,36 @@ public class HMMTest
     HMM hmm;
 
     @Before
-    public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
+    public void setUp() throws InvocationTargetException,
+                               IllegalAccessException, NoSuchMethodException
     {
-        Method method = DiscreteStateMarkovModelFactory.class.getDeclaredMethod("init", HMM.class, char[].class, char[].class, int.class);
+        Method method = DiscreteStateMarkovModelFactory.class.getDeclaredMethod(
+          "init", HMM.class, char[].class, char[].class, int.class);
         method.setAccessible(true);
-        hmm = DiscreteStateMarkovModelFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'X', 'Y', 'Z'}, 1);
+        hmm = DiscreteStateMarkovModelFactory.hmm(new char[]{'A',
+          'B', 'C'}, new char[]{'X', 'Y', 'Z'}, 1);
     }
 
     @Test
-    public void testOrder() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testOrder() throws NoSuchMethodException,
+                                   InvocationTargetException,
+                                   IllegalAccessException
     {
         assert hmm.order() == 1;
     }
 
     @Test
-    public void testStateSize() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testStateSize() throws NoSuchMethodException,
+                                       InvocationTargetException,
+                                       IllegalAccessException
     {
         assert hmm.states().size() == 3;
     }
 
     @Test
-    public void testObservationSize() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    public void testObservationSize() throws NoSuchMethodException,
+                                             InvocationTargetException,
+                                             IllegalAccessException
     {
         assert hmm.observations().size() == 3;
     }

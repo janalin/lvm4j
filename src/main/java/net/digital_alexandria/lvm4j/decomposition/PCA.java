@@ -62,7 +62,7 @@ public final class PCA implements Decomposition
 
     PCA(final INDArray X)
     {
-        this._X = scale(X, true, true);
+        this._X = X;
         this._N = _X.rows();
         this._P = _X.columns();
 
@@ -76,11 +76,11 @@ public final class PCA implements Decomposition
 
         // add standard deviations
         this._SD = new ArrayList<>();
-        final double sq = sqrt(X.rows() - 1);
+        final double sq = sqrt(_X.rows() - 1);
         for (int i = 0; i < _X.columns(); i++)
             _SD.add(svd.getW().get(i, i) / sq);
 
-        this._SCORES = X.mmul(_LOADINGS);
+        this._SCORES = _X.mmul(_LOADINGS);
     }
 
     /**
