@@ -40,7 +40,7 @@ public class HMMNode<T, U> extends LabelledNode<T>
     // the startng probability
     private double _probStart;
 
-    protected HMMNode(T label, int idx, U state)
+    HMMNode(T label, int idx, U state)
     {
         super(label, idx);
         this._STATE = state;

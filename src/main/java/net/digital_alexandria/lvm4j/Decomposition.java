@@ -19,13 +19,12 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package net.digital_alexandria.lvm4j;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
- * Interface for all decomposition methods
+ * Interface for all decomposition methods.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */

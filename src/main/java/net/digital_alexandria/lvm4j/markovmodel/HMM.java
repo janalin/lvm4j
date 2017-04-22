@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
+import net.digital_alexandria.lvm4j.DiscreteStateMarkovModel;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.util.File;
 
@@ -35,7 +36,7 @@ import java.util.Map;
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public final class HMM
+public final class HMM implements DiscreteStateMarkovModel
 {
     // the order of the HMM -> number of previous states that are
     // considered for prediction
@@ -64,11 +65,12 @@ public final class HMM
      * Train the HMM using two files: a file of observations and a file of
      * latent states that emit these observations.
      *
-     * @param states       a mapping from the id of a state to the
+     * @param states a mapping from the id of a state to the
      * real state sequence
      * @param observations a mapping from the id of an observation to the
      * real observations sequence
      */
+    @Override
     public void train(Map<String, String> states,
                       Map<String, String> observations)
     {
@@ -80,13 +82,15 @@ public final class HMM
      * Predict the most probable latent state sequence using a sequence of
      * observations.  Prediciton is done using the viterbi algorithm.
      *
-     * @param observations a mapping from the id of an observation to the real
+     * @param y a mapping from the id of an observation to the real
      * observations sequence
+     *
      * @return returns a map the predicted states for given sequences
      */
-    public Map<String, String> predict(Map<String, String> observations)
+    @Override
+    public Map<String, String> predict(Map<String, String> y)
     {
-        return HMMPredictor.instance().predict(this, observations);
+        return HMMPredictor.instance().predict(this, y);
     }
 
     /**
@@ -143,7 +147,7 @@ public final class HMM
     public final double[][] emissionMatrix()
     {
         double[][] emissionMatrix =
-            new double[this.STATES.size()][this.OBSERVATIONS.size()];
+          new double[this.STATES.size()][this.OBSERVATIONS.size()];
         for (WeightedArc e : EMISSIONS)
             emissionMatrix[e.source().idx()][e.sink().idx()] = e.weight();
         return emissionMatrix;
@@ -231,7 +235,7 @@ public final class HMM
     /**
      * Write the trained HMM parameters to a xml file.
      *
-     * @param file  the output file
+     * @param file the output file
      */
     public void writeHMM(String file)
     {
@@ -239,7 +243,8 @@ public final class HMM
     }
 
     /**
-     * Getter for isTrained. True if the HMM has been trained. False if it is the raw HMM.
+     * Getter for isTrained. True if the HMM has been trained. False if it is
+     * the raw HMM.
      *
      * @return returns true if HMM has been trained
      */

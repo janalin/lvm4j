@@ -59,7 +59,7 @@ public final class HMMParams
      */
     public static HMMParams newInstance() { return new HMMParams(); }
 
-    private HMMParams()
+    HMMParams()
     {
         this._isTrainingParam = false;
         this._startWeights = new ArrayList<>();

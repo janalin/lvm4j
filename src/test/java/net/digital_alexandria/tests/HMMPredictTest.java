@@ -22,7 +22,7 @@
 package net.digital_alexandria.tests;
 
 import net.digital_alexandria.lvm4j.markovmodel.HMM;
-import net.digital_alexandria.lvm4j.markovmodel.HMMFactory;
+import net.digital_alexandria.lvm4j.markovmodel.DiscreteStateMarkovModelFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class HMMPredictTest
     @Before
     public void setUp() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-        hmm = HMMFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
+        hmm = DiscreteStateMarkovModelFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
         Map<String, String> m = new HashMap<String, String>()
         {{
             put("A", "ABCABC");

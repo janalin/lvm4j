@@ -23,7 +23,7 @@ package net.digital_alexandria.tests;
 
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.markovmodel.HMM;
-import net.digital_alexandria.lvm4j.markovmodel.HMMFactory;
+import net.digital_alexandria.lvm4j.markovmodel.DiscreteStateMarkovModelFactory;
 import net.digital_alexandria.lvm4j.markovmodel.HMMNode;
 import net.digital_alexandria.lvm4j.markovmodel.LatentHMMNode;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class HMMTrainTest
     @Before
     public void setUp() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException
     {
-        hmm = HMMFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
+        hmm = DiscreteStateMarkovModelFactory.instance().hmm(new char[]{'A', 'B', 'C'}, new char[]{'A', 'B', 'C'}, 1);
         Map<String, String> m = new HashMap<String, String>() {{
             put("A","ABCABC");
             put("B","ABCABC");

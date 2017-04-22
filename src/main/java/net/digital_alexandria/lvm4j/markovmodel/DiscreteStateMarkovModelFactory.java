@@ -25,10 +25,7 @@ import net.digital_alexandria.lvm4j.datastructures.Pair;
 import net.digital_alexandria.lvm4j.datastructures.Triple;
 import net.digital_alexandria.lvm4j.edges.ArcFactory;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
-
 import net.digital_alexandria.lvm4j.util.File;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,31 +38,11 @@ import static net.digital_alexandria.lvm4j.util.Combinatorial.combinatorial;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class HMMFactory
+public final class DiscreteStateMarkovModelFactory
 {
-    private final static Logger _LOGGER =
-      LoggerFactory.getLogger(HMMFactory.class);
+
     // creator for arcs
     private final static ArcFactory _ARC_FACTORY = ArcFactory.instance();
-    // singleton pattern
-    private static HMMFactory _factory;
-
-    private HMMFactory() {}
-
-    /**
-     * Instance method to create an HMMFactory object.
-     *
-     * @return returns an instance of HMMFactory
-     */
-    public static HMMFactory instance()
-    {
-        if (_factory == null)
-        {
-            _LOGGER.info("Instantiating HMMFactory");
-            _factory = new HMMFactory();
-        }
-        return _factory;
-    }
 
     /**
      * Create a HMM using the provided file. The HMM can be used for training
@@ -76,7 +53,7 @@ public final class HMMFactory
      *
      * @return an HMM
      */
-    public HMM hmm(String hmmFile)
+    public static HMM hmm(String hmmFile)
     {
         return HMMbuilder(hmmFile);
     }
@@ -90,33 +67,33 @@ public final class HMMFactory
      *
      * @return returns the raw HMM (untrained)
      */
-    public HMM hmm(char states[], char observations[], int order)
+    public static HMM hmm(char states[], char observations[], int order)
     {
         return HMMbuilder(states, observations, order);
     }
 
-    private HMM HMMbuilder(char[] states, char[] observations, int order)
+    private static HMM HMMbuilder(char[] states, char[] observations, int order)
     {
         HMM hmm = new HMM();
         init(hmm, states, observations, order);
         return hmm;
     }
 
-    private HMM HMMbuilder(String hmmFile)
+    private static HMM HMMbuilder(String hmmFile)
     {
         HMM hmm = new HMM();
         init(hmm, hmmFile);
         return hmm;
     }
 
-    private void init(HMM hmm, String hmmFile)
+    private static void init(HMM hmm, String hmmFile)
     {
         // get relevant options of the HMM
         HMMParams params = File.parseXML(hmmFile);
         init(hmm, params);
     }
 
-    private void init(HMM hmm, HMMParams params)
+    private static void init(HMM hmm, HMMParams params)
     {
         // set up nodes
         init(hmm, params.states(), params.observations(), params.order());
@@ -128,7 +105,8 @@ public final class HMMFactory
                                params.startProbabilities());
     }
 
-    private void init(HMM hmm, char states[], char observations[], int order)
+    private static void init(HMM hmm, char states[], char observations[], int
+      order)
     {
         hmm.order = order;
         // recursively get all combinates of strings of over an alphabet
@@ -139,7 +117,7 @@ public final class HMMFactory
         // if the XML provided has trained parameter, initialize a trained HMM
     }
 
-    private void init(HMM hmm, List<String> states, char[] observations)
+    private static void init(HMM hmm, List<String> states, char[] observations)
     {
         addStates(hmm, states);
         addObservations(hmm, observations);
@@ -147,7 +125,7 @@ public final class HMMFactory
         addEmissions(hmm);
     }
 
-    private void initTrainingParams(
+    private static void initTrainingParams(
       HMM hmm,
       List<Triple<String, String, Double>> emissions,
       List<Triple<String, String, Double>> transitions,
@@ -169,8 +147,8 @@ public final class HMMFactory
     }
 
     @SuppressWarnings("unchecked")
-    private void setUpWeights(Triple<String, String, Double> t,
-                              List<WeightedArc> it)
+    private static void setUpWeights(Triple<String, String, Double> t,
+                                     List<WeightedArc> it)
     {
         String source = t.getFirst();
         String sink = t.getSecond();
@@ -185,7 +163,7 @@ public final class HMMFactory
     }
 
     @SuppressWarnings("unchecked")
-    private void addStates(HMM hmm, List<String> states)
+    private static void addStates(HMM hmm, List<String> states)
     {
         Collections.sort(states, (o1, o2) ->
         {
@@ -204,14 +182,14 @@ public final class HMMFactory
     }
 
     @SuppressWarnings("unchecked")
-    private void addObservations(HMM hmm, char[] observations)
+    private static void addObservations(HMM hmm, char[] observations)
     {
         for (int i = 0; i < observations.length; i++)
             hmm.OBSERVATIONS.add(
               new HMMNode(observations[i], i, String.valueOf(observations[i])));
     }
 
-    private void addTransitions(HMM hmm)
+    private static void addTransitions(HMM hmm)
     {
         for (int i = 0; i < hmm.STATES.size(); i++)
         {
@@ -221,8 +199,9 @@ public final class HMMFactory
         }
     }
 
-    private void addTransition(HMM hmm, LatentHMMNode<Character, String> source,
-                               HMMNode<Character, String> sink)
+    private static void addTransition(HMM hmm,
+                                      LatentHMMNode<Character, String> source,
+                                      HMMNode<Character, String> sink)
     {
         String sourceSeq = source.state();
         String sinkSeq = sink.state();
@@ -250,14 +229,15 @@ public final class HMMFactory
         source.addTransition(t);
     }
 
-    private void addEmissions(HMM hmm)
+    private static void addEmissions(HMM hmm)
     {
         for (LatentHMMNode<Character, String> state : hmm.STATES)
-            hmm.OBSERVATIONS.stream().forEach(obs -> addEmission(hmm, state,
-                                                                 obs));
+            hmm.OBSERVATIONS
+              .stream()
+              .forEach(obs -> addEmission(hmm, state, obs));
     }
 
-    private void addEmission(HMM hmm, LatentHMMNode source, HMMNode sink)
+    private static void addEmission(HMM hmm, LatentHMMNode source, HMMNode sink)
     {
         WeightedArc t = _ARC_FACTORY.weightedArc(source, sink, .0);
         hmm.EMISSIONS.add(t);
