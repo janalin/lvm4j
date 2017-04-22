@@ -1,0 +1,8 @@
+net.digital_alexandria.lvm4j
+net.digital_alexandria.lvm4j.datastructures
+net.digital_alexandria.lvm4j.decomposition
+net.digital_alexandria.lvm4j.edges
+net.digital_alexandria.lvm4j.enums
+net.digital_alexandria.lvm4j.markovmodel
+net.digital_alexandria.lvm4j.nodes
+net.digital_alexandria.lvm4j.util
