@@ -2,7 +2,7 @@ title: lvm4j
 email: mail@simon-dirmeier.met
 description: The project page for lvm4j
 baseurl: ""
-url: ""
+url: "http://dirmeier.github.io"
 github_username:  dirmeier
 sass:
   sass_dir: _sass
