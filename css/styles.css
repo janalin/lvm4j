@@ -216,3 +216,7 @@ nav ul li:hover {
     animation:
         blinker 2s linear alternate;
 }
+
+p {
+    font-size: 1.1em;
+}
