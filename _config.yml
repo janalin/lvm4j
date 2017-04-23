@@ -1,13 +1,9 @@
-# Site Settings
-title: Start Jekyll
-email: taniarascia@gmail.com
-description: >
-  A guide to getting started with Jekyll.
+title: lvm4j
+email: mail@simon-dirmeier.met
+description: The project page for lvm4j
 baseurl: ""
-url: "http://localhost:4000"
-twitter_username: taniarascia
-github_username:  taniarascia
-# Build Settings
+url: ""
+github_username:  dirmeier
 sass:
   sass_dir: _sass
 include: ['_pages']
