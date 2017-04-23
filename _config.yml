@@ -6,6 +6,6 @@ url: "http://dirmeier.github.io"
 github_username:  dirmeier
 sass:
   sass_dir: _sass
-include: ['_pages', 'bower_components']
+include: ['_pages', 'bower_components' , 'js']
 kramdown:
   input: GFM
