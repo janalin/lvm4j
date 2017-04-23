@@ -1,7 +1,7 @@
 title: lvm4j
 email: mail@simon-dirmeier.met
 description: The project page for lvm4j
-baseurl: "/index"
+baseurl: "/startjekyll"
 url: "http://dirmeier.github.io/lvm4j"
 github_username:  dirmeier
 sass:
