@@ -8,25 +8,23 @@
 
     <title>lvm4j</title>
 
-    <link href="/bower_components/materialize/dist/css/materialize.min.css" type="text/css" rel="stylesheet"
+    <link href="bower_components/materialize/dist/css/materialize.min.css" type="text/css" rel="stylesheet"
           media="screen,projection"/>
-    <link href="/bower_components/skeleton/css/skeleton.css" type="text/css" rel="stylesheet"
+    <link href="bower_components/skeleton/css/skeleton.css" type="text/css" rel="stylesheet"
           media="screen,projection"/>
-    <link href="/bower_components/skeleton/css/normalize.css" type="text/css" rel="stylesheet"
+    <link href="bower_components/skeleton/css/normalize.css" type="text/css" rel="stylesheet"
           media="screen,projection"/>
     <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/github.min.css">
-
+    <style>
+        h4 {
+            border-spacing: 10px;
+            margin-top: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
-
-<style>
-    h4 {
-        border-spacing: 10px;
-        margin-top: 100px;
-        margin-bottom: 20px;
-    }
-</style>
 
 <body>
 <div>
@@ -38,23 +36,23 @@
         </div>
 
         <ul id="nav-mobile" class="fixed leftnavt">
-            <li><a href="/" class="subheader" style="font-size: 1.25em; margin-top: 15%">Home</a></li>
-            <li><a href="/tutorial#decomposition" class="subheader waves-effect waves-teal liblink"
+            <li><a href="index.html" class="subheader" style="font-size: 1.25em; margin-top: 15%">Home</a></li>
+            <li><a href="tutorial#decomposition" class="subheader waves-effect waves-teal liblink"
                    style="font-size: 1.05em; color: #26a69a; ">Decomposition</a>
                 <div>
                     <ul>
-                        <li><a href="/tutorial#principal-component-analysis" class="waves-effect waves-teal liblink"
+                        <li><a href="tutorial#principal-component-analysis" class="waves-effect waves-teal liblink"
                                style="font-size: 1.00em; color: #26a69a">Principal components</a></li>
-                        <li><a href="/tutorial#factor-analysis" class="waves-effect waves-teal liblink"
+                        <li><a href="tutorial#factor-analysis" class="waves-effect waves-teal liblink"
                                style="font-size: 1.00em; color: #26a69a">Factor analysis</a></li>
                     </ul>
                 </div>
             </li>
-            <li><a href="/tutorial#markov-models" class="subheader waves-effect waves-teal liblink"
+            <li><a href="#markov-models" class="subheader waves-effect waves-teal liblink"
                    style="font-size: 1.05em; color: #26a69a;">Markov
                 Models</a>
                 <ul>
-                    <li><a href="/tutorial#hidden-markov-models" class="waves-effect waves-teal liblink"
+                    <li><a href="tutorial#hidden-markov-models" class="waves-effect waves-teal liblink"
                            style="font-size: 1.00em; color: #26a69a;">Hidden Markov Models</a></li>
                 </ul>
 
@@ -65,139 +63,126 @@
 
 <div class="container">
     <section>
-        <h2 style="margin-top: 5%">{{page.title}}</h2>
+        <h2 style="margin-top: 5%">Tutorial</h2>
         <div class="docs-section">
-            Here, we briefly describe how the <code>lvm4j</code> libary is used. Also make sure to check out the [```javadocs```](http://javadoc.io/doc/net.digital-alexandria/lvm4j).
+            Here, we briefly describe how the <code>lvm4j</code> libary is used. Also make sure to check out the
+            <a href="http://javadoc.io/doc/net.digital-alexandria/lvm4j"><code>javadocs</code></a>.
 
+            <h4 id="decomposition">Decomposition</h4>
 
-
-            #### Decomposition
-
-            Decomposition methods implement the `Decomposition`-interface and can be create using a static method from `DecompositionFactory`.
+            Decomposition methods implement the <code>Decomposition</code>-interface and can be create using a static
+            method from
+            <code>DecompositionFactory</code>.
             The means its suffices to initialize decomposition implementations using:
 
-            ```java
-            Decomposition decm = DecompositionFactory.method(...);
-            ```
+            <pre><code class="Java">Decomposition decm = DecompositionFactory.method(...);</code></pre>
 
-            If you want to access all the methods, however, the following tutorial shows you, how it's done. All the decomposition classes need a matrix as argument.
-            This can either be a `double`-matrix or an `INDArray`. In the end it does not matter, what matrix you create, because we cast it to `INDArray` anyways.
-            INDArrays are implemented in the great  [```nd4j```](http://nd4j.org/) package which among other things does matrix computations using BLAS and LAPACK.
+            If you want to access all the methods, however, the following tutorial shows you, how it's done. All the
+            decomposition classes need a matrix as argument.
+            This can either be a `double`-matrix or an `INDArray`. In the end it does not matter, what matrix you
+            create, because we cast it to `INDArray` anyways.
+            INDArrays are implemented in the great [```nd4j```](http://nd4j.org/) package which among other things does
+            matrix computations using BLAS and LAPACK.
 
-            ```java
-            double[][] x = new double[100][10];
-            for (int i = 0; i < x.length; i++)
-            Arrays.fill(x[i], i);
+            <pre><code class="Java">  double[][] x = new double[100][10];
+  for (int i = 0; i < x.length; i++)
+  Arrays.fill(x[i], i);
 
-            INDArray xi = Nd4j.create(X);
-            ```
-
-            ##### Principal component analysis
-
-            Initialize the `PCA` object and create a new `score`-matrix with a different number of components like this:
-
-            ```java
-            PCA pca = DecompositionFactory.pca(x);
-            PCA pcai = DecompositionFactory.pca(xi);
-
-            // here we take four components
-            INDArray s = pca.run(4);
-
-            // here we take two components
-            INDArray si = pcai.run(2);
-            ```
+  INDArray xi = Nd4j.create(X);</code></pre>
 
 
-            ##### Factor analysis
+            <h5 id="principal-component-analysis">Principal component analysis</h5>
+
+            Initialize the <code>PCA</code> object and create a new <code>score</code>-matrix with a different number of
+            components like this:
+
+            <pre><code class="Java">  PCA pca = DecompositionFactory.pca(x);
+  PCA pcai = DecompositionFactory.pca(xi);
+
+  // here we take four components
+  INDArray s = pca.run(4);
+
+  // here we take two components
+  INDArray si = pcai.run(2);</code></pre>
+
+            <h5 id="factor-analysis">Factor analysis</h5>
 
             If we use the same matrices as from above, factor analysis can be used with:
 
-            ```java
-            FactorAnalysis fa = DecompositionFactory.factorAnalysis(x);
+            <pre><code class="Java">  FactorAnalysis fa = DecompositionFactory.factorAnalysis(x);
 
-            // here we take two components
-            INDArray s = fa.run(2);
-            ```
+  // here we take two components
+  INDArray s = fa.run(2);</code></pre>
 
 
-            #### Markov models
+            <h4 id="markov-models">Markov models</h4>
 
-            ##### Hidden Markov models
+            <h5 id="hidden-markov-models"> Hidden Markov models</h5>
 
-            HMMs implement the `DiscreteStateMarkovModel` interface and can be instantiated using the `DiscreteStateMarkovModelFactory`.
-            Using an HMM (in v0.2) involves two steps: training of emission and transition probabilities and prediction of the latent state sequence.
+            HMMs implement the <code>DiscreteStateMarkovModel</code> interface and can be instantiated using the
+            <code>DiscreteStateMarkovModelFactory</code>.
+            Using an HMM (in v0.2) involves two steps: training of emission and transition probabilities and prediction
+            of the latent state sequence.
 
-            ##### Training
+            <h6>Training</h6>
 
             First initialize an HMM using:
 
-            ```java
-            char[] states = new char[]{'A', 'B', 'C'};
-            char[] observations = new char[]{'X', 'Y', 'Z'};
-            HMM hmm = DiscreteStateMarkovModelFactory.hmm(states, observations, 1);
-            ```
+            <pre><code class="Java">  char[] states = new char[]{'A', 'B', 'C'};
+  char[] observations = new char[]{'X', 'Y', 'Z'};
+  HMM hmm = DiscreteStateMarkovModelFactory.hmm(states, observations, 1);</code></pre>
 
-            It is easier though to take the constructor that takes a single string only that contains the path to an XML-file.
+            It is easier though to take the constructor that takes a single string only that contains the path to an
+            XML-file.
 
-            ```java
-            String xmlFile = "/src/test/resources/hmm.xml";
-            HMM hmm = DiscreteStateMarkovModelFactory.hmm(xmlFile);
-            ```
+            <pre><code class="Java">  String xmlFile = "/src/test/resources/hmm.xml";
+   HMM hmm = DiscreteStateMarkovModelFactory.hmm(xmlFile);</code></pre>
 
             If you initialize the hmm with an `xml` you need to specify the following format:
 
-            ```xml
-            <hmm>
-                <meta>
-                <states>HEC</states>
-                <observations>ZWD</observations>
-                <order>2</order>
-                </meta>
-            </hmm>
-            ```
+            <pre><code class="xml">  &lt;hmm&gt;
+    &lt;meta&gt;
+      &lt;states>HEC&lt;/states&gt;
+      &lt;observations>ZWD&lt;/observations&gt;
+      &lt;order&gt;2&lt;/order&gt;
+      &lt;/meta&gt;
+  &lt;/hmm&gt;</code></pre>
 
             Having the HMM initialized, training is done like this:
 
-            ```java
-            Map<String, String> states = new HashMap<>(){{
-            put("s1", "ABCABC");
-            put("s2", "ABCCCC");
-            }};
-            Map<String, String> observations = new HashMap<>(){{
-            put("s1", "XYZYXZ");
-            put("s2", "XYZYXZ");
-            }};
-            hmm.train(states, observations);
-            ```
+            <pre><code class="Java">  Map<String, String> states = new HashMap<>(){{
+    put("s1", "ABCABC");
+    put("s2", "ABCCCC");
+  }};
+  Map<String, String> observations = new HashMap<>(){{
+    put("s1", "XYZYXZ");
+    put("s2", "XYZYXZ");
+  }};
+  hmm.train(states, observations);</code></pre>
 
             Take care that <code>states</code> and <code>observations</code> have the same keys and equally long values.
             You can write your trained HMM to a file using:
 
-            ```java
-            String outFile = "hmm.trained.xml";
-            hmm.writeHMM(outFile);
-            ```
+            <pre><code class="Java">  String outFile = "hmm.trained.xml";
+  hmm.writeHMM(outFile);</code></pre>
 
             That is it!
 
-            ##### Prediction
+            <h6>Prediction</h6>
 
             First initialize the HMM again:
 
-            ```java
-            String xmlFile = "/src/test/resources/hmm.trained.xml";
-            HMM hmm = DiscreteStateMarkovModelFactory.hmm(xmlFile)
-            ```
+            <pre><code class="Java">  String xmlFile = "/src/test/resources/hmm.trained.xml";
+  HMM hmm = DiscreteStateMarkovModelFactory.hmm(xmlFile)</code></pre>
 
-            Make sure to use the <code>hmm.trained.xml</code> file containing your trained HMM. Then make a prediction using:
+            Make sure to use the <code>hmm.trained.xml</code> file containing your trained HMM. Then make a prediction
+            using:
 
-            ```java
-            Map<String, String> observations = new HashMap<>(){{
-            put("s1", "XYZYXZ");
-            put("s2", "XYZYXZ");
-            }};
-            Map<String, String> pred = hmm.predict(states, observations);
-            ```
+            <pre><code class="Java">  Map<String, String> observations = new HashMap<>(){{
+    put("s1", "XYZYXZ");
+    put("s2", "XYZYXZ");
+  }};
+  Map<String, String> pred = hmm.predict(states, observations);</code></pre>
         </div>
     </section>
     <section>
@@ -207,9 +192,9 @@
         </footer>
     </section>
 </div>
-<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="/bower_components/materialize/bin/materialize.js"></script>
-<script src="/bower_components/d3/d3.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/materialize/bin/materialize.js"></script>
+<script src="bower_components/d3/d3.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
