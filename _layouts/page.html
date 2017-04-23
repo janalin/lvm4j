@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+
+<body>
+
+<div>
+    <nav>
+        <ul id="nav-mobile" class="fixed leftnavt">
+            <li><a href="/" class="subheader" style="font-size: 1.25em; margin-top: 15%">Home</a></li>
+            <li><a href="/decomposition" class="subheader waves-effect waves-teal liblink" style="font-size: 1.05em; color: #26a69a; ">Decomposition</a>
+                <div >
+                    <ul>
+                        <li><a href="/decomposition#pca" class="waves-effect waves-teal liblink"
+                               style="font-size: 1.00em; color: #26a69a">Principal components</a></li>
+                        <li><a href="/decomposition#fa" class="waves-effect waves-teal liblink"
+                               style="font-size: 1.00em; color: #26a69a">Factor analysis</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="/markovmodels" class="subheader waves-effect waves-teal liblink" style="font-size: 1.05em; color: #26a69a;">Markov
+                Models</a>
+                <ul>
+                    <li><a href="/decomposition#pca" class="waves-effect waves-teal liblink" style="font-size: 1.00em; color: #26a69a;">Hidden Markov Models</a></li>
+                </ul>
+
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="container">
+    {{ content }}
+
+    {% include footer.html %}
+</div>
+{% include scripts.html %}
+</body>
+</html>
