@@ -21,7 +21,7 @@ With new versions I will try to cover more latent variable models in <code>lvm4j
 
 * <i>Principal Component Analysis</i> is a simple (probably the simplest) method for dimension reduction. We try to find a linear orthogonal transformation onto a new feature space where every basis vector has maximal variance. It's open to debate if this is a *true* latent variale model.
 
-* <i>Factor Analysis<i> is essentially a propabilistic version of PCA (and closely resembles PPCA). Here we additionally include Gaussian noise since our data-points don't exactly lie on a linear subspace.
+* <i>Factor Analysis</i> is essentially a propabilistic version of PCA (and closely resembles PPCA). Here we additionally include Gaussian noise since our data-points don't exactly lie on a linear subspace.
 
 ## Installation
  
