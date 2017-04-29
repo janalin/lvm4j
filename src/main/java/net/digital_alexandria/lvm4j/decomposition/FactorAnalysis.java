@@ -38,7 +38,11 @@ import static net.digital_alexandria.lvm4j.util.Matrix.scale;
 import static org.nd4j.linalg.factory.Nd4j.diag;
 
 /**
- * Class that calculates a factor analysis
+ * Class that calculates a factor analysis.
+ *
+ * The algorithm was largely taken from:
+ *  Barber - Bayesian Reasoning and Machine Learning,
+ *  Chapter 21. 1, Algorithm 21. 1
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */

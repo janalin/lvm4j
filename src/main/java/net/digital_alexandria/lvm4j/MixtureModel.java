@@ -21,35 +21,20 @@
 
 package net.digital_alexandria.lvm4j;
 
-import java.util.Map;
-
 /**
- * Interface for all Markov models
- *
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-public interface DiscreteStateMarkovModel
+public interface MixtureModel
 {
     /**
-     * Train the HMM using two files: a file of observations and a file of
-     * latent states that emit these observations.
+     * Create a clustering of k components from a data-set.
+     * <p>
+     * The number of cluster-center/components is determined by <code>k</code>,
+     * i.e. for <code>k=3</code> 3 clusters will be created.
      *
-     * @param states a mapping from the id of a state to the
-     * real state sequence
-     * @param observations a mapping from the id of an observation to the
-     * real observations sequence
+     * @param k the number of components (cluster-centers)
+     *
+     * @return returns the clustering
      */
-    public void train(Map<String, String> states,
-                      Map<String, String> observations);
-
-    /**
-     * Predict the most probable latent state sequence using a sequence of
-     * observations.  Prediciton is done using the viterbi algorithm.
-     *
-     * @param y a mapping from the id of an observation to the real
-     * observations sequence
-     *
-     * @return returns a map the predicted states for given sequences
-     */
-    public Map<String, String> predict(Map<String, String> y);
+    public MixtureComponents fit(final int k );
 }
