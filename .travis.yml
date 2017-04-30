@@ -2,10 +2,6 @@ language: java
 jdk:
   - oraclejdk8
 
-before_install:
- - git clone https://github.com/dirmeier/std4j.git
- - cd std4j && mvn install 
-
 script: mvn test
 
 after_success:
