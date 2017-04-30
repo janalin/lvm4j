@@ -21,9 +21,17 @@
 
 package net.digital_alexandria.lvm4j;
 
+import net.digital_alexandria.lvm4j.mixturemodel.GaussianMixtureModel;
+
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
 public class MixtureComponents
 {
+    public MixtureComponents(GaussianMixtureModel gaussianMixture) {}
+
+    public MixtureComponents()
+    {
+
+    }
 }

@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import net.digital_alexandria.lvm4j.enums.ExitCode;
  */
 public final class System
 {
-    /** private constructor to avoid instantiation **/
+    /** Constructor private to avoid instantiation. **/
     private System() {}
 
     /**

@@ -31,19 +31,20 @@ import org.nd4j.linalg.factory.Nd4j;
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-public class GaussianMixture implements Cluster, MixtureModel
+public final class GaussianMixtureModel implements Cluster, MixtureModel
 {
-
+    private static final double _THRESHOLD = 0.000001;
+    private static final int _MAXIT = 10000;
     private final INDArray _X;
     private final int _N;
     private final int _P;
 
-    GaussianMixture(double[][] X)
+    GaussianMixtureModel(double[][] X)
     {
         this(Nd4j.create(X));
     }
 
-    GaussianMixture(INDArray X)
+    GaussianMixtureModel(INDArray X)
     {
         this._X = X;
         this._N = X.rows();
@@ -52,14 +53,24 @@ public class GaussianMixture implements Cluster, MixtureModel
 
 
     @Override
-    public Clustering cluster(int k)
+    public final Clustering cluster(final int k)
     {
-        return null;
+        em(k);
+        return new Clustering(this);
     }
 
     @Override
-    public MixtureComponents fit(int k)
+    public final MixtureComponents fit(final int k)
     {
-        return null;
+        em(k);
+        return new MixtureComponents(this);
     }
+
+    private void em(final int k)
+    {
+        GaussianMixtureComponents comp =
+          GaussianMixtureComponents.random(k, _P);
+        int l  = 2;
+    }
+
 }

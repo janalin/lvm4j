@@ -21,22 +21,20 @@
 
 package net.digital_alexandria.tests;
 
-import net.digital_alexandria.lvm4j.decomposition.DecompositionFactory;
-import net.digital_alexandria.lvm4j.decomposition.FactorAnalysis;
+import net.digital_alexandria.lvm4j.mixturemodel.GaussianMixtureModel;
+import net.digital_alexandria.lvm4j.mixturemodel.MixtureModelFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public class FATest
+public class GMMTest
 {
-    FactorAnalysis fa;
+    GaussianMixtureModel gmm;
     double[][] iris;
-    double[][] factors;
 
     @Before
     public void setUp() throws InvocationTargetException,
@@ -45,8 +43,7 @@ public class FATest
     {
         FileIO io = new FileIO();
         this.iris = io.readFile("iris.tsv");
-        this.factors = io.readFile("iris_factors.tsv");
-        fa = DecompositionFactory.factorAnalysis(this.iris);
+        gmm = MixtureModelFactory.gaussianMixture(this.iris);
     }
 
     @Test
@@ -55,12 +52,7 @@ public class FATest
                                 InvocationTargetException,
                                 IllegalAccessException
     {
-        INDArray ar = fa.run(1);
-        for (int i = 0; i < ar.columns(); i++)
-        {
-            assert net.digital_alexandria.lvm4j.util.Math.equals(
-              ar.getDouble(i), this.factors[i][0], 0.2);
-        }
+        gmm.cluster(2);
     }
 
 }

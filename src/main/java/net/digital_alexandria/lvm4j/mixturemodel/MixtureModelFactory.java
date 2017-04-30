@@ -42,9 +42,9 @@ public final class MixtureModelFactory
      *
      * @return returns a GaussianMixture object
      */
-    public static GaussianMixture gaussianMixture(double[][] X)
+    public static GaussianMixtureModel gaussianMixture(double[][] X)
     {
-        return new GaussianMixture(X);
+        return new GaussianMixtureModel(X);
     }
 
 
@@ -59,8 +59,8 @@ public final class MixtureModelFactory
      *
      * @return returns a GaussianMixture object
      */
-    public static GaussianMixture gaussianMixture(INDArray X)
+    public static GaussianMixtureModel gaussianMixture(INDArray X)
     {
-        return new GaussianMixture(X);
+        return new GaussianMixtureModel(X);
     }
 }
