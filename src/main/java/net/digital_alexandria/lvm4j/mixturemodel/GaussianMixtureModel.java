@@ -25,8 +25,11 @@ import net.digital_alexandria.lvm4j.Cluster;
 import net.digital_alexandria.lvm4j.Clustering;
 import net.digital_alexandria.lvm4j.MixtureComponents;
 import net.digital_alexandria.lvm4j.MixtureModel;
+import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
@@ -35,22 +38,22 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
 {
     private static final double _THRESHOLD = 0.000001;
     private static final int _MAXIT = 10000;
-    private final INDArray _X;
+    private final double[][] _X;
     private final int _N;
     private final int _P;
 
     GaussianMixtureModel(double[][] X)
     {
-        this(Nd4j.create(X));
+        this._X = X;
+        this._N = X.length;
+        this._P = X[0].length;
+
     }
 
     GaussianMixtureModel(INDArray X)
     {
-        this._X = X;
-        this._N = X.rows();
-        this._P = X.columns();
+        throw new NotImplementedException();
     }
-
 
     @Override
     public final Clustering cluster(final int k)
@@ -66,11 +69,61 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
         return new MixtureComponents(this);
     }
 
-    private void em(final int k)
+    private void em(final int K)
     {
-        GaussianMixtureComponents comp =
-          GaussianMixtureComponents.random(k, _P);
-        int l  = 2;
+        GaussianMixtureComponents comps =
+          GaussianMixtureComponents.random(K, _P);
+        int run = 0;
+        double[][] probs = new double[_N][K];
+        double[][] probNorm = new double[_N][K];
+        double[] nk = new double[K];
+        while (++run < _MAXIT)
+        {
+            setProbs(probs, K, comps);
+            normProbs(probNorm, probs, K);
+            setClusterCounts(nk, K, probNorm);
+        }
     }
 
+    private void setClusterCounts(
+      double[] nk, final int K, final double[][] probNorm)
+    {
+        for (int j = 0; j < K; j++)
+        {
+            nk[j] = 0;
+            for (int i = 0; i < this._N; i++)
+            {
+                nk[j] += probNorm[i][j];
+            }
+        }
+    }
+
+    private void normProbs(
+      double[][] probNorm, final double[][] probs, final int K)
+    {
+        for (int i = 0; i < this._N; i++)
+        {
+            double p = 0.0;
+            for (int j = 0; j < K; j++)
+                p += probs[i][j];
+            for (int j = 0; j < K; j++)
+                probNorm[i][j] = probs[i][j] / p;
+        }
+    }
+
+    private void setProbs(
+      double[][] probs,
+      final int K,
+      final GaussianMixtureComponents comps)
+    {
+        for (int i = 0; i < K; i++)
+        {
+            MultivariateNormalDistribution mvt = new
+              MultivariateNormalDistribution(comps.means(i), comps.var(i));
+            for (int j = 0; j < this._N; j++)
+            {
+                probs[j][i] = mvt.density(_X[j]);
+            }
+        }
+    }
 }

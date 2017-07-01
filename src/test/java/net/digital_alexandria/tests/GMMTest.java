@@ -48,7 +48,7 @@ public class GMMTest
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testFA() throws NoSuchMethodException,
+    public void testGMM() throws NoSuchMethodException,
                                 InvocationTargetException,
                                 IllegalAccessException
     {

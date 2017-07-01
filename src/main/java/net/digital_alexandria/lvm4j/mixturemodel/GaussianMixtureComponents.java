@@ -12,9 +12,7 @@ final class GaussianMixtureComponents extends MixtureComponents
 {
     private final int _K;
     private final int _P;
-    private final double[] _WEIGHTS;
-    private final INDArray[] _MEANS;
-    private final INDArray[] _VCOVS;
+    private final GaussianMixtureComponent[] _COMPONENTS;
 
     static GaussianMixtureComponents random(final int k, final int p)
     {
@@ -25,15 +23,46 @@ final class GaussianMixtureComponents extends MixtureComponents
     {
         this._K = k;
         this._P = p;
-        this._WEIGHTS = new double[_K];
-        this._MEANS = new INDArray[_K];
-        this._VCOVS = new INDArray[_K];
-        final double weight = 1.0/(double) _K;
+        this._COMPONENTS = new GaussianMixtureComponent[k];
+
+        final double weight = 1.0 / (double) _K;
         for (int i = 0; i < _K; i++)
         {
-            _WEIGHTS[i] = weight;
-            _MEANS[i] = Nd4j.create(MathUtils.generateUniform(_P));
-            _VCOVS[i] = Nd4j.eye(_P);
+            double[][] vcov = new double[_P][_P];
+            for (int j = 0; j < vcov.length; j++) vcov[j][j] = 1;
+            this._COMPONENTS[i] = new GaussianMixtureComponent(
+              weight, MathUtils.generateUniform(_P), vcov);
+
+        }
+    }
+
+    public GaussianMixtureComponent get(int i)
+    {
+        return _COMPONENTS[i];
+    }
+
+    public final double[] means(int i)
+    {
+        return this._COMPONENTS[i]._MEAN;
+    }
+
+    public final double[][] var(int i)
+    {
+        return this._COMPONENTS[i]._VCOV;
+    }
+
+    private final class GaussianMixtureComponent
+    {
+        final double _WEIGHT;
+        final double[] _MEAN;
+        final double[][] _VCOV;
+
+        private GaussianMixtureComponent(
+          final double weight, final double[] mean, final double[][] vcov)
+        {
+            this._WEIGHT = weight;
+            this._MEAN = mean;
+            this._VCOV = vcov;
         }
     }
 }
