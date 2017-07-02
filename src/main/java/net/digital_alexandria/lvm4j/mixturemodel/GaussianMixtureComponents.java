@@ -1,8 +1,6 @@
 package net.digital_alexandria.lvm4j.mixturemodel;
 
 import net.digital_alexandria.lvm4j.MixtureComponents;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.util.MathUtils;
 
 /**
@@ -36,33 +34,46 @@ final class GaussianMixtureComponents extends MixtureComponents
         }
     }
 
-    public GaussianMixtureComponent get(int i)
-    {
-        return _COMPONENTS[i];
-    }
 
     public final double[] means(int i)
     {
-        return this._COMPONENTS[i]._MEAN;
+        return this._COMPONENTS[i]._mean;
     }
 
     public final double[][] var(int i)
     {
-        return this._COMPONENTS[i]._VCOV;
+        return this._COMPONENTS[i]._vcoc;
+    }
+
+    public final void setComponent(final int i,
+                             final double[] mean,
+                             final double[][] vcov,
+                             final double weight)
+    {
+        this._COMPONENTS[i].setComponent(mean, vcov, weight);
     }
 
     private final class GaussianMixtureComponent
     {
-        final double _WEIGHT;
-        final double[] _MEAN;
-        final double[][] _VCOV;
+        double _weight;
+        double[] _mean;
+        double[][] _vcoc;
 
         private GaussianMixtureComponent(
           final double weight, final double[] mean, final double[][] vcov)
         {
-            this._WEIGHT = weight;
-            this._MEAN = mean;
-            this._VCOV = vcov;
+            this._weight = weight;
+            this._mean = mean;
+            this._vcoc = vcov;
+        }
+
+        public void setComponent(double[] mean,
+                                 double[][] vcov,
+                                 double weight)
+        {
+            this._mean = mean;
+            this._vcoc = vcov;
+            this._weight = weight;
         }
     }
 }
