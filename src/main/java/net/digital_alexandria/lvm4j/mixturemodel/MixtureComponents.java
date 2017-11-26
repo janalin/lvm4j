@@ -28,13 +28,11 @@ package net.digital_alexandria.lvm4j.mixturemodel;
 public class MixtureComponents
 {
 
-    public MixtureComponents(GaussianMixtureModel gaussianMixture) {}
+    public MixtureComponents(GaussianMixtureComponents comps)
+    {
+
+    }
 
     public MixtureComponents() {}
-
-    public MixtureComponents fit(int k)
-    {
-        return null;
-    }
 
 }

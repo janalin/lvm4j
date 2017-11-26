@@ -39,5 +39,5 @@ public interface MixtureModel
      *
      * @return returns the clustering
      */
-    public MixtureComponents fit(final int k);
+    MixtureComponents fit(final int k);
 }

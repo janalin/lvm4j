@@ -22,18 +22,18 @@
 
 package net.digital_alexandria.lvm4j.mixturemodel;
 
-import net.digital_alexandria.lvm4j.Cluster;
-import net.digital_alexandria.lvm4j.Clustering;
+import net.digital_alexandria.lvm4j.ClusterAnalysis;
+import net.digital_alexandria.lvm4j.cluster.Clustering;
 import net.digital_alexandria.lvm4j.MixtureModel;
+
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-public final class GaussianMixtureModel implements Cluster, MixtureModel
+public final class GaussianMixtureModel implements ClusterAnalysis, MixtureModel
 {
     private static final int _MAXIT = 10000;
     private final double[][] _X;
@@ -50,27 +50,27 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
 
     GaussianMixtureModel(INDArray X)
     {
-        throw new NotImplementedException();
+        throw new RuntimeException("Not yet implemented");
     }
 
     @Override
     public final Clustering cluster(final int k)
     {
         em(k);
-        return new Clustering(this);
+        return new Clustering(_X, _N, _P, em(k));
     }
 
     @Override
     public final MixtureComponents fit(final int k)
     {
-        em(k);
-        return new MixtureComponents(this);
+        return new MixtureComponents(em(k));
     }
 
-    private void em(final int K)
+    private GaussianMixtureComponents em(final int K)
     {
-        GaussianMixtureComponents comps = GaussianMixtureComponents
-            .random(K, _P);
+        GaussianMixtureComponents comps =
+            GaussianMixtureComponents.random(K, _P);
+
         int run = 0;
         double[][] probs = new double[_N][K];
         double[][] resposibilities = new double[_N][K];
@@ -88,13 +88,25 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
              */
             updateComponents(K, resposibilities, nk, comps);
         }
+
+        return comps;
     }
 
     private void setProbs(double[][] probs, final int K,
                           final GaussianMixtureComponents cps)
     {
+
         for (int i = 0; i < K; i++)
         {
+            for (int j = 0; j < cps.var(i).length; j++)
+            {
+                for (int k = 0; k < cps.var(i)[j].length; k++)
+                {
+                    System.out.print(cps.var(i)[j][k] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
             MultivariateNormalDistribution mvt = new
                 MultivariateNormalDistribution(cps.means(i), cps.var(i));
             for (int j = 0; j < this._N; j++)

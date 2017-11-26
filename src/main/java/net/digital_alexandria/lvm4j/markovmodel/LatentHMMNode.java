@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * Node class that has a label and a state, a couple of transitions and a couple of emissions.
- * Most importantly it is latend in an HMM.
+ * Most importantly it is latent in an HMM.
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  * @param <T> generic for label of node

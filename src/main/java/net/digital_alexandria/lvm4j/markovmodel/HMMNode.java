@@ -22,7 +22,6 @@
 package net.digital_alexandria.lvm4j.markovmodel;
 
 import net.digital_alexandria.lvm4j.nodes.LabelledNode;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Node class that has a label and a state, a couple of transitions and a
@@ -57,7 +56,7 @@ public class HMMNode<T, U> extends LabelledNode<T>
     @Override
     public boolean equals(Object o)
     {
-        throw new NotImplementedException();
+        throw new RuntimeException();
     }
 
     /**

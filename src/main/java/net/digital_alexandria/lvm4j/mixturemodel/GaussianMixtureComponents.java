@@ -28,9 +28,14 @@ public final class GaussianMixtureComponents extends MixtureComponents
             double[][] vcov = new double[_P][_P];
             for (int j = 0; j < vcov.length; j++) vcov[j][j] = 1;
             this._COMPONENTS[i] = new GaussianMixtureComponent(
-              weight, MathUtils.generateUniform(_P), vcov);
+                weight, MathUtils.generateUniform(_P), vcov);
 
         }
+    }
+
+    public int countComponents()
+    {
+        return this._K;
     }
 
     public final double[] means(int i)
@@ -44,17 +49,11 @@ public final class GaussianMixtureComponents extends MixtureComponents
     }
 
     public final void setComponent(final int i,
-                             final double[] mean,
-                             final double[][] vcov,
-                             final double weight)
+                                   final double[] mean,
+                                   final double[][] vcov,
+                                   final double weight)
     {
         this._COMPONENTS[i].setComponent(mean, vcov, weight);
-    }
-
-    @Override
-    public MixtureComponents fit(int k)
-    {
-        return null;
     }
 
     private final class GaussianMixtureComponent
@@ -63,17 +62,16 @@ public final class GaussianMixtureComponents extends MixtureComponents
         double[] _mean;
         double[][] _vcoc;
 
-        private GaussianMixtureComponent(
-          final double weight, final double[] mean, final double[][] vcov)
+        private GaussianMixtureComponent(final double weight,
+                                         final double[] mean,
+                                         final double[][] vcov)
         {
             this._weight = weight;
             this._mean = mean;
             this._vcoc = vcov;
         }
 
-        public void setComponent(double[] mean,
-                                 double[][] vcov,
-                                 double weight)
+        void setComponent(double[] mean, double[][] vcov, double weight)
         {
             this._mean = mean;
             this._vcoc = vcov;

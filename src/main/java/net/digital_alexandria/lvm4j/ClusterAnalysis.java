@@ -22,12 +22,14 @@
 package net.digital_alexandria.lvm4j;
 
 
+import net.digital_alexandria.lvm4j.cluster.Clustering;
+
 /**
  * Interface for all classes that produce clusterings.
  *
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-public interface Cluster
+public interface ClusterAnalysis
 {
 
     /**
@@ -40,5 +42,5 @@ public interface Cluster
      *
      * @return returns the clustering
      */
-    public Clustering cluster(final int k);
+    Clustering cluster(final int k);
 }
