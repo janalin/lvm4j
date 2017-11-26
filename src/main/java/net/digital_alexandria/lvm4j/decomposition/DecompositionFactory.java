@@ -45,6 +45,20 @@ public final class DecompositionFactory
     }
 
     /**
+     * Create a PCA object with a given matrix that is used for the dimension
+     * reduction.
+     *
+     * @param X the matrix for which the PCA is calculated
+     *
+     * @return returns an PCA object
+     */
+    public static PCA pca(INDArray X)
+    {
+        return new PCA(X);
+    }
+
+
+    /**
      * Create a FactorAnalysis object with a given matrix that is used for
      * creation of a latent space.
      *

@@ -19,7 +19,10 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j;
+
+import net.digital_alexandria.lvm4j.mixturemodel.MixtureComponents;
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
@@ -36,5 +39,5 @@ public interface MixtureModel
      *
      * @return returns the clustering
      */
-    public MixtureComponents fit(final int k );
+    public MixtureComponents fit(final int k);
 }

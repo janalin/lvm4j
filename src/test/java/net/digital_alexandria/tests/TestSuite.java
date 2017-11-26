@@ -1,8 +1,8 @@
 /**
  * lvm4j: a Java implementation of various latent variable models.
- *
+ * <p>
  * Copyright (C) 2015 - 2016 Simon Dirmeier
- *
+ * <p>
  * This file is part of lvm4j.
  * <p>
  * lvm4j is free software: you can redistribute it and/or modify
@@ -19,30 +19,33 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.tests;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+
+import java.io.OutputStreamWriter;
 
 /**
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    PCATest.class, FATest.class,
-    GMMTest.class,
-    HMMTest.class, HMMTrainTest.class, HMMPredictTest.class
-})
+    PCATest.class, FATest.class, GMMTest.class, HMMTest.class,
+    HMMTrainTest.class, HMMPredictTest.class})
 public class TestSuite
 {
-
     @BeforeClass
     public static void setup()
     {
-        org.apache.log4j.ConsoleAppender appender = new org.apache.log4j.ConsoleAppender();
-        appender.setWriter(new java.io.OutputStreamWriter(java.lang.System.out));
-        appender.setLayout(new org.apache.log4j.PatternLayout("%-5p [%t]: %m%n"));
-        org.apache.log4j.Logger.getRootLogger().addAppender(appender);
+        ConsoleAppender appender = new ConsoleAppender();
+        appender.setWriter(new OutputStreamWriter(java.lang.System.out));
+        appender.setLayout(new PatternLayout("%-5p [%t]: %m%n"));
+        Logger.getRootLogger().addAppender(appender);
     }
 }

@@ -19,19 +19,22 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.digital_alexandria.lvm4j;
 
-import net.digital_alexandria.lvm4j.mixturemodel.GaussianMixtureModel;
+package net.digital_alexandria.lvm4j.mixturemodel;
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
 public class MixtureComponents
 {
+
     public MixtureComponents(GaussianMixtureModel gaussianMixture) {}
 
-    public MixtureComponents()
-    {
+    public MixtureComponents() {}
 
+    public MixtureComponents fit(int k)
+    {
+        return null;
     }
+
 }

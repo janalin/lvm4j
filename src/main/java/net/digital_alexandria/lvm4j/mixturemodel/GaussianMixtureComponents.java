@@ -1,12 +1,11 @@
 package net.digital_alexandria.lvm4j.mixturemodel;
 
-import net.digital_alexandria.lvm4j.MixtureComponents;
 import org.nd4j.linalg.util.MathUtils;
 
 /**
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-final class GaussianMixtureComponents extends MixtureComponents
+public final class GaussianMixtureComponents extends MixtureComponents
 {
     private final int _K;
     private final int _P;
@@ -34,7 +33,6 @@ final class GaussianMixtureComponents extends MixtureComponents
         }
     }
 
-
     public final double[] means(int i)
     {
         return this._COMPONENTS[i]._mean;
@@ -51,6 +49,12 @@ final class GaussianMixtureComponents extends MixtureComponents
                              final double weight)
     {
         this._COMPONENTS[i].setComponent(mean, vcov, weight);
+    }
+
+    @Override
+    public MixtureComponents fit(int k)
+    {
+        return null;
     }
 
     private final class GaussianMixtureComponent

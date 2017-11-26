@@ -39,15 +39,14 @@ import static org.nd4j.linalg.factory.Nd4j.diag;
 
 /**
  * Class that calculates a factor analysis.
- *
+ * <p>
  * The algorithm was largely taken from:
- *  Barber - Bayesian Reasoning and Machine Learning,
- *  Chapter 21. 1, Algorithm 21. 1
+ * Barber - Bayesian Reasoning and Machine Learning,
+ * Chapter 21. 1, Algorithm 21. 1
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class FactorAnalysis implements Decomposition
-{
+public final class FactorAnalysis implements Decomposition {
     // stop criterion: threshold if likelihood does not change any more
     private static final double _THRESHOLD = 0.0001;
     // stop criterion: maximal number of iterations
@@ -67,13 +66,11 @@ public final class FactorAnalysis implements Decomposition
     // vcov matrix of Gaussian errors
     private INDArray _psi;
 
-    FactorAnalysis(final double X[][])
-    {
+    FactorAnalysis(final double X[][]) {
         this(Nd4j.create(X));
     }
 
-    FactorAnalysis(final INDArray X)
-    {
+    FactorAnalysis(final INDArray X) {
         this._X = scale(X, true, false);
         this._N = _X.rows();
         this._P = _X.columns();
@@ -83,18 +80,15 @@ public final class FactorAnalysis implements Decomposition
      * Runs the factor analysis and computes the score matrix with K factors.
      *
      * @param K the number of factors that are computed for the score matrix.
-     *
      * @return returns the transformed matrix
      */
     @Override
-    public final INDArray run(final int K)
-    {
+    public final INDArray run(final int K) {
         fit(K);
         return decomp(K);
     }
 
-    private void fit(final int K)
-    {
+    private void fit(final int K) {
         final INDArray vars = _X.var(0);
         INDArray F;
         INDArray psis = Nd4j.eye(_P);
@@ -103,8 +97,7 @@ public final class FactorAnalysis implements Decomposition
         double oldLoglik;
 
         int niter = 0;
-        do
-        {
+        do {
             oldLoglik = loglik;
             final INDArray sqrt_psis = sqrtPsis(psis);
 
@@ -116,7 +109,7 @@ public final class FactorAnalysis implements Decomposition
             // TODO: CHANGE TO OWN METHOD USING
             {
                 svd = svd
-                  (X, sqrt_psis.data().asDouble());
+                        (X, sqrt_psis.data().asDouble());
                 s = getSingularValues(svd.getW(), K);
                 V = getRightSingularVectors(svd.getV(), K);
                 unexp = unexplainedVariance(svd.getW(), K);
@@ -135,24 +128,20 @@ public final class FactorAnalysis implements Decomposition
         this._psi = psis;
     }
 
-    private INDArray sqrtPsis(INDArray psis)
-    {
+    private INDArray sqrtPsis(INDArray psis) {
         return Transforms.sqrt(diag(psis)).add(PSEUDO_COUNT);
     }
 
-    private SimpleSVD svd(final INDArray X, final double[] sdevs)
-    {
+    private SimpleSVD svd(final INDArray X, final double[] sdevs) {
         final double nsqrt = sqrt(_N);
-        for (int i = 0; i < sdevs.length; i++)
-        {
+        for (int i = 0; i < sdevs.length; i++) {
             X.getColumn(i).assign(X.getColumn(i).div(sdevs[i] * nsqrt));
         }
         return new SimpleMatrix(_N, _P, true, X.data().asDouble()).svd(true);
     }
 
     private INDArray getSingularValues(final SimpleMatrix S,
-                                       final int k)
-    {
+                                       final int k) {
         final double[] diag = S.extractDiag().getMatrix().data;
         INDArray s = Nd4j.create(k);
         for (int i = 0; i < k; i++) s.getColumn(i).assign(Math.pow(diag[i], 2));
@@ -160,18 +149,15 @@ public final class FactorAnalysis implements Decomposition
     }
 
     private INDArray getRightSingularVectors(final SimpleMatrix V,
-                                             final int K)
-    {
+                                             final int K) {
         return Nd4j.create
-          (V.transpose().extractMatrix(0, K, 0, V.numCols()).getMatrix().data,
-           new int[]{K, V.numCols()}, 'r');
+                (V.transpose().extractMatrix(0, K, 0, V.numCols()).getMatrix().data,
+                        new int[]{K, V.numCols()}, 'r');
     }
 
-    private double unexplainedVariance(final SimpleMatrix S, final int k)
-    {
+    private double unexplainedVariance(final SimpleMatrix S, final int k) {
         double var = 0.0;
-        for (int i = k; i < S.numCols(); i++)
-        {
+        for (int i = k; i < S.numCols(); i++) {
             final double sv = S.get(i, i);
             var += sv * sv;
         }
@@ -180,48 +166,41 @@ public final class FactorAnalysis implements Decomposition
 
     private INDArray factorUpdate(final INDArray singVals,
                                   final INDArray V,
-                                  final INDArray sqrt_psis)
-    {
+                                  final INDArray sqrt_psis) {
         final int sNcol = singVals.columns();
         INDArray m = Nd4j.create(sNcol);
-        for (int i = 0; i < sNcol; i++)
-        {
+        for (int i = 0; i < sNcol; i++) {
             m.getColumn(i)
-             .assign(sqrt(Math.max(singVals.getDouble(i) - 1, 0.)));
+                    .assign(sqrt(Math.max(singVals.getDouble(i) - 1, 0.)));
         }
         m = Nd4j.diag(m);
         INDArray W = V.transpose().mmul(m).transpose();
-        for (int i = 0; i < W.columns(); i++)
-        {
+        for (int i = 0; i < W.columns(); i++) {
             W.getColumn(i).assign(W.getColumn(i).mul(sqrt_psis.getDouble(i)));
         }
         return W;
     }
 
-    private INDArray vcovUpdate(final INDArray var, final INDArray w)
-    {
+    private INDArray vcovUpdate(final INDArray var, final INDArray w) {
         INDArray fft = Transforms.pow(w, 2);
         INDArray psi = fft.sum(0);
-        for (int i = 0; i < psi.columns(); i++)
-        {
+        for (int i = 0; i < psi.columns(); i++) {
             psi
-              .getColumn(i)
-              .assign(max(var.getDouble(i) - psi.getDouble(i), PSEUDO_COUNT));
+                    .getColumn(i)
+                    .assign(max(var.getDouble(i) - psi.getDouble(i), PSEUDO_COUNT));
         }
         return Nd4j.diag(psi);
     }
 
     private double proploglik(final INDArray s,
                               final double unexp,
-                              final INDArray psis)
-    {
+                              final INDArray psis) {
         return sum(log(s.data().asDouble())) +
-               unexp +
-               sum(log(diag(psis).data().asDouble()));
+                unexp +
+                sum(log(diag(psis).data().asDouble()));
     }
 
-    private INDArray decomp(final int K)
-    {
+    private INDArray decomp(final int K) {
         INDArray m = Nd4j.eye(K);
         INDArray psiw = wpsi();
         INDArray b = psiw.mmul(this._f.transpose());
@@ -229,8 +208,7 @@ public final class FactorAnalysis implements Decomposition
         return _X.mmul(psiw.transpose()).mmul(coz);
     }
 
-    private INDArray wpsi()
-    {
+    private INDArray wpsi() {
         INDArray psiw = this._f.dup();
         INDArray ps = diag(this._psi);
         for (int i = 0; i < psiw.rows(); i++)
@@ -238,10 +216,9 @@ public final class FactorAnalysis implements Decomposition
         return psiw;
     }
 
-    private INDArray coz(final int K, final INDArray m, final INDArray b)
-    {
+    private INDArray coz(final int K, final INDArray m, final INDArray b) {
         return (K == 1)
-          ? Nd4j.ones(1).div(m.add(b))
-          : InvertMatrix.invert(m.add(b), false);
+                ? Nd4j.ones(1).div(m.add(b))
+                : InvertMatrix.invert(m.add(b), false);
     }
 }

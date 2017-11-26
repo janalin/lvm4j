@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author Simon Dirmeier {@literal mail@simon-dirmeier.net}
  */
-public interface DiscreteStateMarkovModel
+public interface MarkovModel
 {
     /**
      * Train the HMM using two files: a file of observations and a file of

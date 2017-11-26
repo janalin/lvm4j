@@ -38,7 +38,7 @@ import static net.digital_alexandria.lvm4j.util.Combinatorial.combinatorial;
  *
  * @author Simon Dirmeier {@literal simon.dirmeier@gmx.de}
  */
-public final class DiscreteStateMarkovModelFactory
+public final class MarkovModelFactory
 {
 
     // creator for arcs
@@ -105,8 +105,8 @@ public final class DiscreteStateMarkovModelFactory
                                params.startProbabilities());
     }
 
-    private static void init(HMM hmm, char states[], char observations[], int
-      order)
+    private static void init(HMM hmm, char states[], char observations[],
+                             int order)
     {
         hmm.order = order;
         // recursively get all combinates of strings of over an alphabet

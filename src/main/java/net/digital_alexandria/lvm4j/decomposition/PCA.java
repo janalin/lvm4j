@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.sqrt;
-import static net.digital_alexandria.lvm4j.util.Matrix.scale;
 import static net.digital_alexandria.lvm4j.util.Matrix.svd;
 
 
@@ -69,16 +68,17 @@ public final class PCA implements Decomposition
         SimpleSVD svd = svd(_X);
 
         this._LOADINGS = Nd4j.create(
-          svd.getV()
-             .transpose()
-             .getMatrix().getData(),
-          new int[]{_P, _P}, 'r');
+                svd.getV().transpose()
+                   .getMatrix().getData(),
+                new int[]{_P, _P}, 'r');
 
         // add standard deviations
         this._SD = new ArrayList<>();
         final double sq = sqrt(_X.rows() - 1);
         for (int i = 0; i < _X.columns(); i++)
+        {
             _SD.add(svd.getW().get(i, i) / sq);
+        }
 
         this._SCORES = _X.mmul(_LOADINGS);
     }
@@ -88,7 +88,6 @@ public final class PCA implements Decomposition
      * k principal components.
      *
      * @param K the number of principal components
-     *
      * @return returns the rotation matrix.
      */
     @Override

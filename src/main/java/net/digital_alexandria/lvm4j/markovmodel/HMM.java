@@ -22,7 +22,7 @@
 
 package net.digital_alexandria.lvm4j.markovmodel;
 
-import net.digital_alexandria.lvm4j.DiscreteStateMarkovModel;
+import net.digital_alexandria.lvm4j.MarkovModel;
 import net.digital_alexandria.lvm4j.edges.WeightedArc;
 import net.digital_alexandria.lvm4j.util.File;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author Simon Dirmeier {@literal s@simon-dirmeier.net}
  */
-public final class HMM implements DiscreteStateMarkovModel
+public final class HMM implements MarkovModel
 {
     // the order of the HMM -> number of previous states that are
     // considered for prediction
@@ -50,7 +50,7 @@ public final class HMM implements DiscreteStateMarkovModel
     // arcs between states and observations
     final List<WeightedArc> EMISSIONS;
     // flag whether HMM is trained or raw
-    boolean isTrained;
+    private boolean isTrained;
 
     HMM()
     {

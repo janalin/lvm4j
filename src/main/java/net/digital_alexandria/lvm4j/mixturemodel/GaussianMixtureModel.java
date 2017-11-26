@@ -19,11 +19,11 @@
  * along with lvm4j.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package net.digital_alexandria.lvm4j.mixturemodel;
 
 import net.digital_alexandria.lvm4j.Cluster;
 import net.digital_alexandria.lvm4j.Clustering;
-import net.digital_alexandria.lvm4j.MixtureComponents;
 import net.digital_alexandria.lvm4j.MixtureModel;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -35,7 +35,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public final class GaussianMixtureModel implements Cluster, MixtureModel
 {
-    private static final double _THRESHOLD = 0.000001;
     private static final int _MAXIT = 10000;
     private final double[][] _X;
     private final int _N;
@@ -70,8 +69,8 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
 
     private void em(final int K)
     {
-        GaussianMixtureComponents comps =
-          GaussianMixtureComponents.random(K, _P);
+        GaussianMixtureComponents comps = GaussianMixtureComponents
+            .random(K, _P);
         int run = 0;
         double[][] probs = new double[_N][K];
         double[][] resposibilities = new double[_N][K];
@@ -87,66 +86,26 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
             /*
              * M-step
              */
-            for (int i = 0; i < K; i++)
-            {
-                double newMean[] = updateMean(i, resposibilities, nk[i]);
-                double newCov[][] = updateCov(i, newMean, resposibilities, nk[i]);
-                double weight = nk[i] / _N;
-                comps.setComponent(i, newMean, newCov, weight);
-            }
+            updateComponents(K, resposibilities, nk, comps);
         }
     }
 
-    private double[][] updateCov(final int K, final double[] mean,
-                                 final double[][] resposibilities,
-                                 final double clusterCount)
+    private void setProbs(double[][] probs, final int K,
+                          final GaussianMixtureComponents cps)
     {
-        INDArray mn = Nd4j.create(_N, _P);
-        INDArray mnr = Nd4j.create(_P, _N);
-        for (int i = 0; i < _N; i++)
+        for (int i = 0; i < K; i++)
         {
-            for (int j = 0; j < _P; j++)
+            MultivariateNormalDistribution mvt = new
+                MultivariateNormalDistribution(cps.means(i), cps.var(i));
+            for (int j = 0; j < this._N; j++)
             {
-                double d = _X[i][j] - mean[j];
-                mn.put(i, j, d);
-                mnr.put(j, i, d * resposibilities[i][K]);
+                probs[j][i] = mvt.density(_X[j]);
             }
         }
-        INDArray arr = mn.mmul(mnr).div(clusterCount);
-        double vcov[][] = new double[_P][_P];
-        double[] dat =  arr.data().asDouble();
-        for (int i = 0; i < _P; i++)
-        {
-            for (int j = 0; j < _P; j++)
-            {
-                vcov[i][j] = dat[i * _P + j];
-            }
-        }
-
-        return vcov;
     }
 
-    private double[] updateMean(final int K,
-                                final double[][] resposibilities,
-                                final double clusterCount)
-    {
-        double newMean[] = new double[_P];
-        for (int k = 0; k < _N; k++)
-        {
-            for (int j = 0; j < _P; j++)
-            {
-                newMean[j] += _X[k][j] * resposibilities[k][K];
-            }
-        }
-        for (int i = 0; i < newMean.length; i++)
-        {
-            newMean[i] = 1 / clusterCount;
-        }
-        return newMean;
-    }
-
-    private void setClusterCounts(
-      double[] nk, final int K, final double[][] probNorm)
+    private void setClusterCounts(double[] nk, final int K,
+                                  final double[][] probNorm)
     {
         for (int j = 0; j < K; j++)
         {
@@ -158,32 +117,82 @@ public final class GaussianMixtureModel implements Cluster, MixtureModel
         }
     }
 
-    private void setNormProbs(
-      double[][] probNorm, final double[][] probs, final int K)
+    private void setNormProbs(double[][] probNorm, final double[][] probs,
+                              final int K)
     {
         for (int i = 0; i < this._N; i++)
         {
             double p = 0.0;
             for (int j = 0; j < K; j++)
+            {
                 p += probs[i][j];
+            }
             for (int j = 0; j < K; j++)
+            {
                 probNorm[i][j] = probs[i][j] / p;
+            }
         }
     }
 
-    private void setProbs(
-      double[][] probs,
-      final int K,
-      final GaussianMixtureComponents comps)
+    private void updateComponents(final int K, double[][] resps, double[] nk,
+                                  GaussianMixtureComponents comps)
     {
         for (int i = 0; i < K; i++)
         {
-            MultivariateNormalDistribution mvt = new
-              MultivariateNormalDistribution(comps.means(i), comps.var(i));
-            for (int j = 0; j < this._N; j++)
+            double newMean[] = updateMean(i, resps, nk[i]);
+            double newCov[][] = updateCov(i, newMean, resps, nk[i]);
+            double weight = nk[i] / _N;
+            comps.setComponent(i, newMean, newCov, weight);
+        }
+    }
+
+    private double[] updateMean(final int K, final double[][] resps,
+                                final double clusterCount)
+    {
+        double newMean[] = new double[_P];
+        for (int k = 0; k < _N; k++)
+        {
+            for (int j = 0; j < _P; j++)
             {
-                probs[j][i] = mvt.density(_X[j]);
+                newMean[j] += _X[k][j] * resps[k][K];
             }
         }
+        for (int i = 0; i < newMean.length; i++)
+        {
+            newMean[i] = 1 / clusterCount;
+        }
+        return newMean;
+    }
+
+    private double[][] updateCov(final int K, final double[] mean,
+                                 final double[][] resp,
+                                 final double clusterCount)
+    {
+        INDArray mn = Nd4j.create(_N, _P);
+        INDArray mnr = Nd4j.create(_P, _N);
+
+        for (int i = 0; i < _N; i++)
+        {
+            for (int j = 0; j < _P; j++)
+            {
+                double d = _X[i][j] - mean[j];
+                mn.put(i, j, d);
+                mnr.put(j, i, d * resp[i][K]);
+            }
+        }
+
+        INDArray arr = mn.mmul(mnr).div(clusterCount);
+        double vcov[][] = new double[_P][_P];
+        double[] dat = arr.data().asDouble();
+
+        for (int i = 0; i < _P; i++)
+        {
+            for (int j = 0; j < _P; j++)
+            {
+                vcov[i][j] = dat[i * _P + j];
+            }
+        }
+
+        return vcov;
     }
 }
