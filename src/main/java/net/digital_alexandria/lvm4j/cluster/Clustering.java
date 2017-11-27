@@ -7,12 +7,12 @@ import net.digital_alexandria.lvm4j.mixturemodel.GaussianMixtureComponents;
  */
 public final class Clustering
 {
-    private final ClusterCenters[] _CENTERS;
+    private final ClusterCenter[] _CENTERS;
 
     public Clustering(double[][] X, int n, int p,
                       GaussianMixtureComponents components)
     {
-        this._CENTERS = new ClusterCenters[components.countComponents()];
+        this._CENTERS = new ClusterCenter[components.countComponents()];
         for (int i = 0; i < this._CENTERS.length; i++)
         {
 
